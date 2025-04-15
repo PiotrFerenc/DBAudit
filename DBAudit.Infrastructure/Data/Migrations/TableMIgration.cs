@@ -10,7 +10,8 @@ public class TableMigration : Migration
         Create.Table("Table")
             .WithColumn("Id").AsGuid().PrimaryKey()
             .WithColumn("Name").AsString().NotNullable()
-            .WithColumn("DatabaseId").AsGuid();
+            .WithColumn("DatabaseId").AsGuid().ForeignKey("FK_Table_Database", "Database", "Id");
+        
     }
 
     public override void Down()

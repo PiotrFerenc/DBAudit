@@ -11,7 +11,7 @@ public class DatabaseMigration : Migration
             .WithColumn("Id").AsGuid().PrimaryKey()
             .WithColumn("Name").AsString().NotNullable()
             .WithColumn("EnvironmentId").AsGuid().NotNullable()
-            .ForeignKey("FK_Database_Environment", "Environment", "Id");
+            .ForeignKey("FK_Database_Environment", "Environments", "Id");
     }
 
     public override void Down()
