@@ -7,11 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Migrations\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="FluentMigrator" Version="7.1.0" />
+      <PackageReference Include="FluentMigrator.Runner" Version="7.1.0" />
       <PackageReference Include="Microsoft.AspNetCore" Version="2.3.0" />
       <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.4" />

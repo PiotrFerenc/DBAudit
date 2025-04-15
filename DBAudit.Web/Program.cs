@@ -1,4 +1,5 @@
 using DBAudit.Infrastructure.Data;
+using DBAudit.Infrastructure.Extensions;
 using DBAudit.Infrastructure.SqlServer.Extensions;
 using Microsoft.AspNetCore.Identity;
 
@@ -37,5 +38,5 @@ app.MapControllerRoute(
 
 app.MapRazorPages()
     .WithStaticAssets();
-
+app.RunMigration();
 app.Run();
