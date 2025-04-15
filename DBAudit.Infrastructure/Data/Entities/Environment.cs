@@ -1,4 +1,4 @@
-namespace DBAudit.Web.Data.Entities;
+namespace DBAudit.Infrastructure.Data.Entities;
 
 public class Environment
 {

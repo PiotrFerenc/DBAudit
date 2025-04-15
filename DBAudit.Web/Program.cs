@@ -1,6 +1,6 @@
+using DBAudit.Infrastructure.Data;
 using DBAudit.Infrastructure.SqlServer.Extensions;
 using Microsoft.AspNetCore.Identity;
-using DBAudit.Web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +8,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddSqlServerProvider<ApplicationDbContext>(connectionString);
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddControllersWithViews();
 
