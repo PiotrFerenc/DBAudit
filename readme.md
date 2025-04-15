@@ -1,4 +1,4 @@
-# DBSonar
+# DBAudit
 
 **DBSonar** is an open-source tool that analyzes the quality, performance, and security of relational databases – similar in concept to [SonarQube](https://www.sonarqube.org/) but focused entirely on databases.
 
@@ -56,14 +56,6 @@ The tool helps developers, DBAs, and data architects identify potential issues i
 - [ ] CI/CD integration for schema reviews
 - [ ] Plugin system for supporting various SQL dialects (PostgreSQL, MySQL, SQL Server, etc.)
 - [ ] GitHub Action for database linting in pull requests
-
----
-
-## 🛠️ Technologies (planned)
-- Language: C# / .NET Core
-- Parser: ANTLR or custom SQL parser
-- UI: Web dashboard (React / Blazor)
-- Support: PostgreSQL, MySQL, SQL Server (initially)
 
 ---
 
