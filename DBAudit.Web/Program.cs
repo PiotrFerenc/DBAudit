@@ -1,3 +1,4 @@
+using DBAudit.Infrastructure;
 using DBAudit.Infrastructure.Data;
 using DBAudit.Infrastructure.Extensions;
 using DBAudit.Infrastructure.SqlServer.Extensions;
@@ -6,11 +7,13 @@ using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+var key = builder.Configuration.GetSection("Encryption:Key").Value ?? throw new InvalidOperationException("Encryption:Key not found.");
+var iv = builder.Configuration.GetSection("Encryption:IV").Value ?? throw new InvalidOperationException("Encryption:IV not found.");
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddSqlServerProvider<ApplicationDbContext>(connectionString);
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ApplicationDbContext>();
-
+builder.Services.AddSingleton<IEncryptionService>(new EncryptionService(key, iv));
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
