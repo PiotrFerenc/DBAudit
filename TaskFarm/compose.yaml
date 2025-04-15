@@ -1,0 +1,6 @@
+﻿services:
+  dbaudit.web:
+    image: dbaudit.web
+    build:
+      context: .
+      dockerfile: ../DBAudit.Web/Dockerfile

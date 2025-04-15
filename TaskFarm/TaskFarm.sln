@@ -8,6 +8,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskFarm.Silo", "TaskFarm.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskFarm.Application", "TaskFarm.Application\TaskFarm.Application.csproj", "{A490AAA2-F8AA-4565-857F-BAA2FB5AA116}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Web", "..\DBAudit.Web\DBAudit.Web.csproj", "{75717886-53D0-4A47-92EB-A5D6F0A59B51}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4BE5D0F1-B245-4455-B11C-61745559A42C}"
+	ProjectSection(SolutionItems) = preProject
+		compose.yaml = compose.yaml
+		..\readme.md = ..\readme.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +38,9 @@ Global
 		{A490AAA2-F8AA-4565-857F-BAA2FB5AA116}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A490AAA2-F8AA-4565-857F-BAA2FB5AA116}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A490AAA2-F8AA-4565-857F-BAA2FB5AA116}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75717886-53D0-4A47-92EB-A5D6F0A59B51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75717886-53D0-4A47-92EB-A5D6F0A59B51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75717886-53D0-4A47-92EB-A5D6F0A59B51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75717886-53D0-4A47-92EB-A5D6F0A59B51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
