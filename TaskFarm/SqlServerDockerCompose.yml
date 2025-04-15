@@ -1,10 +1,5 @@
-﻿version: '3.8'
+version: '3.8'
 services:
-  dbaudit.web:
-    image: dbaudit.web
-    build:
-      context: .
-      dockerfile: ../DBAudit.Web/Dockerfile
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
