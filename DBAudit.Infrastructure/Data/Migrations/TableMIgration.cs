@@ -10,6 +10,7 @@ public class TableMigration : Migration
         Create.Table("Table")
             .WithColumn("Id").AsGuid().PrimaryKey()
             .WithColumn("Name").AsString().NotNullable()
+            .WithColumn("IsActive").AsBoolean().NotNullable()
             .WithColumn("DatabaseId").AsGuid().ForeignKey("FK_Table_Database", "Database", "Id");
         
     }

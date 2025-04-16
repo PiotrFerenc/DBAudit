@@ -10,6 +10,7 @@ public class EnvironmentCreateTable : Migration
         Create.Table("Environments")
             .WithColumn("Id").AsGuid().PrimaryKey().NotNullable()
             .WithColumn("Name").AsString().NotNullable()
+            .WithColumn("IsActive").AsBoolean().NotNullable()
             .WithColumn("ConnectionString").AsString().NotNullable();
     }
 
