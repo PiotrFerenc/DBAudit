@@ -15,6 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		compose.yaml = compose.yaml
 		..\readme.md = ..\readme.md
 		SqlServerDockerCompose.yml = SqlServerDockerCompose.yml
+		..\Scripts\CreateUser.sql = ..\Scripts\CreateUser.sql
+		..\Scripts\AttachUser.sql = ..\Scripts\AttachUser.sql
+		..\Scripts\Grant.sql = ..\Scripts\Grant.sql
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaskFarm", "TaskFarm", "{4A141882-BAB3-4B1D-A1ED-8E8D5EE45843}"
