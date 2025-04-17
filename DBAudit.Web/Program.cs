@@ -1,6 +1,7 @@
 using DBAudit.Infrastructure;
 using DBAudit.Infrastructure.Data;
 using DBAudit.Infrastructure.Extensions;
+using DBAudit.Infrastructure.Repositories;
 using DBAudit.Infrastructure.SqlServer.Extensions;
 using Microsoft.AspNetCore.Identity;
 
@@ -14,6 +15,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddSqlServerProvider<ApplicationDbContext>(connectionString);
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddSingleton<IEncryptionService>(new EncryptionService(key, iv));
+builder.Services.AddTransient<IEnvironmentService, EnvironmentService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
