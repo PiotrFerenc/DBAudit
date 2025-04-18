@@ -36,11 +36,15 @@ namespace DBAudit.Infrastructure.Repositories
     }
 
 
-    public class EnvironmentService(IEnvironmentStorage storage) : IEnvironmentService
+    public class EnvironmentService(IEnvironmentStorage storage, IEncryptionService encryptionService) : IEnvironmentService
     {
         public List<Environment> GetAll() => storage.Get();
 
-        public void Add(string id, Environment environment) => storage.Add(id, environment);
+        public void Add(string id, Environment environment)
+        {
+            environment.ConnectionString = encryptionService.Encrypt(environment.ConnectionString);
+            storage.Add(id, environment);
+        }
 
         public void Activate(string id)
             => storage.Get(id).IfSome(e =>

@@ -16,38 +16,38 @@
         </div>
     </div>
     <div class="row">
-        
+        <table class="table table-bordered">
+            <tr>
+                <th>Nazwa</th>
+                <th></th>
+            </tr>
+            @foreach (var environment in Model)
+            {
+                <tr>
+                    <td>@environment.Name</td>
+                    <td>
+                        @if (!environment.IsActive)
+                        {
+                            <form action="/Environment/Activate" method="post">
+                                <input type="hidden" name="id" value="@environment.Id"/>
+                                @Html.AntiForgeryToken()
+                                <input type="submit" value="Activate" class="btn btn-success"/>
+                            </form>
+                        }
+                        else
+                        {
+                            <form action="/Environment/Deactivate" method="post">
+                                <input type="hidden" name="id" value="@environment.Id"/>
+                                @Html.AntiForgeryToken()
+                                <input type="submit" value="Deactivate" class="btn btn-danger"/>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+
+        </table>
     </div>
 </div>
 
-<table class="table table-bordered">
-    <tr>
-        <th>Nazwa</th>
-        <th></th>
-    </tr>
-    @foreach (var environment in Model)
-    {
-        <tr>
-            <td>@environment.Name</td>
-            <td>
-                @if (!environment.IsActive)
-                {
-                    <form action="/Environment/Activate" method="post">
-                        <input type="hidden" name="id" value="@environment.Id"/>
-                        @Html.AntiForgeryToken()
-                        <input type="submit" value="Activate" class="btn btn-success"/>
-                    </form>
-                }
-                else
-                {
-                    <form action="/Environment/Deactivate" method="post">
-                        <input type="hidden" name="id" value="@environment.Id"/>
-                        @Html.AntiForgeryToken()
-                        <input type="submit" value="Deactivate" class="btn btn-danger"/>
-                    </form>
-                }
-            </td>
-        </tr>
-    }
 
-</table>
