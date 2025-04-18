@@ -28,43 +28,43 @@ namespace DBAudit.Infrastructure.Repositories
 
     public class EnvironmentStorage(IStorage<Environment> storage) : IEnvironmentStorage
     {
-        public Option<Environment> Get(string key) => storage.Get(key);
-        public void Remove(string key) => storage.Remove(key);
-        public List<Environment> Get() => storage.Get();
-        public void Add(string key, Environment item) => storage.Add(key, item);
-        public void Update(string key, Environment item) => storage.Update(key, item);
+        public Option<Environment> Find(string key) => storage.Find(key);
+        public void RemoveByKey(string key) => storage.RemoveByKey(key);
+        public List<Environment> FetchAll() => storage.FetchAll();
+        public void SaveItem(string key, Environment item) => storage.SaveItem(key, item);
+        public void UpdateItem(string key, Environment item) => storage.UpdateItem(key, item);
     }
 
 
     public class EnvironmentService(IEnvironmentStorage storage, IEncryptionService encryptionService) : IEnvironmentService
     {
-        public List<Environment> GetAll() => storage.Get();
+        public List<Environment> GetAll() => storage.FetchAll();
 
         public void Add(string id, Environment environment)
         {
             environment.ConnectionString = encryptionService.Encrypt(environment.ConnectionString);
-            storage.Add(id, environment);
+            storage.SaveItem(id, environment);
         }
 
         public void Activate(string id)
-            => storage.Get(id).IfSome(e =>
+            => storage.Find(id).IfSome(e =>
             {
                 e.IsActive = true;
-                storage.Update(id, e);
+                storage.UpdateItem(id, e);
             });
 
         public void Deactivate(string id)
-            => storage.Get(id).IfSome(e =>
+            => storage.Find(id).IfSome(e =>
             {
                 e.IsActive = false;
-                storage.Update(id, e);
+                storage.UpdateItem(id, e);
             });
 
         public void ChangeName(string id, string name)
-            => storage.Get(id).IfSome(e =>
+            => storage.Find(id).IfSome(e =>
             {
                 e.Name = name;
-                storage.Update(id, e);
+                storage.UpdateItem(id, e);
             });
     }
 

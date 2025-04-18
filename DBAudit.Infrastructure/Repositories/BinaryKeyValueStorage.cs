@@ -5,11 +5,11 @@ namespace DBAudit.Infrastructure.Repositories;
 
 public interface IStorage<T> where T : new()
 {
-    Option<T> Get(string key);
-    void Remove(string key);
-    List<T> Get();
-    void Add(string key, T item);
-    void Update(string key, T item);
+    Option<T> Find(string key);
+    void RemoveByKey(string key);
+    List<T> FetchAll();
+    void SaveItem(string key, T item);
+    void UpdateItem(string key, T item);
 }
 
 public class Storage<T> : IStorage<T> where T : new()
@@ -29,12 +29,12 @@ public class Storage<T> : IStorage<T> where T : new()
         _mapToString = mapToString;
 
         if (!File.Exists(_path)) return;
-        Load();
+        ReadFromFile();
     }
 
     private readonly Dictionary<string, byte[]> _data = new Dictionary<string, byte[]>();
 
-    private void Load()
+    private void ReadFromFile()
     {
         using var fs = new FileStream(_path, FileMode.Open);
         using var br = new BinaryReader(fs, Encoding.UTF8);
@@ -50,24 +50,24 @@ public class Storage<T> : IStorage<T> where T : new()
         }
     }
 
-    public void Remove(string key)
+    public void RemoveByKey(string key)
     {
         _data.Remove(key);
-        Save();
+        FlushData();
     }
 
-    public List<T> Get()
+    public List<T> FetchAll()
     {
         var items = new List<T>();
         foreach (var item in _data)
         {
-            Get(item.Key).IfSome(i => items.Add(i));
+            Find(item.Key).IfSome(i => items.Add(i));
         }
 
         return items;
     }
 
-    private void Save()
+    private void FlushData()
     {
         using var fs = new FileStream(_path, FileMode.Create);
         using var bw = new BinaryWriter(fs, Encoding.UTF8);
@@ -81,7 +81,7 @@ public class Storage<T> : IStorage<T> where T : new()
         }
     }
 
-    public Option<T> Get(string key)
+    public Option<T> Find(string key)
     {
         var result = new T();
         if (!_data.TryGetValue(key, out var value)) return Option<T>.None;
@@ -101,7 +101,7 @@ public class Storage<T> : IStorage<T> where T : new()
         return result;
     }
 
-    public void Add(string key, T item)
+    public void SaveItem(string key, T item)
     {
         using var ms = new MemoryStream();
         using var bw = new BinaryWriter(ms, Encoding.UTF8);
@@ -120,12 +120,12 @@ public class Storage<T> : IStorage<T> where T : new()
             _data[key] = baa;
         }
 
-        Save();
+        FlushData();
     }
 
-    public void Update(string key, T item)
+    public void UpdateItem(string key, T item)
     {
-        Remove(key);
-        Add(key, item);
+        RemoveByKey(key);
+        SaveItem(key, item);
     }
 }
