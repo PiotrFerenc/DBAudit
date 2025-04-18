@@ -10,8 +10,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<Environment>().ToTable("Environments").HasKey(e => e.Id);
-        builder.Entity<Environment>().Property(e => e.Id).ValueGeneratedOnAdd();
         builder.Entity<Environment>().Property(e => e.Name).IsRequired();
         builder.Entity<Environment>().Property(e => e.ConnectionString).IsRequired();
 

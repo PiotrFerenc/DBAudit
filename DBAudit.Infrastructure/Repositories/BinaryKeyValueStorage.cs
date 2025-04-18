@@ -1,12 +1,15 @@
 using System.Text;
+using LanguageExt;
 
 namespace DBAudit.Infrastructure.Repositories;
 
 public interface IStorage<T> where T : new()
 {
-    T Get(string key);
+    Option<T> Get(string key);
+    void Remove(string key);
     List<T> Get();
     void Add(string key, T item);
+    void Update(string key, T item);
 }
 
 public class Storage<T> : IStorage<T> where T : new()
@@ -47,7 +50,22 @@ public class Storage<T> : IStorage<T> where T : new()
         }
     }
 
-    public List<T> Get() => _data.Select(item => Get(item.Key)).ToList();
+    public void Remove(string key)
+    {
+        _data.Remove(key);
+        Save();
+    }
+
+    public List<T> Get()
+    {
+        var items = new List<T>();
+        foreach (var item in _data)
+        {
+            Get(item.Key).IfSome(i => items.Add(i));
+        }
+
+        return items;
+    }
 
     private void Save()
     {
@@ -58,20 +76,22 @@ public class Storage<T> : IStorage<T> where T : new()
         foreach (var item in _data)
         {
             bw.Write(item.Key);
+            bw.Write(item.Value.Length);
             bw.Write(item.Value);
         }
     }
 
-    public T Get(string key)
+    public Option<T> Get(string key)
     {
         var result = new T();
-        if (!_data.TryGetValue(key, out var value)) return result;
+        if (!_data.TryGetValue(key, out var value)) return Option<T>.None;
 
         using var ms = new MemoryStream(value);
         using var br = new BinaryReader(ms, Encoding.UTF8);
 
         foreach (var map in _mapFromString())
         {
+            if (br.BaseStream.Position >= br.BaseStream.Length) break;
             var length = br.ReadInt32();
             var ba = br.ReadBytes(length);
             var v = Encoding.UTF8.GetString(ba);
@@ -88,7 +108,8 @@ public class Storage<T> : IStorage<T> where T : new()
 
         foreach (var map in _mapToString())
         {
-            var ba = Encoding.UTF8.GetBytes(map(item));
+            var m = map(item);
+            var ba = Encoding.UTF8.GetBytes(m);
             bw.Write(ba.Length);
             bw.Write(ba);
         }
@@ -104,5 +125,11 @@ public class Storage<T> : IStorage<T> where T : new()
         }
 
         Save();
+    }
+
+    public void Update(string key, T item)
+    {
+        Remove(key);
+        Add(key, item);
     }
 }

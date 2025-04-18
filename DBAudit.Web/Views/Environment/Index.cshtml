@@ -1,0 +1,39 @@
+@using Environment = DBAudit.Infrastructure.Data.Entities.Environment;
+
+@model System.Collections.Generic.List<Environment>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+<a href="/Environment/Create">Create</a>
+<table class="table table-bordered">
+    <tr>
+        <th>Name</th>
+    </tr>
+    @foreach (var environment in Model)
+    {
+        <tr>
+            <td>@environment.Name</td>
+            <td>
+                @if (!environment.IsActive)
+                {
+                    <form action="/Environment/Activate" method="post">
+                        <input type="hidden" name="id" value="@environment.Id"/>
+                        @Html.AntiForgeryToken()
+                        <input type="submit" value="Activate"/>
+                    </form>
+                }
+                else
+                {
+                    <form action="/Environment/Deactivate" method="post">
+                        <input type="hidden" name="id" value="@environment.Id"/>
+                        @Html.AntiForgeryToken()
+                        <input type="submit" value="Deactivate"/>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+
+</table>

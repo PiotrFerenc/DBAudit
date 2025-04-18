@@ -1,3 +1,4 @@
+using LanguageExt;
 using Environment = DBAudit.Infrastructure.Data.Entities.Environment;
 
 namespace DBAudit.Infrastructure.Repositories
@@ -27,23 +28,46 @@ namespace DBAudit.Infrastructure.Repositories
 
     public class EnvironmentStorage(IStorage<Environment> storage) : IEnvironmentStorage
     {
-        public Environment Get(string key) => storage.Get(key);
-
-
+        public Option<Environment> Get(string key) => storage.Get(key);
+        public void Remove(string key) => storage.Remove(key);
         public List<Environment> Get() => storage.Get();
-
         public void Add(string key, Environment item) => storage.Add(key, item);
+        public void Update(string key, Environment item) => storage.Update(key, item);
     }
 
 
     public class EnvironmentService(IEnvironmentStorage storage) : IEnvironmentService
     {
-        public List<Data.Entities.Environment> GetAll() => storage.Get();
+        public List<Environment> GetAll() => storage.Get();
+        public void Add(string id, Environment environment) => storage.Add(id, environment);
+
+        public void Activate(string id)
+        {
+            var env = storage.Get(id);
+            env.IfSome(e =>
+            {
+                e.IsActive = true;
+                storage.Update(id, e);
+            });
+        }
+
+        public void Deactivate(string id)
+        {
+            var env = storage.Get(id);
+            env.IfSome(e =>
+            {
+                e.IsActive = false;
+                storage.Update(id, e);
+            });
+        }
     }
 
 
     public interface IEnvironmentService
     {
-        List<Data.Entities.Environment> GetAll();
+        List<Environment> GetAll();
+        void Add(string id, Environment environment);
+        void Activate(string id);
+        void Deactivate(string id);
     }
 }
