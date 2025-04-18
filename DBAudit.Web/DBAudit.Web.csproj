@@ -39,4 +39,8 @@
       <ProjectReference Include="..\TaskFarm\DBAudit.Infrastructure.SqlServer\DBAudit.Infrastructure.SqlServer.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\Environment\Index.cshtml" />
+    </ItemGroup>
+
 </Project>
