@@ -115,13 +115,9 @@ public class Storage<T> : IStorage<T> where T : new()
         }
 
         var baa = ms.ToArray();
-        if (_data.ContainsKey(key))
+        if (!_data.TryAdd(key, baa))
         {
             _data[key] = baa;
-        }
-        else
-        {
-            _data.Add(key, baa);
         }
 
         Save();
