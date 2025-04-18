@@ -6,10 +6,24 @@
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
-<a href="/Environment/Create">Create</a>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Environments</h2>
+        </div>
+        <div class="col-md-12">
+            <a href="/Environment/Create">Create</a>
+        </div>
+    </div>
+    <div class="row">
+        
+    </div>
+</div>
+
 <table class="table table-bordered">
     <tr>
-        <th>Name</th>
+        <th>Nazwa</th>
+        <th></th>
     </tr>
     @foreach (var environment in Model)
     {
@@ -21,7 +35,7 @@
                     <form action="/Environment/Activate" method="post">
                         <input type="hidden" name="id" value="@environment.Id"/>
                         @Html.AntiForgeryToken()
-                        <input type="submit" value="Activate"/>
+                        <input type="submit" value="Activate" class="btn btn-success"/>
                     </form>
                 }
                 else
@@ -29,7 +43,7 @@
                     <form action="/Environment/Deactivate" method="post">
                         <input type="hidden" name="id" value="@environment.Id"/>
                         @Html.AntiForgeryToken()
-                        <input type="submit" value="Deactivate"/>
+                        <input type="submit" value="Deactivate" class="btn btn-danger"/>
                     </form>
                 }
             </td>

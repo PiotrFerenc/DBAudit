@@ -39,27 +39,29 @@ namespace DBAudit.Infrastructure.Repositories
     public class EnvironmentService(IEnvironmentStorage storage) : IEnvironmentService
     {
         public List<Environment> GetAll() => storage.Get();
+
         public void Add(string id, Environment environment) => storage.Add(id, environment);
 
         public void Activate(string id)
-        {
-            var env = storage.Get(id);
-            env.IfSome(e =>
+            => storage.Get(id).IfSome(e =>
             {
                 e.IsActive = true;
                 storage.Update(id, e);
             });
-        }
 
         public void Deactivate(string id)
-        {
-            var env = storage.Get(id);
-            env.IfSome(e =>
+            => storage.Get(id).IfSome(e =>
             {
                 e.IsActive = false;
                 storage.Update(id, e);
             });
-        }
+
+        public void ChangeName(string id, string name)
+            => storage.Get(id).IfSome(e =>
+            {
+                e.Name = name;
+                storage.Update(id, e);
+            });
     }
 
 
@@ -69,5 +71,6 @@ namespace DBAudit.Infrastructure.Repositories
         void Add(string id, Environment environment);
         void Activate(string id);
         void Deactivate(string id);
+        void ChangeName(string id, string name);
     }
 }
