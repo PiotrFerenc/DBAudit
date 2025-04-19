@@ -6,6 +6,7 @@ namespace DBAudit.Infrastructure.Repositories;
 public interface IStorage<T> where T : new()
 {
     Option<T> Find(string key);
+    Option<T> Find(Func<T, bool> filter);
     void RemoveByKey(string key);
     List<T> FetchAll();
     void SaveItem(string key, T item);
@@ -47,8 +48,7 @@ public class Storage<T> : IStorage<T> where T : new()
 
             var key = br.ReadString();
             var value = br.ReadBytes(br.ReadInt32());
-            _data.Add(key, value);
-            FindFromData(key).IfSome(item => _items.Add(key, item));
+            FindFromData(value).IfSome(item => _items.Add(key, item));
         }
     }
 
@@ -60,11 +60,11 @@ public class Storage<T> : IStorage<T> where T : new()
 
     public List<T> FetchAll() => _items.Values.ToList();
     public Option<T> Find(string key) => _items.TryGetValue(key, out var item) ? item : Option<T>.None;
+    public Option<T> Find(Func<T, bool> filter) => _items.Values.FirstOrDefault(filter);
 
-    private Option<T> FindFromData(string key)
+    private Option<T> FindFromData(byte[] value)
     {
         var result = new T();
-        if (!_data.TryGetValue(key, out var value)) return Option<T>.None;
 
         using var ms = new MemoryStream(value);
         using var br = new BinaryReader(ms, Encoding.UTF8);

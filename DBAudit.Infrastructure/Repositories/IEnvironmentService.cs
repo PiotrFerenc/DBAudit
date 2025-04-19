@@ -29,6 +29,7 @@ namespace DBAudit.Infrastructure.Repositories
     public class EnvironmentStorage(IStorage<Environment> storage) : IEnvironmentStorage
     {
         public Option<Environment> Find(string key) => storage.Find(key);
+        public Option<Environment> Find(Func<Environment, bool> filter) => storage.Find(filter);
         public void RemoveByKey(string key) => storage.RemoveByKey(key);
         public List<Environment> FetchAll() => storage.FetchAll();
         public void SaveItem(string key, Environment item) => storage.SaveItem(key, item);
