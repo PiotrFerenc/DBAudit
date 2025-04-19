@@ -32,7 +32,8 @@ public class Storage<T> : IStorage<T> where T : new()
         ReadFromFile();
     }
 
-    private readonly Dictionary<string, byte[]> _data = new Dictionary<string, byte[]>();
+    private readonly Dictionary<string, byte[]> _data = new();
+    private readonly Dictionary<string, T> _items = new();
 
     private void ReadFromFile()
     {
@@ -47,41 +48,20 @@ public class Storage<T> : IStorage<T> where T : new()
             var key = br.ReadString();
             var value = br.ReadBytes(br.ReadInt32());
             _data.Add(key, value);
+            FindFromData(key).IfSome(item => _items.Add(key, item));
         }
     }
 
     public void RemoveByKey(string key)
     {
-        _data.Remove(key);
+        _items.Remove(key);
         FlushData();
     }
 
-    public List<T> FetchAll()
-    {
-        var items = new List<T>();
-        foreach (var item in _data)
-        {
-            Find(item.Key).IfSome(i => items.Add(i));
-        }
+    public List<T> FetchAll() => _items.Values.ToList();
+    public Option<T> Find(string key) => _items.TryGetValue(key, out var item) ? item : Option<T>.None;
 
-        return items;
-    }
-
-    private void FlushData()
-    {
-        using var fs = new FileStream(_path, FileMode.Create);
-        using var bw = new BinaryWriter(fs, Encoding.UTF8);
-
-        bw.Write(_data.Count);
-        foreach (var item in _data)
-        {
-            bw.Write(item.Key);
-            bw.Write(item.Value.Length);
-            bw.Write(item.Value);
-        }
-    }
-
-    public Option<T> Find(string key)
+    private Option<T> FindFromData(string key)
     {
         var result = new T();
         if (!_data.TryGetValue(key, out var value)) return Option<T>.None;
@@ -103,6 +83,12 @@ public class Storage<T> : IStorage<T> where T : new()
 
     public void SaveItem(string key, T item)
     {
+        _items.Add(key, item);
+        FlushData();
+    }
+
+    private void AddItemToData(string key, T item)
+    {
         using var ms = new MemoryStream();
         using var bw = new BinaryWriter(ms, Encoding.UTF8);
 
@@ -119,8 +105,28 @@ public class Storage<T> : IStorage<T> where T : new()
         {
             _data[key] = baa;
         }
+    }
 
-        FlushData();
+    private void FlushData()
+    {
+        using var fs = new FileStream(_path, FileMode.Create);
+        using var bw = new BinaryWriter(fs, Encoding.UTF8);
+        foreach (var item in _items)
+        {
+            AddItemToData(item.Key, item.Value);
+        }
+
+        bw.Write(_data.Count);
+        foreach (var item in _data)
+        {
+            bw.Write(item.Key);
+            bw.Write(item.Value.Length);
+            bw.Write(item.Value);
+        }
+
+        bw.Flush();
+        fs.Flush();
+        _data.Clear();
     }
 
     public void UpdateItem(string key, T item)
