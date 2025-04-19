@@ -36,19 +36,19 @@ public class DatabaseService : IDatabaseService
         _storage.UpdateItem(id, d);
     });
 
-    public void Deactivate(Guid id)
-    {
-     
-    }
-
-    public void ChangeName(string id, string name) =>
-        _storage.Find(id).IfSome(d =>
-        {
-            d.Name = name;
-            _storage.UpdateItem(id, d);
-        });
-
+    public void Deactivate(Guid id) => _storage.UpdateMany(d => d.IsActive = false, d => d.EnvironmentId == id);
+    public void ChangeName(string id, string name) => _storage.UpdateItem(d => d.Name = name, d => d.Id == Guid.Parse(id));
     public List<Database> GetAll() => _storage.FetchAll();
 
+    /// Retrieves a database entity using the specified identifier.
+    /// <param name="id">
+    /// The unique identifier of the database entity to retrieve.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Database"/> object representing the retrieved entity.
+    /// </returns>
+    /// <exception cref="Exception">
+    /// Thrown if the database entity with the specified identifier is not found.
+    /// </exception>
     public Database GetById(string id) => _storage.Find(id).IfNone(() => throw new Exception("Database not found"));
 }

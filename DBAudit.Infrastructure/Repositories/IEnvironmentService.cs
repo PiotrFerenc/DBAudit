@@ -1,3 +1,4 @@
+
 using LanguageExt;
 using Environment = DBAudit.Infrastructure.Data.Entities.Environment;
 
@@ -34,6 +35,15 @@ namespace DBAudit.Infrastructure.Repositories
         public List<Environment> FetchAll() => storage.FetchAll();
         public void SaveItem(string key, Environment item) => storage.SaveItem(key, item);
         public void UpdateItem(string key, Environment item) => storage.UpdateItem(key, item);
+        public void UpdateMany(Action<Environment> item, Func<Environment, bool> filter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateItem(Action<Environment> item, Func<Environment, bool> filter)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

@@ -11,6 +11,8 @@ public interface IStorage<T> where T : new()
     List<T> FetchAll();
     void SaveItem(string key, T item);
     void UpdateItem(string key, T item);
+    void UpdateMany(Action<T> item, Func<T, bool> filter);
+    void UpdateItem(Action<T> item, Func<T, bool> filter);
 }
 
 public class Storage<T> : IStorage<T> where T : new()
@@ -133,5 +135,24 @@ public class Storage<T> : IStorage<T> where T : new()
     {
         RemoveByKey(key);
         SaveItem(key, item);
+    }
+
+    public void UpdateMany(Action<T> item, Func<T, bool> filter)
+    {
+        var items = FetchAll().Where(filter).ToList();
+        foreach (var i in items)
+        {
+            item(i);
+        }
+
+        if (items.Count != 0) FlushData();
+    }
+
+    public void UpdateItem(Action<T> item, Func<T, bool> filter)
+    {
+        var i = FetchAll().FirstOrDefault(filter);
+        if (i is null) return;
+        item(i);
+        FlushData();
     }
 }
