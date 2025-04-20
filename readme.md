@@ -1,5 +1,6 @@
 # DBAudit
 
+
 **DBSonar** is an open-source tool that analyzes the quality, performance, and security of relational databases – similar in concept to [SonarQube](https://www.sonarqube.org/) but focused entirely on databases.
 
 The tool helps developers, DBAs, and data architects identify potential issues in their database schema, stored procedures, indexing strategy, and access control. It supports continuous improvement by providing clear metrics, quality gates, and recommendations.
