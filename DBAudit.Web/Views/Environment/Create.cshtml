@@ -7,7 +7,7 @@
 
 <form action="/Environment/Create" method="post">
     @Html.AntiForgeryToken()
-    <input type="text" name="name" required="required" class="form-control"/>
-    <input type="text" name="cs" required="required" class="form-control"/>
+    <input type="text" name="name" required="required" class="form-control" value="local"/>
+    <input type="text" name="cs" required="required" class="form-control" value="Server=localhost,1433;User ID=dbaudit;Password=ilaW!yu345kfh7734;Encrypt=True;TrustServerCertificate=True;"/>
     <input type="submit" value="submit" class="btn btn-primary"/>
 </form>

@@ -13,17 +13,16 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <table class="table">
+            <table class="table table-bordered table-striped ">
                 <tr>
                     <th>Name</th>
+                    <th>Active</th>
                 </tr>
                 @foreach (var database in Model)
                 {
                     <tr>
-                        <td>@(database.IsActive ? "&#9989;": "&#10060;")</td>
-                    </tr>
-                    <tr>
                         <td>@database.Name</td>
+                        <td>@(database.IsActive ? "✅" : "❌")</td>
                     </tr>
                 }
             </table>
