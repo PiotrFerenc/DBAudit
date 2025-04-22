@@ -1,4 +1,5 @@
 using DBAudit.Infrastructure.Data.Entities;
+using LanguageExt;
 
 namespace DBAudit.Infrastructure.Repositories;
 
@@ -10,7 +11,7 @@ public interface IDatabaseService
     void Deactivate(Guid id);
     void ChangeName(string id, string name);
     List<Database> GetAll(Guid envId);
-    Database GetById(string id);
+    Option<Database> GetById(string id);
 }
 
 public class DatabaseService(IStorage<Database> storage) : IDatabaseService
@@ -34,7 +35,7 @@ public class DatabaseService(IStorage<Database> storage) : IDatabaseService
     public List<Database> GetAll(Guid envId) => storage.Where(x => x.EnvironmentId == envId);
 
     public List<Database> GetAll() => storage.FetchAll();
-    public Database GetById(string id) => storage.Find(id).IfNone(() => throw new Exception("Database not found"));
+    public Option<Database> GetById(string id) => storage.Find(id);
 }
 
 public static class DatabaseMapper

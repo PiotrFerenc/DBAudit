@@ -5,5 +5,6 @@ namespace DBAudit.Infrastructure;
 public interface IDatabaseProvider
 {
     Task<List<Database>> GetDatabases(Guid envId);
+    Task<List<Table>> GetTables(Guid envId, Guid dbId);
     Task<bool> CheckConnection(Guid envId);
 }

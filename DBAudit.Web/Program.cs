@@ -20,9 +20,18 @@ builder.Services.AddSingleton<IStorage<Database>>(new Storage<Database>("databas
 builder.Services.AddTransient<IDatabaseProvider, SqlServerProvider>();
 
 
-builder.Services.AddHostedService<EnvironmentProcessor>();
 builder.Services.AddSingleton<IQueueProvider, ChannelQueueProvider>();
+
+builder.Services.AddHostedService<EnvironmentProcessor>();
+builder.Services.AddHostedService<DatabaseProcessor>();
 builder.Services.AddSingleton<Channel<EnvironmentMessage>>(_ => Channel.CreateUnbounded<EnvironmentMessage>(new UnboundedChannelOptions
+{
+    AllowSynchronousContinuations = false,
+    SingleReader = true,
+    SingleWriter = true
+}));
+
+builder.Services.AddSingleton<Channel<DatabaseMessage>>(_ => Channel.CreateUnbounded<DatabaseMessage>(new UnboundedChannelOptions
 {
     AllowSynchronousContinuations = false,
     SingleReader = true,
@@ -56,16 +65,21 @@ app.MapControllerRoute(
 app.Run();
 
 
-internal class ChannelQueueProvider(Channel<EnvironmentMessage> channel) : IQueueProvider
+internal class ChannelQueueProvider(Channel<EnvironmentMessage> envChannel, Channel<DatabaseMessage> databaseChannel) : IQueueProvider
 {
     public void Enqueue(EnvironmentMessage message)
     {
-        channel.Writer.TryWrite(message);
+        envChannel.Writer.TryWrite(message);
+    }
+
+    public void Enqueue(DatabaseMessage message)
+    {
+        databaseChannel.Writer.TryWrite(message);
     }
 }
 
 
-public class EnvironmentProcessor(Channel<EnvironmentMessage> channel, IDatabaseProvider databaseProvider, IDatabaseService databaseService) : BackgroundService
+public class EnvironmentProcessor(Channel<EnvironmentMessage> channel, IDatabaseProvider databaseProvider, IDatabaseService databaseService, IQueueProvider queueProvider) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -78,7 +92,20 @@ public class EnvironmentProcessor(Channel<EnvironmentMessage> channel, IDatabase
             {
                 database.EnvironmentId = message.Id;
                 databaseService.Add(database);
+
+                queueProvider.Enqueue(new DatabaseMessage(message.Id, database.Id));
             }
+        }
+    }
+}
+
+public class DatabaseProcessor(Channel<DatabaseMessage> channel, IDatabaseProvider databaseProvider, IDatabaseService databaseService) : BackgroundService
+{
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        while (await channel.Reader.WaitToReadAsync(stoppingToken))
+        {
+            var message = await channel.Reader.ReadAsync(stoppingToken);
         }
     }
 }

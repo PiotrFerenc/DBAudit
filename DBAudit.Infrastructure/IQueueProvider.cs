@@ -3,6 +3,9 @@ namespace DBAudit.Infrastructure;
 public interface IQueueProvider
 {
     void Enqueue(EnvironmentMessage message);
+    void Enqueue(DatabaseMessage message);
 }
 
 public record EnvironmentMessage(Guid Id);
+
+public record DatabaseMessage(Guid EnvId, Guid DbId);
