@@ -9,46 +9,47 @@ public interface IDatabaseService
     void Deactivate(string id);
     void Deactivate(Guid id);
     void ChangeName(string id, string name);
-    List<Database> GetAll();
+    List<Database> GetAll(Guid envId);
     Database GetById(string id);
 }
 
-public class DatabaseService : IDatabaseService
+public class DatabaseService(IStorage<Database> storage) : IDatabaseService
 {
-    private readonly IStorage<Database> _storage;
+    public void Add(Database database) => storage.SaveItem(database.Id.ToString(), database);
 
-    public DatabaseService(IStorage<Database> storage)
-    {
-        _storage = storage;
-    }
-
-    public void Add(Database database) => _storage.SaveItem(database.Id.ToString(), database);
-
-    public void Activate(string id) => _storage.Find(id).IfSome(d =>
+    public void Activate(string id) => storage.Find(id).IfSome(d =>
     {
         d.IsActive = true;
-        _storage.UpdateItem(id, d);
+        storage.UpdateItem(id, d);
     });
 
-    public void Deactivate(string id) => _storage.Find(id).IfSome(d =>
+    public void Deactivate(string id) => storage.Find(id).IfSome(d =>
     {
         d.IsActive = false;
-        _storage.UpdateItem(id, d);
+        storage.UpdateItem(id, d);
     });
 
-    public void Deactivate(Guid id) => _storage.UpdateMany(d => d.IsActive = false, d => d.EnvironmentId == id);
-    public void ChangeName(string id, string name) => _storage.UpdateItem(d => d.Name = name, d => d.Id == Guid.Parse(id));
-    public List<Database> GetAll() => _storage.FetchAll();
+    public void Deactivate(Guid id) => storage.UpdateMany(d => d.IsActive = false, d => d.EnvironmentId == id);
+    public void ChangeName(string id, string name) => storage.UpdateItem(d => d.Name = name, d => d.Id == Guid.Parse(id));
+    public List<Database> GetAll(Guid envId) => storage.Where(x => x.EnvironmentId == envId);
 
-    /// Retrieves a database entity using the specified identifier.
-    /// <param name="id">
-    /// The unique identifier of the database entity to retrieve.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Database"/> object representing the retrieved entity.
-    /// </returns>
-    /// <exception cref="Exception">
-    /// Thrown if the database entity with the specified identifier is not found.
-    /// </exception>
-    public Database GetById(string id) => _storage.Find(id).IfNone(() => throw new Exception("Database not found"));
+    public List<Database> GetAll() => storage.FetchAll();
+    public Database GetById(string id) => storage.Find(id).IfNone(() => throw new Exception("Database not found"));
+}
+
+public static class DatabaseMapper
+{
+    public static Func<Database, string>[] MapToString() =>
+    [
+        p => p.Id.ToString(),
+        p => p.Name,
+        p => p.IsActive ? "1" : "0",
+    ];
+
+    public static Action<Database, string>[] MapFromString() =>
+    [
+        (p, b) => p.Id = Guid.Parse(b),
+        (p, b) => p.Name = b,
+        (p, b) => p.IsActive = b == "1",
+    ];
 }
