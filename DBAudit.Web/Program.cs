@@ -1,5 +1,6 @@
 using DBAudit.Infrastructure;
 using DBAudit.Infrastructure.Data;
+using DBAudit.Infrastructure.Data.Entities;
 using DBAudit.Infrastructure.Extensions;
 using DBAudit.Infrastructure.Repositories;
 using DBAudit.Infrastructure.SqlServer.Extensions;
@@ -17,8 +18,9 @@ builder.Services.AddSqlServerProvider<ApplicationDbContext>(connectionString);
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddSingleton<IEncryptionService>(new EncryptionService(key, iv));
 builder.Services.AddTransient<IEnvironmentService, EnvironmentService>();
-builder.Services.AddSingleton<IEnvironmentStorage, EnvironmentStorage>();
+builder.Services.AddTransient<IDatabaseService, DatabaseService>();
 builder.Services.AddSingleton<IStorage<Environment>>(new Storage<Environment>("environments.bin", EnvironmentMapper.MapFromString, EnvironmentMapper.MapToString));
+builder.Services.AddSingleton<IStorage<Database>>(new Storage<Database>("databases.bin", DatabaseMapper.MapFromString, DatabaseMapper.MapToString));
 
 
 builder.Services.AddControllersWithViews();
