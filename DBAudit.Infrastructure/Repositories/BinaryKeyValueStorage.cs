@@ -7,6 +7,7 @@ public interface IStorage<T> where T : new()
 {
     Option<T> Find(string key);
     Option<T> Find(Func<T, bool> filter);
+    List<T> Where(Func<T, bool> filter);
     void RemoveByKey(string key);
     List<T> FetchAll();
     void SaveItem(string key, T item);
@@ -53,6 +54,8 @@ public class Storage<T> : IStorage<T> where T : new()
             FindFromData(value).IfSome(item => _items.Add(key, item));
         }
     }
+
+    public List<T> Where(Func<T, bool> filter) => FetchAll().Where(filter).ToList();
 
     public void RemoveByKey(string key)
     {
