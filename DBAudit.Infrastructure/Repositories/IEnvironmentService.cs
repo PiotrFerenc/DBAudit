@@ -54,6 +54,15 @@ namespace DBAudit.Infrastructure.Repositories
                 e.Name = name;
                 storage.UpdateItem(id, e);
             });
+
+        public Option<Environment> GetById(Guid id) => storage.Find(x => x.Id == id);
+
+        public Option<string> GetConnectionString(Guid id)
+            => GetById(id)
+                .Match(
+                    e => encryptionService.Decrypt(e.ConnectionString),
+                    () => Option<string>.None
+                );
     }
 
 
@@ -64,5 +73,7 @@ namespace DBAudit.Infrastructure.Repositories
         void Activate(string id);
         void Deactivate(string id);
         void ChangeName(string id, string name);
+        Option<Environment> GetById(Guid id);
+        Option<string> GetConnectionString(Guid id);
     }
 }
