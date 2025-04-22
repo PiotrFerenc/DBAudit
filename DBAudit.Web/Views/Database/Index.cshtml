@@ -1,0 +1,33 @@
+@model System.Collections.Generic.List<DBAudit.Infrastructure.Data.Entities.Database>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1>Databases</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table class="table">
+                <tr>
+                    <th>Name</th>
+                </tr>
+                @foreach (var database in Model)
+                {
+                    <tr>
+                        <td>@(database.IsActive ? "&#9989;": "&#10060;")</td>
+                    </tr>
+                    <tr>
+                        <td>@database.Name</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+
+</div>
