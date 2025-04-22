@@ -14,8 +14,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddSingleton<IEncryptionService>(new EncryptionService(key, iv));
 builder.Services.AddTransient<IEnvironmentService, EnvironmentService>();
 builder.Services.AddTransient<IDatabaseService, DatabaseService>();
+builder.Services.AddTransient<ITableService, TableService>();
 builder.Services.AddSingleton<IStorage<Environment>>(new Storage<Environment>("environments.bin", EnvironmentMapper.MapFromString, EnvironmentMapper.MapToString));
 builder.Services.AddSingleton<IStorage<Database>>(new Storage<Database>("databases.bin", DatabaseMapper.MapFromString, DatabaseMapper.MapToString));
+builder.Services.AddSingleton<IStorage<Table>>(new Storage<Table>("tables.bin", TableMapper.MapFromString, TableMapper.MapToString));
 
 builder.Services.AddTransient<IDatabaseProvider, SqlServerProvider>();
 
@@ -99,13 +101,21 @@ public class EnvironmentProcessor(Channel<EnvironmentMessage> channel, IDatabase
     }
 }
 
-public class DatabaseProcessor(Channel<DatabaseMessage> channel, IDatabaseProvider databaseProvider, IDatabaseService databaseService) : BackgroundService
+public class DatabaseProcessor(Channel<DatabaseMessage> channel, IDatabaseProvider databaseProvider, ITableService tableService) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (await channel.Reader.WaitToReadAsync(stoppingToken))
         {
             var message = await channel.Reader.ReadAsync(stoppingToken);
+            var tables = await databaseProvider.GetTables(message.EnvId, message.DbId);
+
+            foreach (var table in tables)
+            {
+                table.DatabaseId = message.DbId;
+                table.EnvironmentId = message.EnvId;
+                tableService.Add(table);
+            }
         }
     }
 }

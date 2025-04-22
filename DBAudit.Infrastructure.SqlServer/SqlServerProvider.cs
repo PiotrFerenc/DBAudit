@@ -62,7 +62,7 @@ public class SqlServerProvider : IDatabaseProvider
 
             await using var connection = new SqlConnection(cs);
             connection.Open();
-            var command = new SqlCommand("SELECT table_name FROM information_schema.tables\nWHERE table_type = 'BASE TABLE';", connection);
+            var command = new SqlCommand("SELECT table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE';", connection);
 
             await using var reader = await command.ExecuteReaderAsync();
             while (reader.Read())

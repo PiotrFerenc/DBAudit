@@ -3,6 +3,39 @@ using LanguageExt;
 
 namespace DBAudit.Infrastructure.Repositories;
 
+public interface ITableService
+{
+    void Add(Table table);
+    List<Table> GetAll();
+    List<Table> GetAll(Guid databaseId);
+}
+
+public class TableService(IStorage<Table> storage) : ITableService
+{
+    public void Add(Table table) => storage.SaveItem(table.Id.ToString(), table);
+    public List<Table> GetAll() => storage.FetchAll();
+    public List<Table> GetAll(Guid databaseId) => storage.Where(x => x.DatabaseId == databaseId);
+}
+
+public static class TableMapper
+{
+    public static Func<Table, string>[] MapToString() =>
+    [
+        p => p.Id.ToString(),
+        p => p.Name,
+        p => p.IsActive ? "1" : "0",
+        p => p.DatabaseId.ToString(),
+    ];
+
+    public static Action<Table, string>[] MapFromString() =>
+    [
+        (p, b) => p.Id = Guid.Parse(b),
+        (p, b) => p.Name = b,
+        (p, b) => p.IsActive = b == "1",
+        (p, b) => p.DatabaseId = Guid.Parse(b),
+    ];
+}
+
 public interface IDatabaseService
 {
     void Add(Database database);
@@ -45,6 +78,7 @@ public static class DatabaseMapper
         p => p.Id.ToString(),
         p => p.Name,
         p => p.IsActive ? "1" : "0",
+        p => p.EnvironmentId.ToString(),
     ];
 
     public static Action<Database, string>[] MapFromString() =>
@@ -52,5 +86,6 @@ public static class DatabaseMapper
         (p, b) => p.Id = Guid.Parse(b),
         (p, b) => p.Name = b,
         (p, b) => p.IsActive = b == "1",
+        (p, b) => p.EnvironmentId = Guid.Parse(b),
     ];
 }

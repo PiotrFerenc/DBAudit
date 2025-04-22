@@ -1,10 +1,9 @@
-@model System.Collections.Generic.List<DBAudit.Infrastructure.Data.Entities.Database>
+@model System.Collections.Generic.List<DBAudit.Infrastructure.Data.Entities.Table>
 
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
-
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -16,14 +15,12 @@
             <table class="table table-bordered table-striped ">
                 <tr>
                     <th>Name</th>
-                    <th>Tables</th>
                     <th>Active</th>
                 </tr>
                 @foreach (var database in Model)
                 {
                     <tr>
                         <td>@database.Name</td>
-                        <td><a href="/tables/@database.Id">Tables</a></td>
                         <td>@(database.IsActive ? "✅" : "❌")</td>
                     </tr>
                 }
