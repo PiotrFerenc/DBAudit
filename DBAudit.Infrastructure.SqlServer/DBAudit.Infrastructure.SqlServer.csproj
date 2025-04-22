@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\DBAudit.Infrastructure\DBAudit.Infrastructure.csproj" />
       <ProjectReference Include="..\DBAudit.Infrastructure\DBAudit.Infrastructure.csproj" />
     </ItemGroup>
 
