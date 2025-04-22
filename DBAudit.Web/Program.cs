@@ -1,21 +1,18 @@
 using DBAudit.Infrastructure;
-using DBAudit.Infrastructure.Data;
 using DBAudit.Infrastructure.Data.Entities;
 using DBAudit.Infrastructure.Extensions;
 using DBAudit.Infrastructure.Repositories;
-using DBAudit.Infrastructure.SqlServer.Extensions;
-using Microsoft.AspNetCore.Identity;
 using Environment = DBAudit.Infrastructure.Data.Entities.Environment;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+// var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 var key = builder.Configuration.GetSection("Encryption:Key").Value ?? throw new InvalidOperationException("Encryption:Key not found.");
 var iv = builder.Configuration.GetSection("Encryption:IV").Value ?? throw new InvalidOperationException("Encryption:IV not found.");
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-builder.Services.AddSqlServerProvider<ApplicationDbContext>(connectionString);
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ApplicationDbContext>();
+// builder.Services.AddSqlServerProvider<ApplicationDbContext>(connectionString);
+// builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddSingleton<IEncryptionService>(new EncryptionService(key, iv));
 builder.Services.AddTransient<IEnvironmentService, EnvironmentService>();
 builder.Services.AddTransient<IDatabaseService, DatabaseService>();

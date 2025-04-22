@@ -8,12 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\DBAudit.Infrastructure\DBAudit.Infrastructure.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
-        <HintPath>..\..\..\..\.nuget\packages\microsoft.extensions.dependencyinjection.abstractions\9.0.4\lib\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-      </Reference>
+      <ProjectReference Include="..\DBAudit.Infrastructure\DBAudit.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
