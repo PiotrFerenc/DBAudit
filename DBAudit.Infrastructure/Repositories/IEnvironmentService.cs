@@ -1,11 +1,8 @@
-
 using LanguageExt;
 using Environment = DBAudit.Infrastructure.Data.Entities.Environment;
 
 namespace DBAudit.Infrastructure.Repositories
 {
-
-
     public static class EnvironmentMapper
     {
         public static Func<Environment, string>[] MapToString() =>
@@ -25,7 +22,7 @@ namespace DBAudit.Infrastructure.Repositories
         ];
     }
 
-    public class EnvironmentService(IStorage<Environment> storage, IEncryptionService encryptionService) : IEnvironmentService
+    public class EnvironmentService(IStorage<Environment> storage, IEncryptionService encryptionService, IQueueProvider queue) : IEnvironmentService
     {
         public List<Environment> GetAll() => storage.FetchAll();
 
@@ -33,6 +30,8 @@ namespace DBAudit.Infrastructure.Repositories
         {
             environment.ConnectionString = encryptionService.Encrypt(environment.ConnectionString);
             storage.SaveItem(id, environment);
+
+            queue.Enqueue(new EnvironmentMessage(Guid.Parse(id)));
         }
 
         public void Activate(string id)
