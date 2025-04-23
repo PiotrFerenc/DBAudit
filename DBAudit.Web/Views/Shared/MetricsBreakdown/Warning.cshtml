@@ -1,0 +1,21 @@
+@model (string Title, Dictionary<string, (string Text, string Metrics)> Metrics )
+
+<div class="col-md-4">
+    <div class="card">
+        <div class="card-header bg-warning text-white">
+            <h5 class="mb-0">@Model.Title</h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                @foreach (var metric in Model.Metrics)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        @metric.Key
+                        <span class="badge bg-@metric.Value.Metrics">@metric.Value.Text</span>
+                    </li>
+                }
+
+            </ul>
+        </div>
+    </div>
+</div>
