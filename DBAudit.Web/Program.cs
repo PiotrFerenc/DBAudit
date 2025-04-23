@@ -92,8 +92,11 @@ public class EnvironmentProcessor(Channel<EnvironmentMessage> channel, IDatabase
 
             foreach (var database in items)
             {
-                database.EnvironmentId = message.Id;
-                databaseService.Add(database);
+                if (!databaseService.Exist(message.Id, database.Name))
+                {
+                    database.EnvironmentId = message.Id;
+                    databaseService.Add(database);
+                }
 
                 queueProvider.Enqueue(new DatabaseMessage(message.Id, database.Id));
             }
@@ -112,6 +115,7 @@ public class DatabaseProcessor(Channel<DatabaseMessage> channel, IDatabaseProvid
 
             foreach (var table in tables)
             {
+                if (tableService.Exist(message.DbId, message.EnvId)) continue;
                 table.DatabaseId = message.DbId;
                 table.EnvironmentId = message.EnvId;
                 tableService.Add(table);
