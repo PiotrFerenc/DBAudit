@@ -8,6 +8,7 @@ public interface ITableService
     void Add(Table table);
     List<Table> GetAll();
     List<Table> GetAll(Guid databaseId);
+    bool Exist(Guid messageDbId, Guid messageEnvId);
 }
 
 public class TableService(IStorage<Table> storage) : ITableService
@@ -15,6 +16,7 @@ public class TableService(IStorage<Table> storage) : ITableService
     public void Add(Table table) => storage.SaveItem(table.Id.ToString(), table);
     public List<Table> GetAll() => storage.FetchAll();
     public List<Table> GetAll(Guid databaseId) => storage.Where(x => x.DatabaseId == databaseId);
+    public bool Exist(Guid dbId, Guid envId) => storage.Find(x => x.DatabaseId == dbId && x.EnvironmentId == envId).IsSome;
 }
 
 public static class TableMapper
@@ -45,6 +47,8 @@ public interface IDatabaseService
     void ChangeName(string id, string name);
     List<Database> GetAll(Guid envId);
     Option<Database> GetById(string id);
+    bool Exist(Guid databaseId);
+    bool Exist(Guid envId, string databaseName);
 }
 
 public class DatabaseService(IStorage<Database> storage) : IDatabaseService
@@ -69,6 +73,8 @@ public class DatabaseService(IStorage<Database> storage) : IDatabaseService
 
     public List<Database> GetAll() => storage.FetchAll();
     public Option<Database> GetById(string id) => storage.Find(id);
+    public bool Exist(Guid databaseId) => storage.Find(x => x.Id == databaseId).IsSome;
+    public bool Exist(Guid envId, string databaseName) => storage.Find(x => x.EnvironmentId == envId && x.Name == databaseName).IsSome;
 }
 
 public static class DatabaseMapper

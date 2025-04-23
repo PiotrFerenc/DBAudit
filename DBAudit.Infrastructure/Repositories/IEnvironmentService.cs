@@ -25,6 +25,7 @@ namespace DBAudit.Infrastructure.Repositories
     public class EnvironmentService(IStorage<Environment> storage, IEncryptionService encryptionService, IQueueProvider queue) : IEnvironmentService
     {
         public List<Environment> GetAll() => storage.FetchAll();
+        public List<Environment> GetActive() => storage.Where(x => x.IsActive);
 
         public void Add(string id, Environment environment)
         {
@@ -69,6 +70,7 @@ namespace DBAudit.Infrastructure.Repositories
     public interface IEnvironmentService
     {
         List<Environment> GetAll();
+        List<Environment> GetActive();
         void Add(string id, Environment environment);
         void Activate(string id);
         void Deactivate(string id);
