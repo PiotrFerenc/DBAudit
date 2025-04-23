@@ -7,8 +7,13 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-12">
+        <div class="col-6">
             <h1>Databases</h1>
+        </div>
+        <div class="col-6">
+            <form action="/databases/@ViewBag.EnvironmentId/refresh" method="post">
+                <button type="submit" class="btn btn-primary float-end">Refresh</button>
+            </form>
         </div>
     </div>
     <div class="row">
