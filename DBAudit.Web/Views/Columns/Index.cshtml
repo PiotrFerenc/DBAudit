@@ -1,13 +1,15 @@
-@model System.Collections.Generic.List<DBAudit.Infrastructure.Data.Entities.Table>
+@model System.Collections.Generic.List<DBAudit.Infrastructure.Data.Entities.Column>
 
 @{
     ViewBag.Title = "title";
     Layout = "_Layout";
 }
+
+
 <div class="container">
     <div class="row">
-        <div class="col-12">
-            <h1>Tables</h1>
+        <div class="col-6">
+            <h1>Columns</h1>
         </div>
     </div>
     <div class="row">
@@ -15,15 +17,15 @@
             <table class="table table-bordered table-striped ">
                 <tr>
                     <th>Name</th>
+                    <th>Type</th>
                     <th>Active</th>
-                    <th></th>
                 </tr>
-                @foreach (var table in Model)
+                @foreach (var column in Model)
                 {
                     <tr>
-                        <td>@table.Name</td>
-                        <td>@(table.IsActive ? "✅" : "❌")</td>
-                        <td><a href="/columns/@table.Id">Columns</a></td>
+                        <td>@column.Name</td>
+                        <td>@column.Type</td>
+                        <td>@(column.IsActive ? "✅" : "❌")</td>
                     </tr>
                 }
             </table>

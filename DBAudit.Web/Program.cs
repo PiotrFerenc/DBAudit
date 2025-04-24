@@ -15,17 +15,20 @@ builder.Services.AddSingleton<IEncryptionService>(new EncryptionService(key, iv)
 builder.Services.AddTransient<IEnvironmentService, EnvironmentService>();
 builder.Services.AddTransient<IDatabaseService, DatabaseService>();
 builder.Services.AddTransient<ITableService, TableService>();
+builder.Services.AddTransient<IColumnService, ColumnService>();
 builder.Services.AddSingleton<IStorage<Environment>>(new Storage<Environment>("environments.bin", EnvironmentMapper.MapFromString, EnvironmentMapper.MapToString));
 builder.Services.AddSingleton<IStorage<Database>>(new Storage<Database>("databases.bin", DatabaseMapper.MapFromString, DatabaseMapper.MapToString));
 builder.Services.AddSingleton<IStorage<Table>>(new Storage<Table>("tables.bin", TableMapper.MapFromString, TableMapper.MapToString));
+builder.Services.AddSingleton<IStorage<Column>>(new Storage<Column>("column.bin", ColumnMapper.MapFromString, ColumnMapper.MapToString));
 
 builder.Services.AddTransient<IDatabaseProvider, SqlServerProvider>();
 
 
 builder.Services.AddSingleton<IQueueProvider, ChannelQueueProvider>();
 
-builder.Services.AddHostedService<EnvironmentProcessor>();
 builder.Services.AddHostedService<DatabaseProcessor>();
+builder.Services.AddHostedService<TablesProcessor>();
+builder.Services.AddHostedService<ColumnProcessor>();
 builder.Services.AddSingleton<Channel<EnvironmentMessage>>(_ => Channel.CreateUnbounded<EnvironmentMessage>(new UnboundedChannelOptions
 {
     AllowSynchronousContinuations = false,
@@ -34,6 +37,13 @@ builder.Services.AddSingleton<Channel<EnvironmentMessage>>(_ => Channel.CreateUn
 }));
 
 builder.Services.AddSingleton<Channel<DatabaseMessage>>(_ => Channel.CreateUnbounded<DatabaseMessage>(new UnboundedChannelOptions
+{
+    AllowSynchronousContinuations = false,
+    SingleReader = true,
+    SingleWriter = true
+}));
+
+builder.Services.AddSingleton<Channel<ColumnsMessage>>(_ => Channel.CreateUnbounded<ColumnsMessage>(new UnboundedChannelOptions
 {
     AllowSynchronousContinuations = false,
     SingleReader = true,
@@ -67,7 +77,7 @@ app.MapControllerRoute(
 app.Run();
 
 
-internal class ChannelQueueProvider(Channel<EnvironmentMessage> envChannel, Channel<DatabaseMessage> databaseChannel) : IQueueProvider
+internal class ChannelQueueProvider(Channel<EnvironmentMessage> envChannel, Channel<DatabaseMessage> databaseChannel, Channel<ColumnsMessage> columnChannel) : IQueueProvider
 {
     public void Enqueue(EnvironmentMessage message)
     {
@@ -78,10 +88,15 @@ internal class ChannelQueueProvider(Channel<EnvironmentMessage> envChannel, Chan
     {
         databaseChannel.Writer.TryWrite(message);
     }
+
+    public void Enqueue(ColumnsMessage message)
+    {
+        columnChannel.Writer.TryWrite(message);
+    }
 }
 
 
-public class EnvironmentProcessor(Channel<EnvironmentMessage> channel, IDatabaseProvider databaseProvider, IDatabaseService databaseService, IQueueProvider queueProvider) : BackgroundService
+public class DatabaseProcessor(Channel<EnvironmentMessage> channel, IDatabaseProvider databaseProvider, IDatabaseService databaseService, IQueueProvider queueProvider) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -104,7 +119,7 @@ public class EnvironmentProcessor(Channel<EnvironmentMessage> channel, IDatabase
     }
 }
 
-public class DatabaseProcessor(Channel<DatabaseMessage> channel, IDatabaseProvider databaseProvider, ITableService tableService) : BackgroundService
+public class TablesProcessor(Channel<DatabaseMessage> channel, IDatabaseProvider databaseProvider, ITableService tableService, IQueueProvider queueProvider) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -119,6 +134,24 @@ public class DatabaseProcessor(Channel<DatabaseMessage> channel, IDatabaseProvid
                 table.DatabaseId = message.DbId;
                 table.EnvironmentId = message.EnvId;
                 tableService.Add(table);
+                queueProvider.Enqueue(new ColumnsMessage(message.EnvId, message.DbId, table.Name));
+            }
+        }
+    }
+}
+
+public class ColumnProcessor(Channel<ColumnsMessage> channel, IDatabaseProvider databaseProvider, IColumnService columnService) : BackgroundService
+{
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        while (await channel.Reader.WaitToReadAsync(stoppingToken))
+        {
+            var message = await channel.Reader.ReadAsync(stoppingToken);
+            var columns = await databaseProvider.GetColumns(message.EnvId, message.DbId, message.TableName);
+
+            foreach (var column in columns)
+            {
+                columnService.Add(column);
             }
         }
     }

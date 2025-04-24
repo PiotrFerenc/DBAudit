@@ -70,6 +70,7 @@ public class SqlServerProvider : IDatabaseProvider
                 var name = reader.GetString(0);
                 var table = Table.Create(name);
                 table.DatabaseId = envId;
+                table.EnvironmentId = envId;
                 result.Add(table);
             }
         }
@@ -97,5 +98,61 @@ public class SqlServerProvider : IDatabaseProvider
         }
 
         return false;
+    }
+
+    public async Task<IEnumerable<Column>> GetColumns(Guid envId, Guid dbId, string tableName)
+    {
+        var result = new List<Column>();
+        var connectionString = _environmentService.GetConnectionString(envId);
+
+        if (connectionString.IsSome)
+        {
+            var database = _databaseService.GetById(dbId.ToString());
+            var cs = string.Empty;
+            connectionString.IfSome(c => cs = c);
+
+            database.IfSome(o =>
+            {
+                var c = new SqlConnectionStringBuilder(cs)
+                {
+                    InitialCatalog = o.Name
+                };
+                cs = c.ConnectionString;
+            });
+
+
+            await using var connection = new SqlConnection(cs);
+            connection.Open();
+
+            var query = $@"SELECT
+    COLUMN_NAME,
+    DATA_TYPE
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = '{tableName}'";
+
+            var command = new SqlCommand(query, connection);
+
+            await using var reader = await command.ExecuteReaderAsync();
+            while (reader.Read())
+            {
+                var name = reader.GetString(0);
+                var type = reader.GetString(1);
+                var column = new Column
+                {
+                    Id = Guid.NewGuid(),
+                    EnvironmentId = envId,
+                    DatabaseId = dbId,
+                    TableId = 
+                    Type = type,
+                    Name = name,
+                    IsActive = true
+                };
+
+                result.Add(column);
+            }
+        }
+
+
+        return result;
     }
 }

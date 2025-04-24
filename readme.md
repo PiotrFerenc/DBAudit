@@ -60,15 +60,6 @@ The tool helps developers, DBAs, and data architects identify potential issues i
 
 ---
 
-### 👁️ Visibility Management
-
-- [ ] Implement feature toggles for enabling/disabling specific analysis rules and metrics.
-- [ ] Add capabilities for users to customize which metrics and checks are visible in reports.
-- [ ] Provide role-based visibility settings (e.g., developers see different metrics than DBAs).
-- [ ] Allow users to hide specific tables, columns, or other elements from analysis results.
-- [ ] Enable configurable visibility levels for different database environments (e.g., limit access to production
-  metrics).
-
 ## 📫 Contributing
 
 Feature suggestions, bug reports, and PRs are welcome!  
