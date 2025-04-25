@@ -40,20 +40,11 @@ public static class CommandDispatcherExtensions
     {
         services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
 
-        var assembly = typeof(ICommand).Assembly;
-        var handlers = assembly.GetTypes()
-            .Where(t => t.GetInterfaces()
-                .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandHandler<>)))
-            .ToList();
-
-        foreach (var handler in handlers)
-        {
-            var commandType = handler.GetInterfaces()
-                .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommandHandler<>))
-                .GetGenericArguments()[0];
-
-            services.AddTransient(typeof(ICommandHandler<>).MakeGenericType(commandType), handler);
-        }
+        services.Scan(scan => scan
+            .FromAssemblyOf<ICommand>()
+            .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)))
+            .AsImplementedInterfaces()
+            .WithTransientLifetime());
     }
 }
 
