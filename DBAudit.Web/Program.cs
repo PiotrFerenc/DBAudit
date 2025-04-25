@@ -56,11 +56,6 @@ builder.Services.AddSingleton<Channel<ColumnsMessage>>(_ => Channel.CreateUnboun
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
-var dispatcher = app.Services.GetRequiredService<ICommandDispatcher>();
-await dispatcher.HandleAsync(new PrintMessage()
-{
-    Message = "123"
-});
 
 if (app.Environment.IsDevelopment())
 {

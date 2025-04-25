@@ -1,15 +1,25 @@
+using Microsoft.Extensions.DependencyInjection;
+
 namespace DBAudit.Infrastructure.Common.Command;
 
 public class CommandDispatcher(IServiceProvider serviceProvider) : ICommandDispatcher
 {
-    public Task HandleAsync<TCommand>(TCommand command) where TCommand : ICommand
+
+    public Task<TResponse> Send<TResponse>(IRequest<TResponse> request)
     {
-        var handlerType = typeof(ICommandHandler<TCommand>);
-        var service = serviceProvider.GetService(handlerType);
+        var handlerType = typeof(ICommandHandler<,>).MakeGenericType(request.GetType(), typeof(TResponse));
+        var service = serviceProvider.GetRequiredService(handlerType);
+        dynamic handler = service;
+        
+        return handler.HandleAsync((dynamic)request);
+    }
 
-        if (service is not ICommandHandler<TCommand> handler) throw new Exception("Handler not found");
-
-        var task = handler.HandleAsync(command);
-        return task;
+    public Task Send<TRequest>(TRequest request) where TRequest : IRequest
+    {
+        var handlerType = typeof(ICommandHandler<>).MakeGenericType(request.GetType());
+        var service = serviceProvider.GetRequiredService(handlerType);
+        dynamic handler = service;
+        
+        return handler.HandleAsync((dynamic)request);
     }
 }
