@@ -99,7 +99,6 @@ public class SqlServerProvider : IDatabaseProvider
             return false;
         }
 
-        return false;
     }
 
     public async Task<IEnumerable<Column>> GetColumns(Guid envId, Guid dbId, Guid tableId)

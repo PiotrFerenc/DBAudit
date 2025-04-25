@@ -1,5 +1,6 @@
 using System.Threading.Channels;
 using DBAudit.Infrastructure;
+using DBAudit.Infrastructure.Common;
 using DBAudit.Infrastructure.Data.Entities;
 using DBAudit.Infrastructure.Repositories;
 using DBAudit.Infrastructure.SqlServer;
@@ -23,6 +24,7 @@ builder.Services.AddSingleton<IStorage<Column>>(new Storage<Column>("column.bin"
 
 builder.Services.AddTransient<IDatabaseProvider, SqlServerProvider>();
 
+builder.Services.AddCommandDispatcher();
 
 builder.Services.AddSingleton<IQueueProvider, ChannelQueueProvider>();
 
