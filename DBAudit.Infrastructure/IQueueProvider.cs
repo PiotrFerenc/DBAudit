@@ -11,4 +11,4 @@ public record EnvironmentMessage(Guid Id);
 
 public record DatabaseMessage(Guid EnvId, Guid DbId);
 
-public record ColumnsMessage(Guid EnvId, Guid DbId, string TableName);
+public record ColumnsMessage(Guid EnvId, Guid DbId, Guid TableId);

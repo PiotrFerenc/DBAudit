@@ -134,7 +134,7 @@ public class TablesProcessor(Channel<DatabaseMessage> channel, IDatabaseProvider
                 table.DatabaseId = message.DbId;
                 table.EnvironmentId = message.EnvId;
                 tableService.Add(table);
-                queueProvider.Enqueue(new ColumnsMessage(message.EnvId, message.DbId, table.Name));
+                queueProvider.Enqueue(new ColumnsMessage(message.EnvId, message.DbId, table.Id));
             }
         }
     }
@@ -147,7 +147,7 @@ public class ColumnProcessor(Channel<ColumnsMessage> channel, IDatabaseProvider 
         while (await channel.Reader.WaitToReadAsync(stoppingToken))
         {
             var message = await channel.Reader.ReadAsync(stoppingToken);
-            var columns = await databaseProvider.GetColumns(message.EnvId, message.DbId, message.TableName);
+            var columns = await databaseProvider.GetColumns(message.EnvId, message.DbId, message.TableId);
 
             foreach (var column in columns)
             {

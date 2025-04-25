@@ -8,11 +8,13 @@ public class SqlServerProvider : IDatabaseProvider
 {
     private readonly IEnvironmentService _environmentService;
     private readonly IDatabaseService _databaseService;
+    private readonly ITableService _tableService;
 
-    public SqlServerProvider(IEnvironmentService environmentService, IDatabaseService databaseService)
+    public SqlServerProvider(IEnvironmentService environmentService, IDatabaseService databaseService, ITableService tableService)
     {
         _environmentService = environmentService;
         _databaseService = databaseService;
+        _tableService = tableService;
     }
 
     public async Task<List<Database>> GetDatabases(Guid envId)
@@ -100,7 +102,7 @@ public class SqlServerProvider : IDatabaseProvider
         return false;
     }
 
-    public async Task<IEnumerable<Column>> GetColumns(Guid envId, Guid dbId, string tableName)
+    public async Task<IEnumerable<Column>> GetColumns(Guid envId, Guid dbId, Guid tableId)
     {
         var result = new List<Column>();
         var connectionString = _environmentService.GetConnectionString(envId);
@@ -108,6 +110,9 @@ public class SqlServerProvider : IDatabaseProvider
         if (connectionString.IsSome)
         {
             var database = _databaseService.GetById(dbId.ToString());
+            var table = _tableService.GetById(tableId);
+            if (table.IsNone) return result;
+
             var cs = string.Empty;
             connectionString.IfSome(c => cs = c);
 
@@ -123,6 +128,7 @@ public class SqlServerProvider : IDatabaseProvider
 
             await using var connection = new SqlConnection(cs);
             connection.Open();
+            var tableName = table.Map(x => x.Name);
 
             var query = $@"SELECT
     COLUMN_NAME,
@@ -131,7 +137,6 @@ FROM INFORMATION_SCHEMA.COLUMNS
 WHERE TABLE_NAME = '{tableName}'";
 
             var command = new SqlCommand(query, connection);
-
             await using var reader = await command.ExecuteReaderAsync();
             while (reader.Read())
             {
@@ -142,7 +147,7 @@ WHERE TABLE_NAME = '{tableName}'";
                     Id = Guid.NewGuid(),
                     EnvironmentId = envId,
                     DatabaseId = dbId,
-                    TableId = 
+                    TableId = tableId,
                     Type = type,
                     Name = name,
                     IsActive = true
