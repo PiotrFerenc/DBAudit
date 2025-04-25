@@ -1,6 +1,7 @@
 using System.Threading.Channels;
 using DBAudit.Infrastructure;
 using DBAudit.Infrastructure.Common;
+using DBAudit.Infrastructure.Common.Command;
 using DBAudit.Infrastructure.Data.Entities;
 using DBAudit.Infrastructure.Repositories;
 using DBAudit.Infrastructure.SqlServer;
@@ -55,6 +56,11 @@ builder.Services.AddSingleton<Channel<ColumnsMessage>>(_ => Channel.CreateUnboun
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+var dispatcher = app.Services.GetRequiredService<ICommandDispatcher>();
+await dispatcher.HandleAsync(new PrintMessage()
+{
+    Message = "123"
+});
 
 if (app.Environment.IsDevelopment())
 {
