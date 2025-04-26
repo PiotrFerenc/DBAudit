@@ -16,6 +16,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Infrastructure", ".
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Infrastructure.SqlServer", "..\DBAudit.Infrastructure.SqlServer\DBAudit.Infrastructure.SqlServer.csproj", "{122406FC-DDCB-4F2F-9F34-6B863579E5BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Analyzer.Table", "..\DBAudit.Analyzer.Table\DBAudit.Analyzer.Table.csproj", "{8A5E5FAC-F120-4374-BEC1-DBB4E4B7B139}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Analyzer", "..\DBAudit.Analyzer\DBAudit.Analyzer.csproj", "{5372373A-CA4A-4DCF-9840-AA1F641610A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +38,14 @@ Global
 		{122406FC-DDCB-4F2F-9F34-6B863579E5BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{122406FC-DDCB-4F2F-9F34-6B863579E5BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{122406FC-DDCB-4F2F-9F34-6B863579E5BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A5E5FAC-F120-4374-BEC1-DBB4E4B7B139}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A5E5FAC-F120-4374-BEC1-DBB4E4B7B139}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A5E5FAC-F120-4374-BEC1-DBB4E4B7B139}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A5E5FAC-F120-4374-BEC1-DBB4E4B7B139}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5372373A-CA4A-4DCF-9840-AA1F641610A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5372373A-CA4A-4DCF-9840-AA1F641610A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5372373A-CA4A-4DCF-9840-AA1F641610A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5372373A-CA4A-4DCF-9840-AA1F641610A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
