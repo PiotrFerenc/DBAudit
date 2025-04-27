@@ -1,10 +1,12 @@
 using System.Threading.Channels;
+using DBAudit.Analyzer;
+using DBAudit.Analyzer.Table.Extensions;
 using DBAudit.Infrastructure;
-using DBAudit.Infrastructure.Common;
 using DBAudit.Infrastructure.Common.Command;
 using DBAudit.Infrastructure.Data.Entities;
 using DBAudit.Infrastructure.Repositories;
 using DBAudit.Infrastructure.SqlServer;
+using Microsoft.Data.SqlClient;
 using Environment = DBAudit.Infrastructure.Data.Entities.Environment;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,12 +28,13 @@ builder.Services.AddSingleton<IStorage<Column>>(new Storage<Column>("column.bin"
 builder.Services.AddTransient<IDatabaseProvider, SqlServerProvider>();
 
 builder.Services.AddCommandDispatcher();
+builder.Services.AddTableAnalyzer();
 
 builder.Services.AddSingleton<IQueueProvider, ChannelQueueProvider>();
 
+builder.Services.AddHostedService<EnvironmentProcessor>();
 builder.Services.AddHostedService<DatabaseProcessor>();
-builder.Services.AddHostedService<TablesProcessor>();
-builder.Services.AddHostedService<ColumnProcessor>();
+builder.Services.AddHostedService<TableProcessor>();
 builder.Services.AddSingleton<Channel<EnvironmentMessage>>(_ => Channel.CreateUnbounded<EnvironmentMessage>(new UnboundedChannelOptions
 {
     AllowSynchronousContinuations = false,
@@ -99,7 +102,7 @@ internal class ChannelQueueProvider(Channel<EnvironmentMessage> envChannel, Chan
 }
 
 
-public class DatabaseProcessor(Channel<EnvironmentMessage> channel, IDatabaseProvider databaseProvider, IDatabaseService databaseService, IQueueProvider queueProvider) : BackgroundService
+public class EnvironmentProcessor(Channel<EnvironmentMessage> channel, IDatabaseProvider databaseProvider, IDatabaseService databaseService, IQueueProvider queueProvider) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -107,6 +110,7 @@ public class DatabaseProcessor(Channel<EnvironmentMessage> channel, IDatabasePro
         {
             var message = await channel.Reader.ReadAsync(stoppingToken);
             var items = await databaseProvider.GetDatabases(message.Id);
+
 
             foreach (var database in items)
             {
@@ -122,7 +126,7 @@ public class DatabaseProcessor(Channel<EnvironmentMessage> channel, IDatabasePro
     }
 }
 
-public class TablesProcessor(Channel<DatabaseMessage> channel, IDatabaseProvider databaseProvider, ITableService tableService, IQueueProvider queueProvider) : BackgroundService
+public class DatabaseProcessor(Channel<DatabaseMessage> channel, IDatabaseProvider databaseProvider, ITableService tableService, IQueueProvider queueProvider, IAnalyzerService tableAnalyzerService, ICommandDispatcher dispatcher) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -130,6 +134,16 @@ public class TablesProcessor(Channel<DatabaseMessage> channel, IDatabaseProvider
         {
             var message = await channel.Reader.ReadAsync(stoppingToken);
             var tables = await databaseProvider.GetTables(message.EnvId, message.DbId);
+            var cs = databaseProvider.GetConnectionString(message.EnvId, message.DbId);
+            await cs.IfSomeAsync(async connectionString =>
+            {
+                var connection = new SqlConnection(connectionString);
+                var analyzers = tableAnalyzerService.GetDatabaseAnalyzers(connection);
+                foreach (var analyzer in analyzers)
+                {
+                    var result = await dispatcher.Send(analyzer);
+                }
+            });
 
             foreach (var table in tables)
             {
@@ -143,7 +157,7 @@ public class TablesProcessor(Channel<DatabaseMessage> channel, IDatabaseProvider
     }
 }
 
-public class ColumnProcessor(Channel<ColumnsMessage> channel, IDatabaseProvider databaseProvider, IColumnService columnService) : BackgroundService
+public class TableProcessor(Channel<ColumnsMessage> channel, IDatabaseProvider databaseProvider, IColumnService columnService) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

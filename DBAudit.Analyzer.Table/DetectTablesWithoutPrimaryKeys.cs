@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 
 namespace DBAudit.Analyzer.Table;
 
-public class DetectTablesWithoutPrimaryKeys(SqlConnection connection, string tableName) : TableAnalyzer(connection, tableName)
+public class DetectTablesWithoutPrimaryKeys(SqlConnection connection, string tableName) : DatabaseAnalyzer(connection)
 {
 }
 

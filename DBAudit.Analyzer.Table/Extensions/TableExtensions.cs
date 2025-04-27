@@ -20,6 +20,6 @@ public static class TableExtensions
             .AsImplementedInterfaces()
             .WithTransientLifetime());
 
-        services.AddSingleton<ITableAnalyzerService, TableAnalyzerService>();
+        services.AddSingleton<IAnalyzerService, AnalyzerService>();
     }
 }

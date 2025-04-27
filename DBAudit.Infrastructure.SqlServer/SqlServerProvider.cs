@@ -1,5 +1,6 @@
 using DBAudit.Infrastructure.Data.Entities;
 using DBAudit.Infrastructure.Repositories;
+using LanguageExt;
 using Microsoft.Data.SqlClient;
 
 namespace DBAudit.Infrastructure.SqlServer;
@@ -98,7 +99,28 @@ public class SqlServerProvider : IDatabaseProvider
         {
             return false;
         }
+    }
 
+    public Option<string> GetConnectionString(Guid envId, Guid dbId)
+    {
+        var connectionString = _environmentService.GetConnectionString(envId);
+        if (connectionString.IsSome)
+        {
+            var cs = string.Empty;
+            connectionString.IfSome(c => cs = c);
+            var database = _databaseService.GetById(dbId.ToString());
+
+            return database.Match(db =>
+            {
+                var c = new SqlConnectionStringBuilder(cs)
+                {
+                    InitialCatalog = db.Name
+                };
+                return c.ConnectionString;
+            }, () => string.Empty);
+        }
+
+        return connectionString;
     }
 
     public async Task<IEnumerable<Column>> GetColumns(Guid envId, Guid dbId, Guid tableId)
