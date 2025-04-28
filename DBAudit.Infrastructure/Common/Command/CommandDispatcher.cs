@@ -7,7 +7,8 @@ public class CommandDispatcher(IServiceProvider serviceProvider) : ICommandDispa
 
     public Task<TResponse> Send<TResponse>(IRequest<TResponse> request)
     {
-        var handlerType = typeof(ICommandHandler<,>).MakeGenericType(request.GetType(), typeof(TResponse));
+        var requestType = request.GetType();
+        var handlerType = typeof(IRequestHandler<,>).MakeGenericType(requestType, typeof(TResponse));
         var service = serviceProvider.GetRequiredService(handlerType);
         dynamic handler = service;
         
@@ -16,7 +17,8 @@ public class CommandDispatcher(IServiceProvider serviceProvider) : ICommandDispa
 
     public Task Send<TRequest>(TRequest request) where TRequest : IRequest
     {
-        var handlerType = typeof(ICommandHandler<>).MakeGenericType(request.GetType());
+        var requestType = request.GetType();
+        var handlerType = typeof(ICommandHandler<>).MakeGenericType(requestType);
         var service = serviceProvider.GetRequiredService(handlerType);
         dynamic handler = service;
         

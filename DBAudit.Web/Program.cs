@@ -1,5 +1,6 @@
 using System.Threading.Channels;
 using DBAudit.Analyzer;
+using DBAudit.Analyzer.Database.Extensions;
 using DBAudit.Analyzer.Table.Extensions;
 using DBAudit.Infrastructure;
 using DBAudit.Infrastructure.Common.Command;
@@ -28,6 +29,7 @@ builder.Services.AddSingleton<IStorage<Column>>(new Storage<Column>("column.bin"
 builder.Services.AddTransient<IDatabaseProvider, SqlServerProvider>();
 
 builder.Services.AddCommandDispatcher();
+builder.Services.AddDatabaseAnalyzer();
 builder.Services.AddTableAnalyzer();
 
 builder.Services.AddSingleton<IQueueProvider, ChannelQueueProvider>();
@@ -110,7 +112,6 @@ public class EnvironmentProcessor(Channel<EnvironmentMessage> channel, IDatabase
         {
             var message = await channel.Reader.ReadAsync(stoppingToken);
             var items = await databaseProvider.GetDatabases(message.Id);
-
 
             foreach (var database in items)
             {

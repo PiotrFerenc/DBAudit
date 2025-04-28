@@ -6,4 +6,5 @@ namespace DBAudit.Analyzer;
 
 public class DatabaseAnalyzer(SqlConnection connection) : IRequest<Either<string, string>>
 {
+    private readonly SqlConnection _connection = connection;
 }

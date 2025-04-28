@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.Data.SqlClient">
+        <HintPath>..\..\..\.nuget\packages\microsoft.data.sqlclient\6.0.1\ref\net9.0\Microsoft.Data.SqlClient.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DBAudit.Analyzer\DBAudit.Analyzer.csproj" />
+      <ProjectReference Include="..\DBAudit.Infrastructure\DBAudit.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>

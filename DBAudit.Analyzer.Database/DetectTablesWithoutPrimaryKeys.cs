@@ -2,9 +2,9 @@ using DBAudit.Infrastructure.Common.Command;
 using LanguageExt;
 using Microsoft.Data.SqlClient;
 
-namespace DBAudit.Analyzer.Table;
+namespace DBAudit.Analyzer.Database;
 
-public class DetectTablesWithoutPrimaryKeys(SqlConnection connection, string tableName) : DatabaseAnalyzer(connection)
+public class DetectTablesWithoutPrimaryKeys(SqlConnection connection) : DatabaseAnalyzer(connection)
 {
 }
 

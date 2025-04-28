@@ -10,17 +10,15 @@ public static class CommandDispatcherExtensions
 
         services.Scan(scan => scan
             .FromAssemblyOf<IRequest>()
-            .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)))
+            .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)))
             .AsImplementedInterfaces()
             .WithTransientLifetime());
-        
-        
+
+
         services.Scan(scan => scan
             .FromAssemblyOf<IRequest>()
             .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)))
             .AsImplementedInterfaces()
             .WithTransientLifetime());
-        
-        
     }
 }

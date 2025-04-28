@@ -1,17 +1,17 @@
-using DBAudit.Analyzer.Table.Common;
+using DBAudit.Analyzer.Database.Common;
 using DBAudit.Infrastructure.Common.Command;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DBAudit.Analyzer.Table.Extensions;
+namespace DBAudit.Analyzer.Database.Extensions;
 
-public static class TableExtensions
+public static class DatabaseExtensions
 {
-    public static void AddTableAnalyzer(this IServiceCollection services)
+    public static void AddDatabaseAnalyzer(this IServiceCollection services)
     {
-        services.RegisterHandlers<ITableAnalyzerMarker>();
 
+        services.RegisterHandlers<IDatabaseAnalyzerMarker>();
         // services.Scan(scan => scan
-        //     .FromAssemblyOf<ITableAnalyzerMarker>()
+        //     .FromAssemblyOf<IDatabaseAnalyzerMarker>()
         //     .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)))
         //     .AsImplementedInterfaces()
         //     .WithTransientLifetime());

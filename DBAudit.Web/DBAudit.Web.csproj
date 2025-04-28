@@ -36,6 +36,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\DBAudit.Analyzer.Database\DBAudit.Analyzer.Database.csproj" />
       <ProjectReference Include="..\DBAudit.Analyzer.Table\DBAudit.Analyzer.Table.csproj" />
       <ProjectReference Include="..\DBAudit.Infrastructure.SqlServer\DBAudit.Infrastructure.SqlServer.csproj" /> 
     </ItemGroup>
