@@ -5,7 +5,6 @@ namespace DBAudit.Web.Controllers;
 
 public class ColumnsController(IColumnService columnService) : Controller
 {
-    // GET
     [HttpGet("/columns/{tableId:guid}")]
     public IActionResult Index([FromRoute] Guid tableId)
     {

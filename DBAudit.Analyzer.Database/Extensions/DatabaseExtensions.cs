@@ -10,11 +10,6 @@ public static class DatabaseExtensions
     {
 
         services.RegisterHandlers<IDatabaseAnalyzerMarker>();
-        // services.Scan(scan => scan
-        //     .FromAssemblyOf<IDatabaseAnalyzerMarker>()
-        //     .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)))
-        //     .AsImplementedInterfaces()
-        //     .WithTransientLifetime());
 
         services.AddSingleton<IAnalyzerService, AnalyzerService>();
     }

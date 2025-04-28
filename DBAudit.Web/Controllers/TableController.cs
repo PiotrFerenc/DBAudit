@@ -12,7 +12,6 @@ public class TableController : Controller
         _tableService = tableService;
     }
 
-    // GET
     [HttpGet("/tables/{databaseId:guid}")]
     public IActionResult Index([FromRoute] Guid databaseId)
     {

@@ -13,26 +13,22 @@ namespace DBAudit.Web.Controllers
             _environmentService = environmentService;
         }
 
-        // GET: EnvironmentController
         public ActionResult Index()
         {
             var environments = _environmentService.GetAll();
             return View(environments);
         }
 
-        // GET: EnvironmentController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: EnvironmentController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: EnvironmentController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -57,13 +53,11 @@ namespace DBAudit.Web.Controllers
             }
         }
 
-        // GET: EnvironmentController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: EnvironmentController/Activate/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Activate(Guid id)
@@ -79,7 +73,6 @@ namespace DBAudit.Web.Controllers
             }
         }
 
-        // POST: EnvironmentController/Deactivate/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Deactivate(Guid id)
@@ -95,13 +88,11 @@ namespace DBAudit.Web.Controllers
             }
         }
 
-        // GET: EnvironmentController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: EnvironmentController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

@@ -10,12 +10,6 @@ public static class TableExtensions
     {
         services.RegisterHandlers<ITableAnalyzerMarker>();
 
-        // services.Scan(scan => scan
-        //     .FromAssemblyOf<ITableAnalyzerMarker>()
-        //     .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)))
-        //     .AsImplementedInterfaces()
-        //     .WithTransientLifetime());
-
         services.AddSingleton<IAnalyzerService, AnalyzerService>();
     }
 }

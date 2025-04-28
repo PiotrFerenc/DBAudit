@@ -6,7 +6,6 @@ namespace DBAudit.Web.Controllers;
 
 public class DatabaseController(IDatabaseService databaseService, IQueueProvider queueProvider) : Controller
 {
-    // GET
     [HttpGet("/databases/{id:guid}")]
     public IActionResult Index([FromRoute] Guid id)
     {
