@@ -10,7 +10,6 @@ public static class DatabaseExtensions
     {
 
         services.RegisterHandlers<IDatabaseAnalyzerMarker>();
-
         services.AddSingleton<IAnalyzerService, AnalyzerService>();
     }
 }

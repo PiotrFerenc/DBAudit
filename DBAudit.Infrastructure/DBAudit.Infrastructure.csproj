@@ -19,4 +19,8 @@
       <PackageReference Include="Scrutor" Version="6.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DBAudit.Infrastructure.Queue.Channels\DBAudit.Infrastructure.Queue.Channels.csproj" />
+    </ItemGroup>
+
 </Project>

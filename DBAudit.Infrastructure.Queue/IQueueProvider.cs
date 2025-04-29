@@ -1,4 +1,4 @@
-namespace DBAudit.Infrastructure;
+namespace DBAudit.Infrastructure.Queue;
 
 public interface IQueueProvider
 {

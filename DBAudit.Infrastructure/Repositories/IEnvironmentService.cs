@@ -1,3 +1,4 @@
+using DBAudit.Infrastructure.Queue;
 using LanguageExt;
 using Environment = DBAudit.Infrastructure.Data.Entities.Environment;
 

@@ -1,4 +1,5 @@
 using DBAudit.Infrastructure;
+using DBAudit.Infrastructure.Queue;
 using DBAudit.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Mvc;
 

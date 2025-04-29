@@ -22,6 +22,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Analyzer", "..\DBAu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Analyzer.Database", "..\DBAudit.Analyzer.Database\DBAudit.Analyzer.Database.csproj", "{4DB25984-F510-43A5-A882-4177A3268181}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Infrastructure.Queue", "..\DBAudit.Infrastructure.Queue\DBAudit.Infrastructure.Queue.csproj", "{2DEA138C-8AC1-4D70-84C4-6C4E77DC35BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Infrastructure.Queue.Channels", "..\DBAudit.Infrastructure.Queue.Channels\DBAudit.Infrastructure.Queue.Channels.csproj", "{F49E60A8-18DF-4F6D-8FBD-FFF6B56F7D04}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +56,14 @@ Global
 		{4DB25984-F510-43A5-A882-4177A3268181}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DB25984-F510-43A5-A882-4177A3268181}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DB25984-F510-43A5-A882-4177A3268181}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DEA138C-8AC1-4D70-84C4-6C4E77DC35BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DEA138C-8AC1-4D70-84C4-6C4E77DC35BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DEA138C-8AC1-4D70-84C4-6C4E77DC35BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DEA138C-8AC1-4D70-84C4-6C4E77DC35BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F49E60A8-18DF-4F6D-8FBD-FFF6B56F7D04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F49E60A8-18DF-4F6D-8FBD-FFF6B56F7D04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F49E60A8-18DF-4F6D-8FBD-FFF6B56F7D04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F49E60A8-18DF-4F6D-8FBD-FFF6B56F7D04}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection
