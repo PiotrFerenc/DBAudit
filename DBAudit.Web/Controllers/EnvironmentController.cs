@@ -38,7 +38,7 @@ namespace DBAudit.Web.Controllers
                 collection.TryGetValue("name", out var name);
                 collection.TryGetValue("cs", out var connectionString);
                 var id = Guid.NewGuid();
-                _environmentService.Add(id.ToString(), new Environment
+                _environmentService.Add(new Environment
                 {
                     Id = id,
                     Name = name,
@@ -64,7 +64,7 @@ namespace DBAudit.Web.Controllers
         {
             try
             {
-                _environmentService.Activate(id.ToString());
+                _environmentService.Activate(id);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -79,7 +79,7 @@ namespace DBAudit.Web.Controllers
         {
             try
             {
-                _environmentService.Deactivate(id.ToString());
+                _environmentService.Deactivate(id);
                 return RedirectToAction(nameof(Index));
             }
             catch

@@ -1,12 +1,15 @@
+using MessagePack;
+
 namespace DBAudit.Infrastructure.Data.Entities;
 
+[MessagePackObject(AllowPrivate = true)]
 public class Table
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public bool IsActive { get; set; }
-    public Guid DatabaseId { get; set; }
-    public Guid EnvironmentId { get; set; }
+    [Key(0)] public Guid Id { get; set; }
+    [Key(1)] public string Name { get; set; } = string.Empty;
+    [Key(2)] public bool IsActive { get; set; }
+    [Key(3)] public Guid DatabaseId { get; set; }
+    [Key(4)] public Guid EnvironmentId { get; set; }
 
     public static Table Create(string name) => new Table
     {

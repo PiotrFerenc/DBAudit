@@ -49,7 +49,7 @@ public class SqlServerProvider : IDatabaseProvider
 
         if (connectionString.IsSome)
         {
-            var database = _databaseService.GetById(dbId.ToString());
+            var database = _databaseService.GetById(dbId);
             var cs = string.Empty;
             connectionString.IfSome(c => cs = c);
 
@@ -108,7 +108,7 @@ public class SqlServerProvider : IDatabaseProvider
         {
             var cs = string.Empty;
             connectionString.IfSome(c => cs = c);
-            var database = _databaseService.GetById(dbId.ToString());
+            var database = _databaseService.GetById(dbId);
 
             return database.Match(db =>
             {
@@ -130,7 +130,7 @@ public class SqlServerProvider : IDatabaseProvider
 
         if (connectionString.IsSome)
         {
-            var database = _databaseService.GetById(dbId.ToString());
+            var database = _databaseService.GetById(dbId);
             var table = _tableService.GetById(tableId);
             if (table.IsNone) return result;
 

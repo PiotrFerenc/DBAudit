@@ -22,7 +22,7 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         var environments = _environmentService.GetActive();
-        _queueProvider.Enqueue(new EnvironmentMessage(environments.First().Id));
+        // _queueProvider.Enqueue(new EnvironmentMessage(environments.First().Id));
 
         return View(environments);
     }

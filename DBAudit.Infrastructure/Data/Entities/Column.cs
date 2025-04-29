@@ -1,17 +1,19 @@
 using DBAudit.Infrastructure.Repositories;
 using LanguageExt;
+using MessagePack;
 
 namespace DBAudit.Infrastructure.Data.Entities;
 
+[MessagePackObject(AllowPrivate = true)]
 public class Column
 {
-    public Guid Id { get; set; }
-    public Guid EnvironmentId { get; set; }
-    public Guid DatabaseId { get; set; }
-    public Guid TableId { get; set; }
-    public string Type { get; set; } = string.Empty;
-    public string Name { get; set; } = string.Empty;
-    public bool IsActive { get; set; }
+    [Key(0)] public Guid Id { get; set; }
+    [Key(1)] public Guid EnvironmentId { get; set; }
+    [Key(2)] public Guid DatabaseId { get; set; }
+    [Key(3)] public Guid TableId { get; set; }
+    [Key(4)] public string Type { get; set; } = string.Empty;
+    [Key(5)] public string Name { get; set; } = string.Empty;
+    [Key(6)] public bool IsActive { get; set; }
 }
 
 public interface IColumnService
@@ -20,33 +22,8 @@ public interface IColumnService
     List<Column> GetByTableId(Guid tableId);
 }
 
-public class ColumnService(IStorage<Column> storage) : IColumnService
+public class ColumnService(IBinaryStorage<Column> storage) : IColumnService
 {
-    public void Add(Column column) => storage.SaveItem(column.Id.ToString(), column);
+    public void Add(Column column) => storage.SaveItem(column);
     public List<Column> GetByTableId(Guid tableId) => storage.Where(x => x.TableId == tableId);
-}
-
-public static class ColumnMapper
-{
-    public static Func<Column, string>[] MapToString() =>
-    [
-        c => c.Id.ToString(),
-        c => c.EnvironmentId.ToString(),
-        c => c.DatabaseId.ToString(),
-        c => c.TableId.ToString(),
-        c => c.Type,
-        c => c.Name,
-        c => c.IsActive.ToString()
-    ];
-
-    public static Action<Column, string>[] MapFromString() =>
-    [
-        (c, b) => c.Id = Guid.Parse(b),
-        (c, b) => c.EnvironmentId = Guid.Parse(b),
-        (c, b) => c.DatabaseId = Guid.Parse(b),
-        (c, b) => c.TableId = Guid.Parse(b),
-        (c, b) => c.Type = b,
-        (c, b) => c.Name = b,
-        (c, b) => c.IsActive = b == "1"
-    ];
 }

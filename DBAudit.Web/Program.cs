@@ -21,10 +21,12 @@ builder.Services.AddTransient<IEnvironmentService, EnvironmentService>();
 builder.Services.AddTransient<IDatabaseService, DatabaseService>();
 builder.Services.AddTransient<ITableService, TableService>();
 builder.Services.AddTransient<IColumnService, ColumnService>();
-builder.Services.AddSingleton<IStorage<Environment>>(new Storage<Environment>("environments.bin", EnvironmentMapper.MapFromString, EnvironmentMapper.MapToString));
-builder.Services.AddSingleton<IStorage<Database>>(new Storage<Database>("databases.bin", DatabaseMapper.MapFromString, DatabaseMapper.MapToString));
-builder.Services.AddSingleton<IStorage<Table>>(new Storage<Table>("tables.bin", TableMapper.MapFromString, TableMapper.MapToString));
-builder.Services.AddSingleton<IStorage<Column>>(new Storage<Column>("column.bin", ColumnMapper.MapFromString, ColumnMapper.MapToString));
+
+
+builder.Services.AddSingleton<IBinaryStorage<Environment>>(new BinaryStorage<Environment>($"{nameof(Environment)}.bin"));
+builder.Services.AddSingleton<IBinaryStorage<Database>>(new BinaryStorage<Database>($"{nameof(Database)}.bin"));
+builder.Services.AddSingleton<IBinaryStorage<Table>>(new BinaryStorage<Table>($"{nameof(Table)}.bin"));
+builder.Services.AddSingleton<IBinaryStorage<Column>>(new BinaryStorage<Column>($"{nameof(Column)}.bin"));
 
 builder.Services.AddTransient<IDatabaseProvider, SqlServerProvider>();
 
