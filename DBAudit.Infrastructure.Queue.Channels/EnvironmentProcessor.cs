@@ -1,4 +1,6 @@
 using System.Threading.Channels;
+using DBAudit.Infrastructure.DatabaseProvider;
+using DBAudit.Infrastructure.Storage;
 using Microsoft.Extensions.Hosting;
 
 namespace DBAudit.Infrastructure.Queue.Channels;

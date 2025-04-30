@@ -1,6 +1,6 @@
-using DBAudit.Infrastructure.Repositories;
+using DBAudit.Infrastructure.Storage;
 using Microsoft.AspNetCore.Mvc;
-using Environment = DBAudit.Infrastructure.Data.Entities.Environment;
+using Environment = DBAudit.Infrastructure.Contracts.Entities.Environment;
 
 namespace DBAudit.Web.Controllers
 {

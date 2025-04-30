@@ -1,9 +1,11 @@
 using System.Threading.Channels;
+using DBAudit.Infrastructure.DatabaseProvider;
+using DBAudit.Infrastructure.Storage;
 using Microsoft.Extensions.Hosting;
 
 namespace DBAudit.Infrastructure.Queue.Channels;
 
-public class TableProcessor(Channel<ColumnsMessage> channel, IDatabaseProvider databaseProvider, IColumnService  ) : BackgroundService
+public class TableProcessor(Channel<ColumnsMessage> channel, IDatabaseProvider databaseProvider, IColumnService columnService) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

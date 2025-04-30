@@ -16,11 +16,15 @@
       <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.1" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.4" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.4" />
-      <PackageReference Include="Scrutor" Version="6.0.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\DBAudit.Infrastructure.Queue.Channels\DBAudit.Infrastructure.Queue.Channels.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Common\Command\" />
+      <Folder Include="Repositories\" />
     </ItemGroup>
 
 </Project>

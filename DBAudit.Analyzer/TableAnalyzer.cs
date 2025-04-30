@@ -1,6 +1,5 @@
-﻿using DBAudit.Infrastructure.Common.Command;
+﻿using DBAudit.Infrastructure.Command;
 using LanguageExt;
-using LanguageExt.Common;
 using Microsoft.Data.SqlClient;
 
 namespace DBAudit.Analyzer;

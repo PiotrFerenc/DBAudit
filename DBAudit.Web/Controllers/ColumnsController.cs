@@ -1,4 +1,4 @@
-using DBAudit.Infrastructure.Data.Entities;
+using DBAudit.Infrastructure.Storage;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DBAudit.Web.Controllers;

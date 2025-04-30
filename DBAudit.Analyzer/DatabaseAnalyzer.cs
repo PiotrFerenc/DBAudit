@@ -1,4 +1,4 @@
-using DBAudit.Infrastructure.Common.Command;
+using DBAudit.Infrastructure.Command;
 using LanguageExt;
 using Microsoft.Data.SqlClient;
 
