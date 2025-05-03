@@ -2,7 +2,6 @@ using DBAudit.Infrastructure.Contracts.Entities;
 using DBAudit.Infrastructure.Storage;
 using LanguageExt;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore.Storage;
 using Database = DBAudit.Infrastructure.Contracts.Entities.Database;
 
 namespace DBAudit.Infrastructure.DatabaseProvider.SqlServer;

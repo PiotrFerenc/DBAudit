@@ -1,6 +1,3 @@
-using DBAudit.Infrastructure.DatabaseProvider.Migrations;
-using FluentMigrator.Runner;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DBAudit.Infrastructure.DatabaseProvider.SqlServer.Extensions;
