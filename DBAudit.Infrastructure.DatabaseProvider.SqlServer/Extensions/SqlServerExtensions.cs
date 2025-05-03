@@ -7,16 +7,8 @@ namespace DBAudit.Infrastructure.DatabaseProvider.SqlServer.Extensions;
 
 public static class SqlServerExtensions
 {
-    public static void AddSqlServerProvider<TDbContext>(this IServiceCollection services, string connectionString) where TDbContext : DbContext
+    public static void AddSqlServerProvider(this IServiceCollection services)
     {
-        services.AddDbContext<TDbContext>(options => options.UseSqlServer(connectionString));
-
-        services.AddFluentMigratorCore()
-            .ConfigureRunner(runner => runner
-                .AddSqlServer()
-                .WithGlobalConnectionString(connectionString)
-                .ScanIn(typeof(DatabaseMigration).Assembly).For.Migrations()
-            )
-            .AddLogging(logging => logging.AddFluentMigratorConsole());
+        services.AddTransient<IDatabaseProvider, SqlServerProvider>();
     }
 }

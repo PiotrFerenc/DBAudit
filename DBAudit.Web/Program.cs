@@ -2,8 +2,10 @@ using DBAudit.Analyzer.Database.Extensions;
 using DBAudit.Analyzer.Table.Extensions;
 using DBAudit.Infrastructure;
 using DBAudit.Infrastructure.Command;
+using DBAudit.Infrastructure.DatabaseProvider.SqlServer.Extensions;
 using DBAudit.Infrastructure.Queue.Channels;
-using DBAudit.Infrastructure.Storage;
+using DBAudit.Infrastructure.Queue.Channels.Extensions;
+using DBAudit.Infrastructure.Storage.Binary;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,23 +16,16 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddSingleton<IEncryptionService>(new EncryptionService(key, iv));
 
-// builder.Services.AddTransient<IEnvironmentService, EnvironmentService>();
-// builder.Services.AddTransient<IDatabaseService, DatabaseService>();
-// builder.Services.AddTransient<ITableService, TableService>();
-// builder.Services.AddTransient<IColumnService, ColumnService>();
-//
-// builder.Services.AddBinaryStorage();
-//
-// builder.Services.AddTransient<IDatabaseProvider, SqlServerProvider>();
+builder.Services.AddBinaryStorage();
 
+builder.Services.AddSqlServerProvider();
 builder.Services.AddHostedService<EnvironmentProcessor>();
 
 builder.Services.AddCommandDispatcher();
 
 builder.Services.AddDatabaseAnalyzer();
 builder.Services.AddTableAnalyzer();
-
-
+builder.Services.AddChanelQueue();
 
 builder.Services.AddControllersWithViews();
 
