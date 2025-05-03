@@ -39,6 +39,7 @@
       <ProjectReference Include="..\DBAudit.Analyzer.Table\DBAudit.Analyzer.Table.csproj" />
       <ProjectReference Include="..\DBAudit.Infrastructure.DatabaseProvider.SqlServer\DBAudit.Infrastructure.DatabaseProvider.SqlServer.csproj" />
       <ProjectReference Include="..\DBAudit.Infrastructure.Storage\DBAudit.Infrastructure.Storage.csproj" />
+      <ProjectReference Include="..\TaskFarm\DBAudit.Application\DBAudit.Application.csproj" />
       <ProjectReference Include="..\TaskFarm\DBAudit.Infrastructure.Storage.Binary\DBAudit.Infrastructure.Storage.Binary.csproj" />
     </ItemGroup>
 

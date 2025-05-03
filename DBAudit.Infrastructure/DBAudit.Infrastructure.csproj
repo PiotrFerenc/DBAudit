@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Common\Command\" />
+      <Folder Include="Common\" />
       <Folder Include="Repositories\" />
     </ItemGroup>
 

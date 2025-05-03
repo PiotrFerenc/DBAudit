@@ -1,5 +1,6 @@
 using DBAudit.Analyzer.Database.Extensions;
 using DBAudit.Analyzer.Table.Extensions;
+using DBAudit.Application.Extensions;
 using DBAudit.Infrastructure;
 using DBAudit.Infrastructure.Command;
 using DBAudit.Infrastructure.DatabaseProvider.SqlServer.Extensions;
@@ -22,6 +23,7 @@ builder.Services.AddSqlServerProvider();
 builder.Services.AddHostedService<EnvironmentProcessor>();
 
 builder.Services.AddCommandDispatcher();
+builder.Services.AddApplication();
 
 builder.Services.AddDatabaseAnalyzer();
 builder.Services.AddTableAnalyzer();

@@ -1,4 +1,5 @@
 using DBAudit.Analyzer.Table.Common;
+using DBAudit.Infrastructure.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DBAudit.Analyzer.Table.Extensions;
@@ -7,7 +8,7 @@ public static class TableExtensions
 {
     public static void AddTableAnalyzer(this IServiceCollection services)
     {
-        services.RegisterHandlers<ITableAnalyzerMarker>();
+        services.RegisterRequestHandlers<ITableAnalyzerMarker>();
 
         services.AddSingleton<IAnalyzerService, AnalyzerService>();
     }

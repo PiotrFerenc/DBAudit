@@ -46,6 +46,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Infrastructure.Cont
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Infrastructure.Storage.Binary", "DBAudit.Infrastructure.Storage.Binary\DBAudit.Infrastructure.Storage.Binary.csproj", "{9C7B9668-A2CC-4EFD-AD4B-0B3769BB0046}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Application", "DBAudit.Application\DBAudit.Application.csproj", "{5C82408A-EF92-401E-B01F-D9D916C7D13D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,10 @@ Global
 		{9C7B9668-A2CC-4EFD-AD4B-0B3769BB0046}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C7B9668-A2CC-4EFD-AD4B-0B3769BB0046}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C7B9668-A2CC-4EFD-AD4B-0B3769BB0046}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C82408A-EF92-401E-B01F-D9D916C7D13D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C82408A-EF92-401E-B01F-D9D916C7D13D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C82408A-EF92-401E-B01F-D9D916C7D13D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C82408A-EF92-401E-B01F-D9D916C7D13D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{5372373A-CA4A-4DCF-9840-AA1F641610A3} = {CD19F0B3-BC0A-4269-94CE-1AD684A066E3}
