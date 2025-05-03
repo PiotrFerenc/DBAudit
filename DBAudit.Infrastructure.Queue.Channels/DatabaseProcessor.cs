@@ -27,9 +27,8 @@ public class DatabaseProcessor(Channel<DatabaseMessage> channel, IDatabaseProvid
                 }
             });
 
-            foreach (var table in tables)
+            foreach (var table in tables.Where(table => !tableService.Exist(message.DbId, message.EnvId)))
             {
-                if (tableService.Exist(message.DbId, message.EnvId)) continue;
                 table.DatabaseId = message.DbId;
                 table.EnvironmentId = message.EnvId;
                 tableService.Add(table);
