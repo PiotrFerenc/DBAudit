@@ -59,6 +59,9 @@ The tool helps developers, DBAs, and data architects identify potential issues i
 - [ ] GitHub Action for database linting in pull requests
 
 ---
+## Links:
+https://www.indiehackers.com/product/dbaudit
+
 
 ## 📫 Contributing
 
