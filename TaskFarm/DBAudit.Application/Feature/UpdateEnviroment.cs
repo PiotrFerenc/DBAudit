@@ -3,7 +3,6 @@ using DBAudit.Infrastructure.Command;
 using DBAudit.Infrastructure.DatabaseProvider;
 using DBAudit.Infrastructure.Queue;
 using DBAudit.Infrastructure.Storage;
-using Microsoft.Data.SqlClient;
 
 namespace DBAudit.Application.Feature;
 
