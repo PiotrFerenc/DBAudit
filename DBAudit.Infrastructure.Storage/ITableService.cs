@@ -8,6 +8,6 @@ public interface ITableService
     void Add(Table table);
     List<Table> GetAll();
     List<Table> GetAll(Guid databaseId);
-    bool Exist(Guid messageDbId, Guid messageEnvId);
+    bool Exist(Guid messageDbId, Guid messageEnvId, string tableName);
     Option<Table> GetById(Guid tableId);
 }
