@@ -1,4 +1,3 @@
-using DBAudit.Analyzer;
 using DBAudit.Infrastructure.Command;
 using DBAudit.Infrastructure.DatabaseProvider;
 using DBAudit.Infrastructure.Queue;

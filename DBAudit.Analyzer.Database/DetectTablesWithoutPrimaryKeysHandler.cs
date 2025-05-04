@@ -1,6 +1,5 @@
 using System.Data;
 using DBAudit.Infrastructure.Command;
-using LanguageExt;
 using LanguageExt.Common;
 using Microsoft.Data.SqlClient;
 
