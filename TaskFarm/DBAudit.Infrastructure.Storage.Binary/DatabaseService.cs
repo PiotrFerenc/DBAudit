@@ -14,4 +14,5 @@ public class DatabaseService(IDbAuditStorage<Database> storage) : IDatabaseServi
     public Option<Database> GetById(Guid id) => storage.Find(x => x.Id == id);
     public bool Exist(Guid databaseId) => storage.Find(x => x.Id == databaseId).IsSome;
     public bool Exist(Guid envId, string databaseName) => storage.Find(x => x.EnvironmentId == envId && x.Name == databaseName).IsSome;
+    public Option<Database> GetByName(Guid envId, string databaseName) => storage.Find(x => x.EnvironmentId == envId && x.Name == databaseName);
 }

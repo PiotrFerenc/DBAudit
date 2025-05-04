@@ -19,9 +19,9 @@ public class SqlServerProvider : IDatabaseProvider
         _tableService = tableService;
     }
 
-    public async Task<List<Database>> GetDatabases(Guid envId)
+    public async Task<List<string>> GetDatabases(Guid envId)
     {
-        var result = new List<Database>();
+        var result = new List<string>();
         var connectionString = _environmentService.GetConnectionString(envId);
         if (connectionString.IsSome)
         {
@@ -35,8 +35,7 @@ public class SqlServerProvider : IDatabaseProvider
             while (reader.Read())
             {
                 var name = reader.GetString(0);
-                var database = Database.Create(name);
-                result.Add(database);
+                result.Add(name);
             }
         }
 
@@ -118,7 +117,7 @@ public class SqlServerProvider : IDatabaseProvider
                     InitialCatalog = db.Name
                 };
                 return c.ConnectionString;
-            }, () => string.Empty);
+            }, () => Option<string>.None);
         }
 
         return connectionString;

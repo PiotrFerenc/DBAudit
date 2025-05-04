@@ -13,4 +13,5 @@ public interface IDatabaseService
     Option<Database> GetById(Guid id);
     bool Exist(Guid databaseId);
     bool Exist(Guid envId, string databaseName);
+    Option<Database> GetByName(Guid envId, string databaseName);
 }

@@ -1,10 +1,11 @@
 using DBAudit.Infrastructure.Command;
 using LanguageExt;
+using LanguageExt.Common;
 using Microsoft.Data.SqlClient;
 
 namespace DBAudit.Analyzer;
 
-public class DatabaseAnalyzer(SqlConnection connection) : IRequest<Either<string, string>>
+public class DatabaseAnalyzer(SqlConnection connection) : IRequest<Result<string>>
 {
-    private readonly SqlConnection _connection = connection;
+    protected SqlConnection Connection = connection;
 }

@@ -1,4 +1,5 @@
 using DBAudit.Infrastructure.Command;
+using DBAudit.Infrastructure.Contracts.Entities;
 using DBAudit.Infrastructure.DatabaseProvider;
 using DBAudit.Infrastructure.Queue;
 using DBAudit.Infrastructure.Storage;
@@ -11,15 +12,19 @@ public class UpdateEnvironmentHandler(IDatabaseProvider databaseProvider, IDatab
     {
         var items = await databaseProvider.GetDatabases(command.Id);
 
-        foreach (var database in items)
+        foreach (var name in items)
         {
-            if (!databaseService.Exist(command.Id, database.Name))
-            {
-                database.EnvironmentId = command.Id;
-                databaseService.Add(database);
-            }
+            var dbId = Guid.Empty;
+            databaseService.GetByName(command.Id, name).Match(d => dbId = d.Id,
+                () =>
+                {
+                    var database = Database.Create(name);
+                    database.EnvironmentId = command.Id;
+                    dbId = database.Id;
+                    databaseService.Add(database);
+                });
 
-            queueProvider.Enqueue(new DatabaseMessage(command.Id, database.Id));
+            queueProvider.Enqueue(new DatabaseMessage(command.Id, dbId));
         }
     }
 }
