@@ -2,7 +2,7 @@ using Microsoft.Data.SqlClient;
 
 namespace DBAudit.Analyzer.Database;
 
-public class DetectTablesWithoutPrimaryKeys(SqlConnection connection) : DatabaseAnalyzer(connection)
+public class CountTableWithoutPrimaryKeys(SqlConnection connection) : Counter(connection)
 {
-    public new SqlConnection Connection = connection;
+    public new readonly SqlConnection Connection = connection;
 }

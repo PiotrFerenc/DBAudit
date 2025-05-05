@@ -15,12 +15,12 @@ public class AnalyzerService : IAnalyzerService
         return analyzers;
     }
 
-    public List<DatabaseAnalyzer> GetDatabaseAnalyzers(SqlConnection connection)
+    public List<Counter> GetDatabaseAnalyzers(SqlConnection connection)
     {
         var analyzers = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(x => x.GetTypes())
-            .Where(x => x is { IsClass: true, IsAbstract: false } && x.IsSubclassOf(typeof(DatabaseAnalyzer)))
-            .Select(x => Activator.CreateInstance(x, connection) as DatabaseAnalyzer)
+            .Where(x => x is { IsClass: true, IsAbstract: false } && x.IsSubclassOf(typeof(Counter)))
+            .Select(x => Activator.CreateInstance(x, connection) as Counter)
             .ToList();
 
         return analyzers;

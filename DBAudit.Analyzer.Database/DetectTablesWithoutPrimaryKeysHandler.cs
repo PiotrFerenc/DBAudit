@@ -1,11 +1,12 @@
 using DBAudit.Analyzer.Database.Common;
 using DBAudit.Infrastructure.Command;
+using LanguageExt;
 using LanguageExt.Common;
 
 namespace DBAudit.Analyzer.Database;
 
-public class DetectTablesWithoutPrimaryKeysHandler(IDatabaseService databaseService) : IRequestHandler<DetectTablesWithoutPrimaryKeys, Result<string>>
+public class CountTableWithoutPrimaryKeysHandler(IDatabaseService databaseService) : IRequestHandler<CountTableWithoutPrimaryKeys, Option<int>>
 {
-    public async Task<Result<string>> HandleAsync(DetectTablesWithoutPrimaryKeys request) =>
-        await databaseService.QuerySingleData(request.Connection, QueryConstants.TablesWithoutPk, reader => reader.GetInt32(0)).Match(c => c.ToString(), () => string.Empty);
+    public async Task<Option<int>> HandleAsync(CountTableWithoutPrimaryKeys request) =>
+        await databaseService.QuerySingleData(request.Connection, QueryConstants.TablesWithoutPk, reader => reader.GetInt32(0));
 }

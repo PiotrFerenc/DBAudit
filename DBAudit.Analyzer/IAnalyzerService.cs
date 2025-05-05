@@ -5,5 +5,5 @@ namespace DBAudit.Analyzer;
 public interface IAnalyzerService
 {
     List<TableAnalyzer> GetTableAnalyzers(SqlConnection connection, string tableName);
-    List<DatabaseAnalyzer> GetDatabaseAnalyzers(SqlConnection connection);
+    List<Counter> GetDatabaseAnalyzers(SqlConnection connection);
 }
