@@ -1,7 +1,6 @@
 using DBAudit.Analyzer.Database.Common;
 using DBAudit.Infrastructure.Command;
 using LanguageExt;
-using LanguageExt.Common;
 
 namespace DBAudit.Analyzer.Database;
 
