@@ -22,6 +22,7 @@ public class CounterMetricsProcessor(Channel<CounterMetricMessage> channel) : Ba
     {
         while (await channel.Reader.WaitToReadAsync(stoppingToken))
         {
+            var message = await channel.Reader.ReadAsync(stoppingToken);
             //save counter
             var t = 1;
         }

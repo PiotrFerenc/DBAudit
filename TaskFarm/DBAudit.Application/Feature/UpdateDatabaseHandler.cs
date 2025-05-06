@@ -11,11 +11,16 @@ public class UpdateDatabaseHandler(IDatabaseProvider databaseProvider, ITableSer
     {
         var tables = await databaseProvider.GetTables(message.EnvId, message.DbId);
 
-        foreach (var table in tables.Where(table => !tableService.Exist(message.DbId, message.EnvId, table.Name)))
+        foreach (var table in tables)
         {
-            table.DatabaseId = message.DbId;
-            table.EnvironmentId = message.EnvId;
-            tableService.Add(table);
+            var exist = tableService.Exist(message.DbId, message.EnvId, table.Name);
+            if (!exist)
+            {
+                table.DatabaseId = message.DbId;
+                table.EnvironmentId = message.EnvId;
+                tableService.Add(table);
+            }
+
             await dispatcher.Send(new AnalyzeDatabase
             {
                 EnvId = message.EnvId,
