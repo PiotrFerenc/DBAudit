@@ -1,6 +1,7 @@
 using DBAudit.Analyzer;
 using DBAudit.Infrastructure.Command;
 using DBAudit.Infrastructure.DatabaseProvider;
+using DBAudit.Infrastructure.Queue;
 using Microsoft.Data.SqlClient;
 
 namespace DBAudit.Application.Feature;
@@ -11,7 +12,7 @@ public class AnalyzeDatabase : IRequest
     public Guid DbId { get; set; }
 }
 
-public class AnalyzeDatabaseHandler(IDatabaseProvider databaseProvider, IAnalyzerService analyzerService, ICommandDispatcher dispatcher) : ICommandHandler<AnalyzeDatabase>
+public class AnalyzeDatabaseHandler(IDatabaseProvider databaseProvider, IAnalyzerService analyzerService, ICommandDispatcher dispatcher, DBAudit.Infrastructure.Queue.IQueueProvider queryProvider) : ICommandHandler<AnalyzeDatabase>
 {
     public async Task HandleAsync(AnalyzeDatabase message)
     {
@@ -20,9 +21,13 @@ public class AnalyzeDatabaseHandler(IDatabaseProvider databaseProvider, IAnalyze
         {
             var connection = new SqlConnection(connectionString);
             var analyzers = analyzerService.GetDatabaseAnalyzers(connection);
+            
             foreach (var analyzer in analyzers)
             {
-                var result = await dispatcher.Send(analyzer);
+                await dispatcher.Send(analyzer).IfSomeAsync(value =>
+                {
+                    queryProvider.Enqueue(new CounterMetricMessage(message.DbId, analyzer.Name, value));
+                });
             }
         });
     }

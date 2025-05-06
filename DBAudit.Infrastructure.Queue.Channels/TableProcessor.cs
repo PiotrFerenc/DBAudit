@@ -15,3 +15,15 @@ public class TableProcessor(Channel<ColumnsMessage> channel, ICommandDispatcher 
         }
     }
 }
+
+public class CounterMetricsProcessor(Channel<CounterMetricMessage> channel) : BackgroundService
+{
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        while (await channel.Reader.WaitToReadAsync(stoppingToken))
+        {
+            //save counter
+            var t = 1;
+        }
+    }
+}

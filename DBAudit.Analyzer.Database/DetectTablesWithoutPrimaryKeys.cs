@@ -2,7 +2,13 @@ using Microsoft.Data.SqlClient;
 
 namespace DBAudit.Analyzer.Database;
 
-public class CountTableWithoutPrimaryKeys(SqlConnection connection) : Counter(connection)
+public class CountTableWithoutPrimaryKeys : Counter
 {
-    public new readonly SqlConnection Connection = connection;
+    public new readonly SqlConnection Connection;
+
+    public CountTableWithoutPrimaryKeys(SqlConnection connection) : base(connection)
+    {
+        Connection = connection;
+        Name = "Number of tables without primary key";
+    }
 }
