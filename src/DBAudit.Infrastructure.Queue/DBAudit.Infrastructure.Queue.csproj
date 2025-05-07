@@ -10,4 +10,10 @@
       <ProjectReference Include="..\DBAudit.Infrastructure.Command\DBAudit.Infrastructure.Command.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Microsoft.Data.SqlClient">
+        <HintPath>..\..\..\..\.nuget\packages\microsoft.data.sqlclient\6.0.2\ref\net9.0\Microsoft.Data.SqlClient.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

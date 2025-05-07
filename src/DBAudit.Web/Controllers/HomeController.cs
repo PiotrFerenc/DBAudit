@@ -1,3 +1,4 @@
+using DBAudit.Infrastructure.Contracts.Entities;
 using DBAudit.Infrastructure.Queue;
 using DBAudit.Infrastructure.Storage;
 using DBAudit.Web.Models;
@@ -24,8 +25,8 @@ public class HomeController : Controller
     {
         var environments = _environmentService.GetActive();
         if (environments.Count == 0) return View("AddEnv");
-        
-        var report = new ReportViewModel
+
+        var report = new ReportView
         {
             Title = "test",
             Links =
