@@ -15,7 +15,7 @@ public class AnalyzerService : IAnalyzerService
         return analyzers;
     }
 
-    public List<Counter> GetDatabaseAnalyzers(SqlConnection connection)
+    public List<Counter> GetDatabaseCounters(SqlConnection connection)
     {
         var analyzers = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(x => x.GetTypes())
