@@ -7,9 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\DBAudit.Infrastructure.Queue\DBAudit.Infrastructure.Queue.csproj" />
-      <ProjectReference Include="..\..\DBAudit.Infrastructure.Storage\DBAudit.Infrastructure.Storage.csproj" />
-      <ProjectReference Include="..\..\DBAudit.Infrastructure\DBAudit.Infrastructure.csproj" />
+      <ProjectReference Include="..\DBAudit.Infrastructure.Queue\DBAudit.Infrastructure.Queue.csproj" />
+      <ProjectReference Include="..\DBAudit.Infrastructure.Storage\DBAudit.Infrastructure.Storage.csproj" />
+      <ProjectReference Include="..\DBAudit.Infrastructure\DBAudit.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>
