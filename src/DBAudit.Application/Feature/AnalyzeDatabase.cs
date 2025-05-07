@@ -1,6 +1,7 @@
 using System.Threading.Channels;
 using DBAudit.Analyzer;
 using DBAudit.Infrastructure.Command;
+using DBAudit.Infrastructure.Contracts.Entities;
 using DBAudit.Infrastructure.DatabaseProvider;
 using DBAudit.Infrastructure.Queue;
 using DBAudit.Infrastructure.Storage;
@@ -22,6 +23,7 @@ public class AnalyzeDatabaseHandler(IDatabaseProvider databaseProvider, IQueuePr
         cs.IfSome(connectionString =>
         {
             var connection = new SqlConnection(connectionString);
+ 
             queryProvider.Enqueue(new CounterMetricMessage(connection, message.DbId));
         });
 

@@ -9,4 +9,5 @@ public interface IReportService
     void Add(ReportView report);
     void AddCounter(Guid dbId, (string Title, string Value) counter);
     Option<ReportView> Get(Guid dbId);
+    void Remove(Guid dbId);
 }

@@ -15,7 +15,7 @@ public class CounterMetricsProcessor(Channel<CounterMetricMessage> channel, IRep
             var message = await channel.Reader.ReadAsync(stoppingToken);
 
             var analyzers = analyzerService.GetDatabaseCounters(message.connection);
-
+            
             foreach (var analyzer in analyzers)
             {
                 await dispatcher.Send(analyzer).IfSomeAsync(value =>
