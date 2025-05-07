@@ -1,6 +1,8 @@
 using DBAudit.Infrastructure.Queue;
 using DBAudit.Infrastructure.Storage;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Environment = DBAudit.Infrastructure.Contracts.Entities.Environment;
 
 namespace DBAudit.Web.Controllers;
 
@@ -20,8 +22,31 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         var environments = _environmentService.GetActive();
-        // _queueProvider.Enqueue(new EnvironmentMessage(environments.First().Id));
 
-        return View(environments);
+        return environments.Any() ? View(environments) : View("AddEnv");
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult Create(IFormCollection collection)
+    {
+        try
+        {
+            collection.TryGetValue("name", out var name);
+            collection.TryGetValue("cs", out var connectionString);
+            var id = Guid.NewGuid();
+            _environmentService.Add(new Environment
+            {
+                Id = id,
+                Name = name,
+                IsActive = true,
+                ConnectionString = connectionString
+            });
+            return RedirectToAction(nameof(Index));
+        }
+        catch
+        {
+            return View();
+        }
     }
 }
