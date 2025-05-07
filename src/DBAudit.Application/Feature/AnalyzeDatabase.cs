@@ -1,7 +1,9 @@
+using System.Threading.Channels;
 using DBAudit.Analyzer;
 using DBAudit.Infrastructure.Command;
 using DBAudit.Infrastructure.DatabaseProvider;
 using DBAudit.Infrastructure.Queue;
+using DBAudit.Infrastructure.Storage;
 using Microsoft.Data.SqlClient;
 
 namespace DBAudit.Application.Feature;
@@ -12,23 +14,17 @@ public class AnalyzeDatabase : IRequest
     public Guid DbId { get; set; }
 }
 
-public class AnalyzeDatabaseHandler(IDatabaseProvider databaseProvider, IAnalyzerService analyzerService, ICommandDispatcher dispatcher, DBAudit.Infrastructure.Queue.IQueueProvider queryProvider) : ICommandHandler<AnalyzeDatabase>
+public class AnalyzeDatabaseHandler(IDatabaseProvider databaseProvider, IQueueProvider queryProvider) : ICommandHandler<AnalyzeDatabase>
 {
-    public async Task HandleAsync(AnalyzeDatabase message)
+    public Task HandleAsync(AnalyzeDatabase message)
     {
         var cs = databaseProvider.GetConnectionString(message.EnvId, message.DbId);
-        await cs.IfSomeAsync(async connectionString =>
+        cs.IfSome(connectionString =>
         {
             var connection = new SqlConnection(connectionString);
-            var analyzers = analyzerService.GetDatabaseAnalyzers(connection);
-            
-            foreach (var analyzer in analyzers)
-            {
-                await dispatcher.Send(analyzer).IfSomeAsync(value =>
-                {
-                    queryProvider.Enqueue(new CounterMetricMessage(message.DbId, analyzer.Name, value));
-                });
-            }
+            queryProvider.Enqueue(new CounterMetricMessage(connection, message.DbId));
         });
+
+        return Task.CompletedTask;
     }
 }
