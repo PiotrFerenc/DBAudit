@@ -1,5 +1,6 @@
 using DBAudit.Infrastructure.Queue;
 using DBAudit.Infrastructure.Storage;
+using DBAudit.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Environment = DBAudit.Infrastructure.Contracts.Entities.Environment;
@@ -22,8 +23,20 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         var environments = _environmentService.GetActive();
-
-        return environments.Any() ? View(environments) : View("AddEnv");
+        if (environments.Count == 0) return View("AddEnv");
+        
+        var report = new ReportViewModel
+        {
+            Title = "test",
+            Links =
+            [
+                ("Database Overview", "/database/overview"),
+                ("Security Audit", "/audit/security"),
+                ("Performance Metrics", "/metrics/performance"),
+                ("User Activities", "/audit/users")
+            ]
+        };
+        return View("Report", report);
     }
 
     [HttpPost]
