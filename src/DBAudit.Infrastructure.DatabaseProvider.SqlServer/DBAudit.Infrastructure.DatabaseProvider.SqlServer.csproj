@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\DBAudit.Infrastructure.DatabaseProvider\DBAudit.Infrastructure.DatabaseProvider.csproj" />
       <ProjectReference Include="..\DBAudit.Infrastructure.Storage\DBAudit.Infrastructure.Storage.csproj" />
+      <ProjectReference Include="..\DBAudit.Infrastructure\DBAudit.Infrastructure.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.4" />

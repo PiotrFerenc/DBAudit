@@ -1,4 +1,5 @@
 using DBAudit.Analyzer.Database.Common;
+using DBAudit.Infrastructure;
 using DBAudit.Infrastructure.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,6 @@ public static class DatabaseExtensions
     {
         services.RegisterRequestHandlers<IDatabaseAnalyzerMarker>();
         services.AddSingleton<IAnalyzerService, AnalyzerService>();
-        services.AddSingleton<IDatabaseService, DatabaseService>();
+        services.AddSingleton<IQueryService, DatabaseService>();
     }
 }

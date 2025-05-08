@@ -1,5 +1,6 @@
 using DBAudit.Infrastructure.Queue;
 using LanguageExt;
+using Microsoft.Data.SqlClient;
 using Environment = DBAudit.Infrastructure.Contracts.Entities.Environment;
 
 namespace DBAudit.Infrastructure.Storage.Binary;
@@ -23,10 +24,10 @@ public class EnvironmentService(IDbAuditStorage<Environment> storage, IEncryptio
 
     public Option<Environment> GetById(Guid id) => storage.Find(x => x.Id == id);
 
-    public Option<string> GetConnectionString(Guid id)
+    public Option<SqlConnectionStringBuilder> GetConnectionString(Guid id)
         => GetById(id)
             .Match(
-                e => encryptionService.Decrypt(e.ConnectionString),
-                () => Option<string>.None
+                e =>  new SqlConnectionStringBuilder(encryptionService.Decrypt(e.ConnectionString)),
+                () => Option<SqlConnectionStringBuilder>.None
             );
 }

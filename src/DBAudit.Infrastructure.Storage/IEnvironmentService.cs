@@ -1,4 +1,5 @@
 using LanguageExt;
+using Microsoft.Data.SqlClient;
 using Environment = DBAudit.Infrastructure.Contracts.Entities.Environment;
 
 namespace DBAudit.Infrastructure.Storage
@@ -12,6 +13,6 @@ namespace DBAudit.Infrastructure.Storage
         void Deactivate(Guid id);
         void ChangeName(Guid id, string name);
         Option<Environment> GetById(Guid id);
-        Option<string> GetConnectionString(Guid id);
+        Option<SqlConnectionStringBuilder> GetConnectionString(Guid id);
     }
 }

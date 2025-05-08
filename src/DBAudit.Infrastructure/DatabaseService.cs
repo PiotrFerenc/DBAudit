@@ -2,9 +2,9 @@ using System.Data;
 using LanguageExt;
 using Microsoft.Data.SqlClient;
 
-namespace DBAudit.Analyzer;
+namespace DBAudit.Infrastructure;
 
-public class DatabaseService : IDatabaseService
+public class DatabaseService : IQueryService
 {
     public async Task<Option<T>> QuerySingleData<T>(SqlConnection connection, string query, Func<SqlDataReader, T> map)
     {
