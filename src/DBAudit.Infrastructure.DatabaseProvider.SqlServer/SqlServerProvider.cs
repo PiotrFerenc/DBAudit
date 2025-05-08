@@ -148,7 +148,7 @@ public class SqlServerProvider : IDatabaseProvider
 
             await using var connection = new SqlConnection(cs);
             connection.Open();
-            var tableName = table.Map(x => x.Name);
+            var tableName = table.Match(x => x.Name, () => string.Empty);
 
             var query = $@"SELECT
     COLUMN_NAME,

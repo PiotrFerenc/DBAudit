@@ -13,14 +13,19 @@ public class UpdateDatabaseHandler(IDatabaseProvider databaseProvider, ITableSer
 
         foreach (var table in tables)
         {
-            var exist = tableService.Exist(message.DbId, message.EnvId, table.Name);
-            if (!exist)
-            {
-                table.DatabaseId = message.DbId;
-                table.EnvironmentId = message.EnvId;
-                tableService.Add(table);
-            }
-            queueProvider.Enqueue(new ColumnsMessage(message.EnvId, message.DbId, table.Id));
+            tableService.Get(message.DbId, message.EnvId, table.Name).Match(t =>
+                {
+                    queueProvider.Enqueue(new ColumnsMessage(t.EnvironmentId, t.DatabaseId, t.Id));
+                },
+                () =>
+                {
+                    table.DatabaseId = message.DbId;
+                    table.EnvironmentId = message.EnvId;
+                    tableService.Add(table);
+
+                    queueProvider.Enqueue(new ColumnsMessage(table.DatabaseId, table.EnvironmentId, table.Id));
+                }
+            );
         }
     }
 }

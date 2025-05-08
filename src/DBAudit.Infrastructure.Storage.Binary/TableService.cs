@@ -8,6 +8,6 @@ public class TableService(IDbAuditStorage<Table> storage) : ITableService
     public void Add(Table table) => storage.SaveItem(table);
     public List<Table> GetAll() => storage.FetchAll();
     public List<Table> GetAll(Guid databaseId) => storage.Where(x => x.DatabaseId == databaseId);
-    public bool Exist(Guid dbId, Guid envId, string tableName) => storage.Find(x => x.DatabaseId == dbId && x.EnvironmentId == envId && x.Name == tableName).IsSome;
+    public Option<Table> Get(Guid dbId, Guid envId, string tableName) => storage.Find(x => x.DatabaseId == dbId && x.EnvironmentId == envId && x.Name == tableName);
     public Option<Table> GetById(Guid tableId) => storage.Find(x => x.Id == tableId);
 }
