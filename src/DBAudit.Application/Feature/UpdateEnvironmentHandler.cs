@@ -6,7 +6,7 @@ using DBAudit.Infrastructure.Storage;
 
 namespace DBAudit.Application.Feature;
 
-public class UpdateEnvironmentHandler(IDatabaseProvider databaseProvider, IDatabaseService databaseService, IQueueProvider queueProvider, IReportService reportService) : ICommandHandler<EnvironmentMessage>
+public class UpdateEnvironmentHandler(IDatabaseProvider databaseProvider, IDatabaseService databaseService, IQueueProvider queueProvider) : ICommandHandler<EnvironmentMessage>
 {
     public async Task HandleAsync(EnvironmentMessage command)
     {
@@ -22,15 +22,6 @@ public class UpdateEnvironmentHandler(IDatabaseProvider databaseProvider, IDatab
                     database.EnvironmentId = command.Id;
                     dbId = database.Id;
                     databaseService.Add(database);
-
-                    reportService.Remove(database.Id);
-                    reportService.Add(new ReportView
-                    {
-                        DatabaseId = database.Id,
-                        Title = "123",
-                        Links = [],
-                        Counters = []
-                    });
                 });
 
             queueProvider.Enqueue(new DatabaseMessage(command.Id, dbId));

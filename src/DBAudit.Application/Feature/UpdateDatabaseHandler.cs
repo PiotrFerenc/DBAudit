@@ -20,13 +20,6 @@ public class UpdateDatabaseHandler(IDatabaseProvider databaseProvider, ITableSer
                 table.EnvironmentId = message.EnvId;
                 tableService.Add(table);
             }
-
-            await dispatcher.Send(new AnalyzeDatabase
-            {
-                EnvId = message.EnvId,
-                DbId = message.DbId,
-            });
-
             queueProvider.Enqueue(new ColumnsMessage(message.EnvId, message.DbId, table.Id));
         }
     }

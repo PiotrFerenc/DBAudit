@@ -15,7 +15,7 @@ public class AnalyzeDatabase : IRequest
     public Guid DbId { get; set; }
 }
 
-public class AnalyzeDatabaseHandler(IDatabaseProvider databaseProvider, IQueueProvider queryProvider) : ICommandHandler<AnalyzeDatabase>
+public class AnalyzeDatabaseHandler(IDatabaseProvider databaseProvider, IQueueProvider queryProvider, IReportService reportService) : ICommandHandler<AnalyzeDatabase>
 {
     public Task HandleAsync(AnalyzeDatabase message)
     {
@@ -23,8 +23,17 @@ public class AnalyzeDatabaseHandler(IDatabaseProvider databaseProvider, IQueuePr
         cs.IfSome(connectionString =>
         {
             var connection = new SqlConnection(connectionString);
- 
+            reportService.Remove(message.DbId);
+            reportService.Add(new ReportView
+            {
+                DatabaseId = message.DbId,
+                Title = "123",
+                Links = [],
+                Counters = []
+            });
+            
             queryProvider.Enqueue(new CounterMetricMessage(connection, message.DbId));
+            
         });
 
         return Task.CompletedTask;
