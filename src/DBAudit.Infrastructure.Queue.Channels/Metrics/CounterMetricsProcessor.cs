@@ -20,7 +20,7 @@ public class CounterMetricsProcessor(Channel<CounterMetricMessage> channel, IRep
             {
                 await dispatcher.Send(analyzer).IfSomeAsync(value =>
                 {
-                    reportService.Get(message.messageDbId).IfSome(report =>
+                    reportService.GetByDbId(message.messageDbId).IfSome(report =>
                         reportService.AddCounter(report.DatabaseId, (analyzer.Name, value.ToString()))
                     );
                 });

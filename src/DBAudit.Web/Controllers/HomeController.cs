@@ -14,13 +14,15 @@ public class HomeController : Controller
     private readonly IEnvironmentService _environmentService;
     private readonly IQueueProvider _queueProvider;
     private readonly IDatabaseService _databaseService;
+    private readonly IReportService _reportService;
 
-    public HomeController(ILogger<HomeController> logger, IEnvironmentService environmentService, IQueueProvider queueProvider, IDatabaseService databaseService)
+    public HomeController(ILogger<HomeController> logger, IEnvironmentService environmentService, IQueueProvider queueProvider, IDatabaseService databaseService, IReportService reportService)
     {
         _logger = logger;
         _environmentService = environmentService;
         _queueProvider = queueProvider;
         _databaseService = databaseService;
+        _reportService = reportService;
     }
 
     public IActionResult Index()
@@ -28,22 +30,14 @@ public class HomeController : Controller
         var environments = _environmentService.GetActive();
         if (environments.Count == 0) return View("AddEnv");
         var env = environments.First();
-
-        var databases = _databaseService.GetAll(env.Id);
-
-        var report = new ReportView
-        {
-            Title = "test",
-            Links = []
-        };
-        return View("Report", report);
+        ViewBag.EnvironmentId = env.Id;
+        return _reportService.GetByEnvId(env.Id).Match(r => View("Report", r), () => View("Report", new ReportView()));
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
     public ActionResult Create(IFormCollection collection)
     {
-        //IQueueProvider
         try
         {
             collection.TryGetValue("name", out var name);
@@ -56,6 +50,25 @@ public class HomeController : Controller
                 IsActive = true,
                 ConnectionString = connectionString
             });
+            return RedirectToAction(nameof(Index));
+        }
+        catch
+        {
+            return View();
+        }
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public ActionResult AnalyzeDatabase(IFormCollection collection)
+    {
+        try
+        {
+            if (collection.TryGetValue("envId", out var name) && Guid.TryParse(name, out var envId))
+            {
+                _queueProvider.Enqueue(new DatabaseAnalyzerMessage(envId));
+            }
+
             return RedirectToAction(nameof(Index));
         }
         catch

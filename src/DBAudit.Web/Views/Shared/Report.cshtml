@@ -11,7 +11,9 @@
             @Model.Title
         </div>
         <div class="col-3">
-            <form action="" method="post">
+            <form action="/home/AnalyzeDatabase" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="envId" value="@ViewBag.EnvironmentId"/>
                 <input type="submit" value="Refresh" class="btn btn-primary"/>
             </form>
         </div>
@@ -29,7 +31,10 @@
 
                 </div>
                 <div class="col-9">
-
+                    @foreach (var counter in Model.Counters)
+                    {
+                        @await Html.PartialAsync("StatusCard/Primary", counter)
+                    }
                 </div>
             </div>
         </div>

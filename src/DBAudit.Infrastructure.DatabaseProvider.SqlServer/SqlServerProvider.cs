@@ -61,14 +61,10 @@ public class SqlServerProvider : IDatabaseProvider
 
     public async Task<bool> CheckConnection(Guid envId)
     {
-
         return true;
     }
 
-    public Option<string> GetConnectionString(Guid envId, Guid dbId)
-    {
- return string.Empty;
-    }
+    public Option<string> GetConnectionString(Guid envId, Guid dbId) => _environmentService.GetConnectionString(envId).Match(c => c.ToString(), () => Option<string>.None);
 
     public async Task<IEnumerable<Column>> GetColumns(Guid envId, Guid dbId, Guid tableId)
     {
