@@ -4,7 +4,7 @@ using DBAudit.Infrastructure.Command;
 using DBAudit.Infrastructure.Storage;
 using Microsoft.Extensions.Hosting;
 
-namespace DBAudit.Infrastructure.Queue.Channels;
+namespace DBAudit.Infrastructure.Queue.Channels.Metrics;
 
 public class CounterMetricsProcessor(Channel<CounterMetricMessage> channel, IReportService reportService, IAnalyzerService analyzerService, ICommandDispatcher dispatcher) : BackgroundService
 {

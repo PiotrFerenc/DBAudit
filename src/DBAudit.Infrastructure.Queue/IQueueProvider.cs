@@ -6,4 +6,5 @@ public interface IQueueProvider
     void Enqueue(DatabaseMessage message);
     void Enqueue(ColumnsMessage message);
     void Enqueue(CounterMetricMessage message);
+    void Enqueue(DatabaseAnalyzerMessage message);
 }

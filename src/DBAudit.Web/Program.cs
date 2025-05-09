@@ -6,6 +6,7 @@ using DBAudit.Infrastructure.Command;
 using DBAudit.Infrastructure.DatabaseProvider.SqlServer.Extensions;
 using DBAudit.Infrastructure.Queue.Channels;
 using DBAudit.Infrastructure.Queue.Channels.Extensions;
+using DBAudit.Infrastructure.Queue.Channels.StructureProcessors;
 using DBAudit.Infrastructure.Storage.Binary;
 
 var builder = WebApplication.CreateBuilder(args);

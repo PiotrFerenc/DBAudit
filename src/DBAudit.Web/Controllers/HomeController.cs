@@ -13,29 +13,28 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly IEnvironmentService _environmentService;
     private readonly IQueueProvider _queueProvider;
+    private readonly IDatabaseService _databaseService;
 
-    public HomeController(ILogger<HomeController> logger, IEnvironmentService environmentService, IQueueProvider queueProvider)
+    public HomeController(ILogger<HomeController> logger, IEnvironmentService environmentService, IQueueProvider queueProvider, IDatabaseService databaseService)
     {
         _logger = logger;
         _environmentService = environmentService;
         _queueProvider = queueProvider;
+        _databaseService = databaseService;
     }
 
     public IActionResult Index()
     {
         var environments = _environmentService.GetActive();
         if (environments.Count == 0) return View("AddEnv");
+        var env = environments.First();
+
+        var databases = _databaseService.GetAll(env.Id);
 
         var report = new ReportView
         {
             Title = "test",
-            Links =
-            [
-                ("Database Overview", "/database/overview"),
-                ("Security Audit", "/audit/security"),
-                ("Performance Metrics", "/metrics/performance"),
-                ("User Activities", "/audit/users")
-            ]
+            Links = []
         };
         return View("Report", report);
     }
@@ -44,6 +43,7 @@ public class HomeController : Controller
     [ValidateAntiForgeryToken]
     public ActionResult Create(IFormCollection collection)
     {
+        //IQueueProvider
         try
         {
             collection.TryGetValue("name", out var name);

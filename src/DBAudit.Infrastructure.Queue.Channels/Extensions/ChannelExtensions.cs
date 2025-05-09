@@ -1,4 +1,6 @@
 using System.Threading.Channels;
+using DBAudit.Infrastructure.Queue.Channels.Metrics;
+using DBAudit.Infrastructure.Queue.Channels.StructureProcessors;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DBAudit.Infrastructure.Queue.Channels.Extensions;
@@ -13,6 +15,7 @@ public static class ChannelExtensions
         services.AddHostedService<EnvironmentProcessor>();
         services.AddHostedService<DatabaseProcessor>();
         services.AddHostedService<TableProcessor>();
+        services.AddHostedService<DatabaseAnalyzerProcessor>();
 
         var config = new UnboundedChannelOptions
         {
@@ -24,6 +27,9 @@ public static class ChannelExtensions
         services.AddSingleton<Channel<EnvironmentMessage>>(_ => Channel.CreateUnbounded<EnvironmentMessage>(config));
         services.AddSingleton<Channel<DatabaseMessage>>(_ => Channel.CreateUnbounded<DatabaseMessage>(config));
         services.AddSingleton<Channel<ColumnsMessage>>(_ => Channel.CreateUnbounded<ColumnsMessage>(config));
+        
         services.AddSingleton<Channel<CounterMetricMessage>>(_ => Channel.CreateUnbounded<CounterMetricMessage>(config));
+        
+        services.AddSingleton<Channel<DatabaseAnalyzerMessage>>(_ => Channel.CreateUnbounded<DatabaseAnalyzerMessage>(config));
     }
 }

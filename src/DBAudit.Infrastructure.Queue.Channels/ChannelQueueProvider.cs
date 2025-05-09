@@ -2,7 +2,7 @@ using System.Threading.Channels;
 
 namespace DBAudit.Infrastructure.Queue.Channels;
 
-internal class ChannelQueueProvider(Channel<EnvironmentMessage> envChannel, Channel<DatabaseMessage> databaseChannel, Channel<ColumnsMessage> columnChannel, Channel<CounterMetricMessage> counterMetricChannel) : IQueueProvider
+internal class ChannelQueueProvider(Channel<EnvironmentMessage> envChannel, Channel<DatabaseMessage> databaseChannel, Channel<ColumnsMessage> columnChannel, Channel<CounterMetricMessage> counterMetricChannel, Channel<DatabaseAnalyzerMessage> databaseAnalyzerChannel) : IQueueProvider
 {
     public void Enqueue(EnvironmentMessage message)
     {
@@ -22,5 +22,10 @@ internal class ChannelQueueProvider(Channel<EnvironmentMessage> envChannel, Chan
     public void Enqueue(CounterMetricMessage message)
     {
         counterMetricChannel.Writer.TryWrite(message);
+    }
+
+    public void Enqueue(DatabaseAnalyzerMessage message)
+    {
+        databaseAnalyzerChannel.Writer.TryWrite(message);
     }
 }

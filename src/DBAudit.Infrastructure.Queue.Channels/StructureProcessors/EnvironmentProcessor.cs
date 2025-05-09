@@ -2,9 +2,9 @@ using System.Threading.Channels;
 using DBAudit.Infrastructure.Command;
 using Microsoft.Extensions.Hosting;
 
-namespace DBAudit.Infrastructure.Queue.Channels;
+namespace DBAudit.Infrastructure.Queue.Channels.StructureProcessors;
 
-public class DatabaseProcessor(Channel<DatabaseMessage> channel, ICommandDispatcher dispatcher) : BackgroundService
+public class EnvironmentProcessor(Channel<EnvironmentMessage> channel, ICommandDispatcher dispatcher) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

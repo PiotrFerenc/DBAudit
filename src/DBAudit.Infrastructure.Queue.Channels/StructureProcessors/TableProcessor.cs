@@ -2,7 +2,7 @@ using System.Threading.Channels;
 using DBAudit.Infrastructure.Command;
 using Microsoft.Extensions.Hosting;
 
-namespace DBAudit.Infrastructure.Queue.Channels;
+namespace DBAudit.Infrastructure.Queue.Channels.StructureProcessors;
 
 public class TableProcessor(Channel<ColumnsMessage> channel, ICommandDispatcher dispatcher) : BackgroundService
 {
