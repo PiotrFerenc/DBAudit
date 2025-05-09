@@ -6,13 +6,13 @@ using DBAudit.Infrastructure.Storage;
 
 namespace DBAudit.Application.Feature;
 
-public class UpdateEnvironmentHandler(IDatabaseProvider databaseProvider, IDatabaseService databaseService, IQueueProvider queueProvider) : ICommandHandler<EnvironmentMessage>
+public class UpdateDatabasesHandler(IDatabaseProvider databaseProvider, IDatabaseService databaseService, IQueueProvider queueProvider) : ICommandHandler<EnvironmentMessage>
 {
     public async Task HandleAsync(EnvironmentMessage command)
     {
-        var items = await databaseProvider.GetDatabases(command.Id);
+        var databases = await databaseProvider.GetDatabases(command.Id);
 
-        foreach (var name in items)
+        foreach (var name in databases)
         {
             var dbId = Guid.Empty;
             databaseService.GetByName(command.Id, name).Match(d => dbId = d.Id,

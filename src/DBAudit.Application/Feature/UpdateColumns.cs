@@ -5,7 +5,7 @@ using DBAudit.Infrastructure.Storage;
 
 namespace DBAudit.Application.Feature;
 
-public class UpdateTables(IDatabaseProvider databaseProvider, IColumnService columnService) : ICommandHandler<ColumnsMessage>
+public class UpdateColumns(IDatabaseProvider databaseProvider, IColumnService columnService) : ICommandHandler<ColumnsMessage>
 {
     public async Task HandleAsync(ColumnsMessage message)
     {
@@ -13,7 +13,7 @@ public class UpdateTables(IDatabaseProvider databaseProvider, IColumnService col
 
         foreach (var column in columns)
         {
-            columnService.Add(column);
+            columnService.GetByName(message.TableId, column.Name).IfNone(() => columnService.Add(column));
         }
     }
 }

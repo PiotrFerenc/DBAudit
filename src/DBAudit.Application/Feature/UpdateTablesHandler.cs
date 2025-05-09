@@ -5,7 +5,7 @@ using DBAudit.Infrastructure.Storage;
 
 namespace DBAudit.Application.Feature;
 
-public class UpdateDatabaseHandler(IDatabaseProvider databaseProvider, ITableService tableService, IQueueProvider queueProvider, ICommandDispatcher dispatcher) : ICommandHandler<DatabaseMessage>
+public class UpdateTablesHandler(IDatabaseProvider databaseProvider, ITableService tableService, IQueueProvider queueProvider, ICommandDispatcher dispatcher) : ICommandHandler<DatabaseMessage>
 {
     public async Task HandleAsync(DatabaseMessage message)
     {
