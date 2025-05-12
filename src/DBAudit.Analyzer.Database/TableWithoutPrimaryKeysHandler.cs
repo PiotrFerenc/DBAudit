@@ -14,12 +14,17 @@ public class TableWithoutPrimaryKeysHandler(IReportService reportService, IQuery
         var tables = await databaseService.QueryData(request.Connection, QueryConstants.TablesWithoutPk, reader => (reader.GetString(0), reader.GetString(1)));
 
         reportService.GetByDbId(request.reportId).IfSome(report =>
-            reportService.AddCounter(report.Id, new CounterDetails
             {
-                Title = request.Name,
-                Value = tables.Count,
-                Items = tables.Select(x => ($"{x.Item1}.{x.Item2}", "database")).ToList()
-            })
+                var counterDetails = new CounterDetails
+                {
+                    Title = request.Name,
+                    Value = tables.Count,
+                    Id = Guid.NewGuid(),
+                    Items = tables.Select(x => ($"{x.Item1}.{x.Item2}", "database")).ToList()
+                };
+                //counterdetails repo
+                reportService.AddCounter(report.Id, (request.Name, tables.Count.ToString(), counterDetails.Id));
+            }
         );
 
         return tables.Count;
