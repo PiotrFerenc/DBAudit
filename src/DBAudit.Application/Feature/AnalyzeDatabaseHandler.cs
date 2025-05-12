@@ -14,20 +14,22 @@ public class AnalyzeDatabaseHandler(IDatabaseProvider databaseProvider, IQueuePr
         var cs = databaseProvider.GetConnectionString(message.EnvId, message.DbId);
         cs.IfSome(connectionString =>
         {
-            var databases = databaseService.GetAll(message.DbId);
+            var databases = databaseService.GetAll(message.EnvId);
 
             var connection = new SqlConnection(connectionString);
             reportService.Remove(message.DbId);
-            reportService.Add(new ReportView
+            var report = new ReportView
             {
+                Id = Guid.NewGuid(),
                 DatabaseId = message.DbId,
                 EnvId = message.EnvId,
-                Title = "123",
+                Title = "Env metrics",
                 Links = databases.Select(x => (x.Name, $"/database/{x.Id}")).ToList(),
                 Counters = []
-            });
+            };
+            reportService.Add(report);
 
-            queryProvider.Enqueue(new CounterMetricMessage(connection, message.DbId));
+            queryProvider.Enqueue(new CounterMetricMessage(connection, report.Id));
         });
 
         return Task.CompletedTask;

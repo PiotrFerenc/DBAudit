@@ -1,4 +1,4 @@
-@model (string Title, string Text)
+@model (string Title, string Text, List<(string Name, string Link)> Items)
 
 
 <div class="col-md-3">
@@ -6,6 +6,10 @@
         <div class="card-body">
             <h6 class="card-title">@Model.Title</h6>
             <h2 class="card-text">@Model.Text</h2>
+            @foreach (var table in Model.Items)
+            {
+                <a href="@table.Link" class="btn btn-primary">@table.Name</a>
+            }
         </div>
     </div>
 </div>

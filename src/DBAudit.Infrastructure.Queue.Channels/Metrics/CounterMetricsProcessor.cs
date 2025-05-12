@@ -6,7 +6,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace DBAudit.Infrastructure.Queue.Channels.Metrics;
 
-public class CounterMetricsProcessor(Channel<CounterMetricMessage> channel, IReportService reportService, IAnalyzerService analyzerService, ICommandDispatcher dispatcher) : BackgroundService
+public class CounterMetricsProcessor(Channel<CounterMetricMessage> channel, IAnalyzerService analyzerService, ICommandDispatcher dispatcher) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -14,16 +14,11 @@ public class CounterMetricsProcessor(Channel<CounterMetricMessage> channel, IRep
         {
             var message = await channel.Reader.ReadAsync(stoppingToken);
 
-            var analyzers = analyzerService.GetDatabaseCounters(message.connection);
-            
+            var analyzers = analyzerService.GetDatabaseCounters(message.connection, message.reportId);
+
             foreach (var analyzer in analyzers)
             {
-                await dispatcher.Send(analyzer).IfSomeAsync(value =>
-                {
-                    reportService.GetByDbId(message.messageDbId).IfSome(report =>
-                        reportService.AddCounter(report.DatabaseId, (analyzer.Name, value.ToString()))
-                    );
-                });
+                await dispatcher.Send(analyzer);
             }
         }
     }

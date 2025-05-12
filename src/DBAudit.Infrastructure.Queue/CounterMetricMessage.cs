@@ -3,4 +3,4 @@ using Microsoft.Data.SqlClient;
 
 namespace DBAudit.Infrastructure.Queue;
 
-public record CounterMetricMessage(SqlConnection connection, Guid messageDbId) : IRequest;
+public record CounterMetricMessage(SqlConnection connection, Guid reportId) : IRequest;

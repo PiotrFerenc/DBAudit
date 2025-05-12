@@ -33,7 +33,7 @@
                 <div class="col-9">
                     @foreach (var counter in Model.Counters)
                     {
-                        @await Html.PartialAsync("StatusCard/Primary", counter)
+                        @await Html.PartialAsync("StatusCard/Primary", (counter.Title, counter.Value.ToString(), counter.Items))
                     }
                 </div>
             </div>
