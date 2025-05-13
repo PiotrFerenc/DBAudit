@@ -7,7 +7,7 @@ using LanguageExt;
 
 namespace DBAudit.Analyzer.Database;
 
-public class TableWithoutPrimaryKeysHandler(IReportService reportService, IQueryService databaseService) : IRequestHandler<TableWithoutPrimaryKeys, Option<int>>
+public class TableWithoutPrimaryKeysHandler(IReportService reportService, IQueryService databaseService, ICounterService counterService) : IRequestHandler<TableWithoutPrimaryKeys, Option<int>>
 {
     public async Task<Option<int>> HandleAsync(TableWithoutPrimaryKeys request)
     {
@@ -20,9 +20,10 @@ public class TableWithoutPrimaryKeysHandler(IReportService reportService, IQuery
                     Title = request.Name,
                     Value = tables.Count,
                     Id = Guid.NewGuid(),
-                    Items = tables.Select(x => ($"{x.Item1}.{x.Item2}", "database")).ToList()
+                    Items = tables.Select(x => ($"{x.Item1}.{x.Item2}", $"/database/{report.DatabaseId}")).ToList()
                 };
-                //counterdetails repo
+
+                counterService.Add(counterDetails);
                 reportService.AddCounter(report.Id, (request.Name, tables.Count.ToString(), counterDetails.Id));
             }
         );

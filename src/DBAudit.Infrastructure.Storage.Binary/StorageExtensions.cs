@@ -13,11 +13,13 @@ public static class StorageExtensions
         services.AddSingleton<IDbAuditStorage<Table>>(new BinaryStorage<Table>($"{nameof(Table)}.bin"));
         services.AddSingleton<IDbAuditStorage<Column>>(new BinaryStorage<Column>($"{nameof(Column)}.bin"));
         services.AddSingleton<IDbAuditStorage<ReportView>>(new BinaryStorage<ReportView>($"{nameof(ReportView)}.bin"));
-        
+        services.AddSingleton<IDbAuditStorage<CounterDetails>>(new BinaryStorage<CounterDetails>($"{nameof(CounterDetails)}.bin"));
+
         services.AddTransient<IEnvironmentService, EnvironmentService>();
         services.AddTransient<IDatabaseService, DatabaseService>();
         services.AddTransient<ITableService, TableService>();
         services.AddTransient<IColumnService, ColumnService>();
         services.AddTransient<IReportService, ReportService>();
+        services.AddTransient<ICounterService, CounterService>();
     }
 }
