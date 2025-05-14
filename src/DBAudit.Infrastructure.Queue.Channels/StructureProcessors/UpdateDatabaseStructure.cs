@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace DBAudit.Infrastructure.Queue.Channels.StructureProcessors;
 
-public class EnvironmentProcessor(Channel<EnvironmentMessage> channel, ICommandDispatcher dispatcher) : BackgroundService
+public class UpdateDatabaseStructure(Channel<EnvironmentMessage> channel, ICommandDispatcher dispatcher) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

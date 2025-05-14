@@ -21,7 +21,6 @@ builder.Services.AddSingleton<IEncryptionService>(new EncryptionService(key, iv)
 builder.Services.AddBinaryStorage();
 
 builder.Services.AddSqlServerProvider();
-builder.Services.AddHostedService<EnvironmentProcessor>();
 
 builder.Services.AddCommandDispatcher();
 builder.Services.AddApplication();

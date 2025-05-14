@@ -33,6 +33,7 @@ public class BinaryStorage<T> : IDbAuditStorage<T>
     public Option<T> Find(Func<T, bool> filter) => _items.Find(filter);
 
     public List<T> Where(Func<T, bool> filter) => FetchAll().Where(filter).ToList();
+    public int Count(Func<T, bool> filter) => FetchAll().Count(filter);
 
     public void RemoveByKey(Func<T, bool> filter) =>
         _items.Find(filter).IfSome(x =>

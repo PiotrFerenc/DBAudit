@@ -16,5 +16,5 @@ public class ReportService(IDbAuditStorage<ReportView> storage, ICounterService 
     });
 
     public void AddCounter(Guid id, (string Title, string Value, Guid Id) counter) => storage.Update(r => r.Counters.Add(counter), x => x.Id == id);
-    public Option<ReportView> GetByDbId(Guid id) => storage.Find(x => x.Id == id);
+    public Option<ReportView> GetByDbId(Guid id) => storage.Find(x => x.DatabaseId == id);
 }

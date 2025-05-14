@@ -34,6 +34,12 @@ public class HomeController : Controller
         return _reportService.GetByEnvId(env.Id).Match(r => View("Report", r), () => View("Report", new ReportView()));
     }
 
+    [HttpGet("/database/{id:guid}")]
+    public IActionResult DatabaseReport([FromRoute]Guid id)
+    {
+        return _reportService.GetByDbId(id).Match(r => View("Report", r), () => View("Report", new ReportView()));
+    }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     public ActionResult Create(IFormCollection collection)

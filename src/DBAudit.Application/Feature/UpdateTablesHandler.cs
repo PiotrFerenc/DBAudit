@@ -5,7 +5,7 @@ using DBAudit.Infrastructure.Storage;
 
 namespace DBAudit.Application.Feature;
 
-public class UpdateTablesHandler(IDatabaseProvider databaseProvider, ITableService tableService, IQueueProvider queueProvider, ICommandDispatcher dispatcher) : ICommandHandler<DatabaseMessage>
+public class UpdateTablesHandler(IDatabaseProvider databaseProvider, ITableService tableService,   ICommandDispatcher dispatcher) : ICommandHandler<DatabaseMessage>
 {
     public async Task HandleAsync(DatabaseMessage message)
     {
@@ -15,7 +15,7 @@ public class UpdateTablesHandler(IDatabaseProvider databaseProvider, ITableServi
         {
             tableService.Get(message.DbId, message.EnvId, table.Name).Match(t =>
                 {
-                    queueProvider.Enqueue(new ColumnsMessage(t.EnvironmentId, t.DatabaseId, t.Id));
+                    dispatcher.Send(new ColumnsMessage(t.EnvironmentId, t.DatabaseId, t.Id));
                 },
                 () =>
                 {
@@ -23,7 +23,7 @@ public class UpdateTablesHandler(IDatabaseProvider databaseProvider, ITableServi
                     table.EnvironmentId = message.EnvId;
                     tableService.Add(table);
 
-                    queueProvider.Enqueue(new ColumnsMessage(table.DatabaseId, table.EnvironmentId, table.Id));
+                    dispatcher.Send(new ColumnsMessage(table.DatabaseId, table.EnvironmentId, table.Id));
                 }
             );
         }

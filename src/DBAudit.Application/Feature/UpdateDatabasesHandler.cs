@@ -6,7 +6,7 @@ using DBAudit.Infrastructure.Storage;
 
 namespace DBAudit.Application.Feature;
 
-public class UpdateDatabasesHandler(IDatabaseProvider databaseProvider, IDatabaseService databaseService, IQueueProvider queueProvider) : ICommandHandler<EnvironmentMessage>
+public class UpdateDatabasesHandler(IDatabaseProvider databaseProvider, IDatabaseService databaseService,  ICommandDispatcher dispatcher) : ICommandHandler<EnvironmentMessage>
 {
     public async Task HandleAsync(EnvironmentMessage command)
     {
@@ -23,8 +23,7 @@ public class UpdateDatabasesHandler(IDatabaseProvider databaseProvider, IDatabas
                     dbId = database.Id;
                     databaseService.Add(database);
                 });
-
-            queueProvider.Enqueue(new DatabaseMessage(command.Id, dbId));
+            await dispatcher.Send(new DatabaseMessage(command.Id, dbId));
         }
     }
 }

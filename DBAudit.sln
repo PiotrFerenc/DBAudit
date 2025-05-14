@@ -48,6 +48,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Analyzer.Database",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Analyzer.Table", "src\DBAudit.Analyzer.Table\DBAudit.Analyzer.Table.csproj", "{3F9CA104-3063-431F-ACB4-EEEF93C4FEEF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Infrastructure.Storage.SqlLite", "src\DBAudit.Infrastructure.Storage.SqlLite\DBAudit.Infrastructure.Storage.SqlLite.csproj", "{59C159FF-C881-4FF6-9B4F-30083AE729A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,6 +112,10 @@ Global
 		{3F9CA104-3063-431F-ACB4-EEEF93C4FEEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F9CA104-3063-431F-ACB4-EEEF93C4FEEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F9CA104-3063-431F-ACB4-EEEF93C4FEEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59C159FF-C881-4FF6-9B4F-30083AE729A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59C159FF-C881-4FF6-9B4F-30083AE729A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59C159FF-C881-4FF6-9B4F-30083AE729A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59C159FF-C881-4FF6-9B4F-30083AE729A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B0CD0E5D-928B-42DE-8174-1EC9A6CDFF24} = {0AC1E1CC-D085-418C-AD76-02646DC0BEAD}
@@ -122,5 +128,6 @@ Global
 		{140A738E-71AA-4B91-BC6B-6820AEB209C9} = {CD19F0B3-BC0A-4269-94CE-1AD684A066E3}
 		{4401BE2A-051F-4FF0-B105-B6BCC1EC4C17} = {CD19F0B3-BC0A-4269-94CE-1AD684A066E3}
 		{3F9CA104-3063-431F-ACB4-EEEF93C4FEEF} = {CD19F0B3-BC0A-4269-94CE-1AD684A066E3}
+		{59C159FF-C881-4FF6-9B4F-30083AE729A1} = {EA107DD3-6528-45BB-A58D-6CEA20589E4D}
 	EndGlobalSection
 EndGlobal
