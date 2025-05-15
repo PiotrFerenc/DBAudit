@@ -1,10 +1,10 @@
-using DBAudit.Analyzer.Database.Common;
+using DBAudit.Analyzer.Table.Common;
 using DBAudit.Infrastructure;
 using DBAudit.Infrastructure.Command;
 using DBAudit.Infrastructure.Contracts.Entities;
 using DBAudit.Infrastructure.Storage;
 
-namespace DBAudit.Analyzer.Database;
+namespace DBAudit.Analyzer.Table;
 
 public class IsTableWithoutPrimaryKeysHandler(IQueryService queryService, IDatabaseService databaseService) : ICommandHandler<IsTableWithoutPrimaryKeys>
 {

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace DBAudit.Infrastructure.Queue.Channels.Metrics;
 
-public class CounterMetricsProcessor(Channel<CounterMetricMessage> channel, IAnalyzerService analyzerService, ICommandDispatcher dispatcher) : BackgroundService
+public class CounterMetricsProcessor(Channel<CounterMetricMessage> channel, ITableAnalyzerService analyzerService, ICommandDispatcher dispatcher) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {

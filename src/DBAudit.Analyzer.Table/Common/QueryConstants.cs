@@ -1,4 +1,4 @@
-namespace DBAudit.Analyzer.Database.Common;
+namespace DBAudit.Analyzer.Table.Common;
 
 public static class QueryConstants
 {

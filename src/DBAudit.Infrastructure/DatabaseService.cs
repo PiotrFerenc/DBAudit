@@ -8,17 +8,25 @@ public class DatabaseService : IQueryService
 {
     public async Task<Option<T>> QuerySingleData<T>(SqlConnection connection, string query, Func<SqlDataReader, T> map)
     {
-        if (connection.State is not ConnectionState.Open)
+        try
         {
-            await connection.OpenAsync();
+            if (connection.State is not ConnectionState.Open)
+            {
+                await connection.OpenAsync();
+            }
+
+            await using var command = new SqlCommand(query, connection);
+
+            await using var reader = await command.ExecuteReaderAsync();
+            while (await reader.ReadAsync())
+            {
+                return map(reader);
+            }
         }
-
-        await using var command = new SqlCommand(query, connection);
-
-        await using var reader = await command.ExecuteReaderAsync();
-        while (await reader.ReadAsync())
+        catch (Exception e)
         {
-            return map(reader);
+            Console.WriteLine(e);
+            throw;
         }
 
         return Option<T>.None;

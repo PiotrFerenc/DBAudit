@@ -9,8 +9,7 @@ public static class TableExtensions
 {
     public static void AddTableAnalyzer(this IServiceCollection services)
     {
-        services.RegisterRequestHandlers<ITableAnalyzerMarker>();
-
-        services.AddSingleton<IAnalyzerService, AnalyzerService>();
+        services.RegisterCommandHandlers<ITableAnalyzerMarker>();
+        services.AddSingleton<ITableAnalyzerService, TableAnalyzerService>();
     }
 }

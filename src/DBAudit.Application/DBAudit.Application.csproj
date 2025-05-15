@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\DBAudit.Analyzer\DBAudit.Analyzer.csproj" />
       <ProjectReference Include="..\DBAudit.Infrastructure.Command\DBAudit.Infrastructure.Command.csproj" />
       <ProjectReference Include="..\DBAudit.Infrastructure.DatabaseProvider\DBAudit.Infrastructure.DatabaseProvider.csproj" />
       <ProjectReference Include="..\DBAudit.Infrastructure.Queue\DBAudit.Infrastructure.Queue.csproj" />

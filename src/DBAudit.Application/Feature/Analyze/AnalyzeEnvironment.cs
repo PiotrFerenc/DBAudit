@@ -1,3 +1,5 @@
+using System.Data;
+using DBAudit.Analyzer;
 using DBAudit.Infrastructure.Command;
 using DBAudit.Infrastructure.Storage;
 using Microsoft.Data.SqlClient;
@@ -29,25 +31,28 @@ public record AnalyzeDatabase(Guid EnvId, Guid DbId, SqlConnectionStringBuilder 
 
 public class AnalyzeDatabaseHandler(ICommandDispatcher dispatcher, ITableService tableService) : ICommandHandler<AnalyzeDatabase>
 {
-    public Task HandleAsync(AnalyzeDatabase command)
+    public async Task HandleAsync(AnalyzeDatabase command)
     {
         var tables = tableService.GetAll(command.DbId);
-        using var connection = new SqlConnection(command.ConnectionStringBuilder.ToString());
-        foreach (var table in tables)
-        {
-            dispatcher.Send(new AnalyzeTable(command.EnvId, command.DbId, table.Id, connection));
-        }
+        await using var connection = new SqlConnection(command.ConnectionStringBuilder.ToString());
+        if (connection.State is not ConnectionState.Open) await connection.OpenAsync();
 
-        return Task.CompletedTask;
+        foreach (var table in tables) await dispatcher.Send(new AnalyzeTable(command.EnvId, command.DbId, table.Id, connection));
     }
 }
 
 public record AnalyzeTable(Guid EnvId, Guid DbId, Guid TableId, SqlConnection connection) : IRequest;
 
-public class AnalyzeTableHandler(ICommandDispatcher dispatcher, IColumnService columnService) : ICommandHandler<AnalyzeTable>
+public class AnalyzeTableHandler(ICommandDispatcher dispatcher, IColumnService columnService, ITableAnalyzerService databaseAnalyzerService) : ICommandHandler<AnalyzeTable>
 {
     public Task HandleAsync(AnalyzeTable command)
     {
+        var analyzers = databaseAnalyzerService.GetCheckAnalyzers(command.connection, TableId.Create(command.TableId), EnvId.Create(command.EnvId), DbId.Create(command.DbId));
+        foreach (var analyzer in analyzers)
+        {
+            dispatcher.Send(analyzer);
+        }
+
         var columns = columnService.GetByTableId(command.TableId);
         foreach (var column in columns)
         {

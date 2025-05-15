@@ -1,6 +1,6 @@
 using FluentMigrator;
 
-namespace DBAudit.Infrastructure.Data.Migrations;
+namespace DBAudit.Infrastructure.DatabaseProvider.Migrations;
 
 [Migration(202504151353)]
 public class EnvironmentCreateTable : Migration

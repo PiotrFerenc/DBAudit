@@ -1,6 +1,6 @@
 using FluentMigrator;
 
-namespace DBAudit.Infrastructure.Data.Migrations;
+namespace DBAudit.Infrastructure.DatabaseProvider.Migrations;
 
 [Migration(202504151421)]
 public class TableMigration : Migration

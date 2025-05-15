@@ -11,7 +11,7 @@ public static class DatabaseExtensions
     public static void AddDatabaseAnalyzer(this IServiceCollection services)
     {
         services.RegisterRequestHandlers<IDatabaseAnalyzerMarker>();
-        services.AddSingleton<IAnalyzerService, AnalyzerService>();
+        // services.AddSingleton<IDatabaseAnalyzerService, DatabaseAnalyzerService>();
         services.AddSingleton<IQueryService, DatabaseService>();
     }
 }
