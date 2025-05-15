@@ -13,7 +13,7 @@ public static class ChannelExtensions
         
         services.AddHostedService<CounterMetricsProcessor>();
         services.AddHostedService<UpdateDatabaseStructure>();
-        services.AddHostedService<DatabaseAnalyzerProcessor>();
+        services.AddHostedService<DatabasesAnalyzerProcessor>();
 
         var config = new UnboundedChannelOptions
         {

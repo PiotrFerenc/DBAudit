@@ -4,25 +4,32 @@ namespace DBAudit.Analyzer;
 
 public class AnalyzerService : IAnalyzerService
 {
-    public List<TableAnalyzer> GetTableAnalyzers(SqlConnection connection, string tableName)
+    public List<Is> GetCheckAnalyzers(SqlConnection connection, TableId tableId, EnvId envId, DbId dbId)
     {
         var analyzers = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(x => x.GetTypes())
-            .Where(x => x is { IsClass: true, IsAbstract: false } && x.IsSubclassOf(typeof(TableAnalyzer)))
-            .Select(x => Activator.CreateInstance(x, connection, tableName) as TableAnalyzer)
-            .ToList();
-
-        return analyzers;
-    }
-
-    public List<Counter> GetDatabaseCounters(SqlConnection connection, Guid reportId)
-    {
-        var analyzers = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(x => x.GetTypes())
-            .Where(x => x is { IsClass: true, IsAbstract: false } && x.IsSubclassOf(typeof(Counter)))
-            .Select(x => Activator.CreateInstance(x, connection, reportId) as Counter)
+            .Where(x => x is { IsClass: true, IsAbstract: false } && x.IsSubclassOf(typeof(Is)))
+            .Select(x => Activator.CreateInstance(x, connection, tableId.Value, envId.Value, dbId.Value) as Is)
             .ToList();
 
         return analyzers;
     }
 }
+
+public record TableId(Guid Value)
+{
+    public static TableId Empty => new(Guid.Empty);
+    public static TableId Create(Guid id) => new(id);
+};
+
+public record DbId(Guid Value)
+{
+    public static DbId Empty => new(Guid.Empty);
+    public static DbId Create(Guid id) => new(id);
+};
+
+public record EnvId(Guid Value)
+{
+    public static EnvId Empty => new(Guid.Empty);
+    public static EnvId Create(Guid id) => new(id);
+};

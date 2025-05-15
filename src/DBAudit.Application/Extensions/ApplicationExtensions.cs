@@ -1,5 +1,5 @@
 using DBAudit.Application.Common;
-using DBAudit.Infrastructure.Extensions;
+using DBAudit.Infrastructure.Command.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DBAudit.Application.Extensions;

@@ -1,7 +1,6 @@
-using DBAudit.Infrastructure.Command;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DBAudit.Infrastructure.Extensions;
+namespace DBAudit.Infrastructure.Command.Extensions;
 
 public static class RegisterHelper
 {
