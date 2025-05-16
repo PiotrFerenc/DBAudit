@@ -16,6 +16,12 @@ public interface IMetricsService
     int Count(string type, Guid envId, Guid dbId, Guid tableId);
     int Count(string type, Guid envId, Guid dbId, Guid tableId, Guid columnId);
 
+    List<MetricsDetails> Get(string type, Guid envId);
+    List<MetricsDetails> Get(string type, Guid envId, Guid dbId);
+    List<MetricsDetails> Get(string type, Guid envId, Guid dbId, Guid tableId);
+    List<MetricsDetails> Get(string type, Guid envId, Guid dbId, Guid tableId, Guid columnId);
+
+
     Option<MetricsDetails> Get(Guid id);
     void Remove(params Guid[] id);
 }

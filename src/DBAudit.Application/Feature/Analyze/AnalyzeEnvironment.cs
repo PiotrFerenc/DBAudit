@@ -38,6 +38,8 @@ public class AnalyzeDatabaseHandler(ICommandDispatcher dispatcher, ITableService
         await using var connection = new SqlConnection(command.ConnectionStringBuilder.ToString());
 
         foreach (var table in tables) await dispatcher.Send(new AnalyzeTable(command.EnvId, command.DbId, table.Id, connection));
+        
+        await connection.CloseAsync();
     }
 }
 

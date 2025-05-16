@@ -1,3 +1,4 @@
+using DBAudit.Analyzer.Table;
 using DBAudit.Infrastructure.Contracts.Entities;
 using DBAudit.Infrastructure.Queue;
 using DBAudit.Infrastructure.Storage;
@@ -15,14 +16,16 @@ public class HomeController : Controller
     private readonly IQueueProvider _queueProvider;
     private readonly IDatabaseService _databaseService;
     private readonly IReportService _reportService;
+    private readonly IMetricsService _metricsService;
 
-    public HomeController(ILogger<HomeController> logger, IEnvironmentService environmentService, IQueueProvider queueProvider, IDatabaseService databaseService, IReportService reportService)
+    public HomeController(ILogger<HomeController> logger, IEnvironmentService environmentService, IQueueProvider queueProvider, IDatabaseService databaseService, IReportService reportService, IMetricsService metricsService)
     {
         _logger = logger;
         _environmentService = environmentService;
         _queueProvider = queueProvider;
         _databaseService = databaseService;
         _reportService = reportService;
+        _metricsService = metricsService;
     }
 
     public IActionResult Index()
@@ -30,12 +33,15 @@ public class HomeController : Controller
         var environments = _environmentService.GetActive();
         if (environments.Count == 0) return View("AddEnv");
         var env = environments.First();
-        ViewBag.EnvironmentId = env.Id;
-        return _reportService.GetByEnvId(env.Id).Match(r => View("Report", r), () => View("Report", new ReportView()));
+        ViewBag.Count =    _metricsService.Count(nameof(IsTableWithoutPrimaryKeys), env.Id); 
+        ViewBag.Metrics =    _metricsService.Get(nameof(IsTableWithoutPrimaryKeys), env.Id); 
+        return View(environments);
+        //     ViewBag.EnvironmentId = env.Id;
+        //     return _reportService.GetByEnvId(env.Id).Match(r => View("Report", r), () => View("Report", new ReportView()));
     }
 
     [HttpGet("/database/{id:guid}")]
-    public IActionResult DatabaseReport([FromRoute]Guid id)
+    public IActionResult DatabaseReport([FromRoute] Guid id)
     {
         return _reportService.GetByDbId(id).Match(r => View("Report", r), () => View("Report", new ReportView()));
     }

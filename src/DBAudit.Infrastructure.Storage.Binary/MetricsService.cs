@@ -40,6 +40,12 @@ public class MetricsService(IDbAuditStorage<MetricsDetails> storage) : IMetricsS
     public int Count(string type, Guid envId, Guid dbId, Guid tableId) => Count(type, envId, dbId, tableId, Guid.Empty);
     public int Count(string type, Guid envId, Guid dbId, Guid tableId, Guid columnId) => storage.Count(x => x.Type == type && x.EnvironmentId == envId && x.DatabaseId == dbId && x.TableId == tableId && x.ColumnId == columnId);
 
+    public List<MetricsDetails> Get(string type, Guid envId) => Get(type, envId, Guid.Empty, Guid.Empty, Guid.Empty);
+    public List<MetricsDetails> Get(string type, Guid envId, Guid dbId) =>Get(type, envId, dbId, Guid.Empty, Guid.Empty);
+    public List<MetricsDetails> Get(string type, Guid envId, Guid dbId, Guid tableId) => Get(type, envId, dbId, tableId, Guid.Empty);
+    public List<MetricsDetails> Get(string type, Guid envId, Guid dbId, Guid tableId, Guid columnId) => storage.Where(x => x.Type == type && x.EnvironmentId == envId && x.DatabaseId == dbId && x.TableId == tableId && x.ColumnId == columnId);
+
+    
 
     public Option<MetricsDetails> Get(Guid id) => storage.Find(x => x.Id == id);
     public void Remove(params Guid[] id) => storage.RemoveByKey(x => id.Contains(x.Id));
