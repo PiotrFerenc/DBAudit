@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DBAudit.Web.Controllers;
 
-public class CounterController(ICounterService counterService) : Controller
+public class CounterController(IMetricsService counterService) : Controller
 {
     // GET
     [HttpGet("/counter/{id:guid}")]

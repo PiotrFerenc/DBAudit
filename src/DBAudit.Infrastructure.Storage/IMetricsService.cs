@@ -3,9 +3,9 @@ using LanguageExt;
 
 namespace DBAudit.Infrastructure.Storage;
 
-public interface ICounterService
+public interface IMetricsService
 {
-    void Add(CounterDetails counter);
+    void Add(MetricsDetails counter);
     void Add(int value, string type, Guid envId);
     void Add(int value, string type, Guid envId, Guid dbId);
     void Add(int value, string type, Guid envId, Guid dbId, Guid tableId);
@@ -16,6 +16,6 @@ public interface ICounterService
     int Count(string type, Guid envId, Guid dbId, Guid tableId);
     int Count(string type, Guid envId, Guid dbId, Guid tableId, Guid columnId);
 
-    Option<CounterDetails> Get(Guid id);
+    Option<MetricsDetails> Get(Guid id);
     void Remove(params Guid[] id);
 }

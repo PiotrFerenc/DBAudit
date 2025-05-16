@@ -3,7 +3,7 @@ using MessagePack;
 namespace DBAudit.Infrastructure.Contracts.Entities;
 
 [MessagePackObject(AllowPrivate = true)]
-public class CounterDetails
+public class MetricsDetails
 {
     [Key(0)] public Guid Id { get; set; }
     [Key(1)] public string Title { get; set; } = string.Empty;

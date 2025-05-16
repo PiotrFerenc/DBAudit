@@ -3,31 +3,21 @@ using DBAudit.Infrastructure;
 using DBAudit.Infrastructure.Command;
 using DBAudit.Infrastructure.Contracts.Entities;
 using DBAudit.Infrastructure.Storage;
+using LanguageExt;
 
 namespace DBAudit.Analyzer.Table;
 
-public class IsTableWithoutPrimaryKeysHandler(IQueryService queryService, IDatabaseService databaseService) : ICommandHandler<IsTableWithoutPrimaryKeys>
+public class IsTableWithoutPrimaryKeysHandler(IQueryService queryService, IDatabaseService databaseService, IMetricsService metricsService) : IRequestHandler<IsTableWithoutPrimaryKeys, Option<string>>
 {
-    public async Task HandleAsync(IsTableWithoutPrimaryKeys request)
+    public async Task<Option<string>> HandleAsync(IsTableWithoutPrimaryKeys request)
     {
         await databaseService.GetById(request.dbId).IfSomeAsync(db =>
         {
             var query = QueryConstants.TablesWithoutPk.Replace("@table", db.Name);
-             queryService.QuerySingleData(request.connection, query, reader => (reader.GetInt32(0)))
-                .IfSomeAsync(count =>
-                {
-                    var counterDetails = new CounterDetails
-                    {
-                        Title = request.name,
-                        Value = count > 0 ? 1 : 0,
-                        Id = Guid.NewGuid(),
-                        Type = nameof(IsTableWithoutPrimaryKeys),
-                        EnvironmentId = request.envId,
-                        DatabaseId = request.dbId,
-                        TableId = request.tableId,
-                        ColumnId = Guid.Empty
-                    };
-                });
+            queryService.QuerySingleData(request.connection, query, reader => (reader.GetInt32(0)))
+                .IfSomeAsync(count => { metricsService.Add(count > 0 ? 1 : 0, nameof(IsTableWithoutPrimaryKeys), request.envId, request.dbId, request.tableId); });
         });
+
+        return Option<string>.None;
     }
 }

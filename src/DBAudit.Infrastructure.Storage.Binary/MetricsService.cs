@@ -3,9 +3,9 @@ using LanguageExt;
 
 namespace DBAudit.Infrastructure.Storage.Binary;
 
-public class CounterService(IDbAuditStorage<CounterDetails> storage) : ICounterService
+public class MetricsService(IDbAuditStorage<MetricsDetails> storage) : IMetricsService
 {
-    public void Add(CounterDetails counter) => storage.SaveItem(counter);
+    public void Add(MetricsDetails counter) => storage.SaveItem(counter);
 
     public void Add(int value, string type, Guid envId)
     {
@@ -23,7 +23,7 @@ public class CounterService(IDbAuditStorage<CounterDetails> storage) : ICounterS
     }
 
     public void Add(int value, string type, Guid envId, Guid dbId, Guid tableId, Guid columnId)
-        => storage.SaveItem(new CounterDetails
+        => storage.SaveItem(new MetricsDetails
         {
             Id = Guid.NewGuid(),
             Title = type,
@@ -41,6 +41,6 @@ public class CounterService(IDbAuditStorage<CounterDetails> storage) : ICounterS
     public int Count(string type, Guid envId, Guid dbId, Guid tableId, Guid columnId) => storage.Count(x => x.Type == type && x.EnvironmentId == envId && x.DatabaseId == dbId && x.TableId == tableId && x.ColumnId == columnId);
 
 
-    public Option<CounterDetails> Get(Guid id) => storage.Find(x => x.Id == id);
+    public Option<MetricsDetails> Get(Guid id) => storage.Find(x => x.Id == id);
     public void Remove(params Guid[] id) => storage.RemoveByKey(x => id.Contains(x.Id));
 }

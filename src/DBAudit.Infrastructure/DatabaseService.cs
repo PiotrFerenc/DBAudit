@@ -8,15 +8,15 @@ public class DatabaseService : IQueryService
 {
     public async Task<Option<T>> QuerySingleData<T>(SqlConnection connection, string query, Func<SqlDataReader, T> map)
     {
+        var wasInitiallyClosed = connection.State is not ConnectionState.Open;
         try
         {
-            if (connection.State is not ConnectionState.Open)
+            if (wasInitiallyClosed)
             {
                 await connection.OpenAsync();
             }
-
+            
             await using var command = new SqlCommand(query, connection);
-
             await using var reader = await command.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {
@@ -28,27 +28,44 @@ public class DatabaseService : IQueryService
             Console.WriteLine(e);
             throw;
         }
+        finally
+        {
+            if (wasInitiallyClosed && connection.State is ConnectionState.Open)
+            {
+                await connection.CloseAsync();
+            }
+        }
 
         return Option<T>.None;
     }
 
     public async Task<List<T>> QueryData<T>(SqlConnection connection, string query, Func<SqlDataReader, T> map)
     {
-        if (connection.State is not ConnectionState.Open)
+        var wasInitiallyClosed = connection.State is not ConnectionState.Open;
+        try
         {
-            await connection.OpenAsync();
+            if (wasInitiallyClosed)
+            {
+                await connection.OpenAsync();
+            }
+    
+            await using var command = new SqlCommand(query, connection);
+            await using var reader = await command.ExecuteReaderAsync();
+            var result = new List<T>();
+            while (await reader.ReadAsync())
+            {
+                var item = map(reader);
+                result.AddRange(item);
+            }
+    
+            return result;
         }
-
-        await using var command = new SqlCommand(query, connection);
-
-        await using var reader = await command.ExecuteReaderAsync();
-        var result = new List<T>();
-        while (await reader.ReadAsync())
+        finally
         {
-            var item = map(reader);
-            result.AddRange(item);
+            if (wasInitiallyClosed && connection.State is ConnectionState.Open)
+            {
+                await connection.CloseAsync();
+            }
         }
-
-        return result;
     }
 }

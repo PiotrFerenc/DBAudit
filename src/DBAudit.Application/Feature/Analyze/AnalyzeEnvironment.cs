@@ -2,6 +2,7 @@ using System.Data;
 using DBAudit.Analyzer;
 using DBAudit.Infrastructure.Command;
 using DBAudit.Infrastructure.Storage;
+using LanguageExt.ClassInstances.Const;
 using Microsoft.Data.SqlClient;
 
 namespace DBAudit.Application.Feature.Analyze;
@@ -35,7 +36,6 @@ public class AnalyzeDatabaseHandler(ICommandDispatcher dispatcher, ITableService
     {
         var tables = tableService.GetAll(command.DbId);
         await using var connection = new SqlConnection(command.ConnectionStringBuilder.ToString());
-        if (connection.State is not ConnectionState.Open) await connection.OpenAsync();
 
         foreach (var table in tables) await dispatcher.Send(new AnalyzeTable(command.EnvId, command.DbId, table.Id, connection));
     }
@@ -45,21 +45,15 @@ public record AnalyzeTable(Guid EnvId, Guid DbId, Guid TableId, SqlConnection co
 
 public class AnalyzeTableHandler(ICommandDispatcher dispatcher, IColumnService columnService, ITableAnalyzerService databaseAnalyzerService) : ICommandHandler<AnalyzeTable>
 {
-    public Task HandleAsync(AnalyzeTable command)
+    public async Task HandleAsync(AnalyzeTable command)
     {
+        if (command.connection.State is not ConnectionState.Open) command.connection.Open();
+
         var analyzers = databaseAnalyzerService.GetCheckAnalyzers(command.connection, TableId.Create(command.TableId), EnvId.Create(command.EnvId), DbId.Create(command.DbId));
-        foreach (var analyzer in analyzers)
-        {
-            dispatcher.Send(analyzer);
-        }
+        foreach (var analyzer in analyzers) await dispatcher.Send(analyzer).IfSomeAsync(Console.WriteLine);
 
         var columns = columnService.GetByTableId(command.TableId);
-        foreach (var column in columns)
-        {
-            dispatcher.Send(new AnalyzeColumn(command.EnvId, command.DbId, command.TableId, column.Id, command.connection));
-        }
-
-        return Task.CompletedTask;
+        foreach (var column in columns) await dispatcher.Send(new AnalyzeColumn(command.EnvId, command.DbId, command.TableId, column.Id, command.connection));
     }
 }
 
@@ -67,8 +61,8 @@ public record AnalyzeColumn(Guid EnvId, Guid DbId, Guid TableId, Guid ColumnId, 
 
 public class AnalyzeColumnHandler : ICommandHandler<AnalyzeColumn>
 {
-    public Task HandleAsync(AnalyzeColumn command)
+    public async Task HandleAsync(AnalyzeColumn command)
     {
-        return Task.CompletedTask;
+        await Task.Delay(1);
     }
 }

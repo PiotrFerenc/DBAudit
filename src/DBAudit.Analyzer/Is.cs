@@ -1,9 +1,10 @@
 using DBAudit.Infrastructure.Command;
+using LanguageExt;
 using Microsoft.Data.SqlClient;
 
 namespace DBAudit.Analyzer;
 
-public class Is(SqlConnection connection, string name, Guid tableId, Guid envId, Guid dbId) : IRequest
+public class Is(SqlConnection connection, string name, Guid tableId, Guid envId, Guid dbId) : IRequest<Option<string>>
 {
     public SqlConnection connection { get; } = connection;
     public string name { get; } = name;

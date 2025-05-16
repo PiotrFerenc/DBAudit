@@ -10,6 +10,7 @@ public static class TableExtensions
     public static void AddTableAnalyzer(this IServiceCollection services)
     {
         services.RegisterCommandHandlers<ITableAnalyzerMarker>();
+        services.RegisterRequestHandlers<ITableAnalyzerMarker>();
         services.AddSingleton<ITableAnalyzerService, TableAnalyzerService>();
     }
 }
