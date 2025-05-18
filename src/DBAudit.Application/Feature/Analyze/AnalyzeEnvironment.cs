@@ -1,8 +1,8 @@
 using System.Data;
 using DBAudit.Analyzer;
 using DBAudit.Infrastructure.Command;
+using DBAudit.Infrastructure.Contracts.Entities;
 using DBAudit.Infrastructure.Storage;
-using LanguageExt.ClassInstances.Const;
 using Microsoft.Data.SqlClient;
 
 namespace DBAudit.Application.Feature.Analyze;
@@ -11,20 +11,19 @@ public record AnalyzeEnvironment(Guid EnvId) : IRequest;
 
 public class AnalyzeEnvironmentHandler(ICommandDispatcher dispatcher, IDatabaseService databaseService, IEnvironmentService environmentService) : ICommandHandler<AnalyzeEnvironment>
 {
-    public Task HandleAsync(AnalyzeEnvironment command)
+    public async Task HandleAsync(AnalyzeEnvironment command)
     {
-        environmentService.GetConnectionString(command.EnvId).IfSome(builder =>
+        await environmentService.GetConnectionString(command.EnvId).IfSomeAsync(async builder =>
         {
             var databases = databaseService.GetAll(command.EnvId);
             foreach (var database in databases)
             {
                 builder.InitialCatalog = database.Name;
-                dispatcher.Send(new AnalyzeDatabase(command.EnvId, database.Id, builder));
+                await dispatcher.Send(new AnalyzeDatabase(command.EnvId, database.Id, builder));
             }
+
+            await dispatcher.Send(new GenerateMetrics(command.EnvId));
         });
-
-
-        return Task.CompletedTask;
     }
 }
 
@@ -38,7 +37,7 @@ public class AnalyzeDatabaseHandler(ICommandDispatcher dispatcher, ITableService
         await using var connection = new SqlConnection(command.ConnectionStringBuilder.ToString());
 
         foreach (var table in tables) await dispatcher.Send(new AnalyzeTable(command.EnvId, command.DbId, table.Id, connection));
-        
+
         await connection.CloseAsync();
     }
 }
@@ -67,4 +66,49 @@ public class AnalyzeColumnHandler : ICommandHandler<AnalyzeColumn>
     {
         await Task.Delay(1);
     }
+}
+
+public record GenerateMetrics(Guid EnvId) : IRequest;
+
+public class GenerateMetricsHandler(IMetricsService metricsService, ITableService tableService) : ICommandHandler<GenerateMetrics>
+{
+    public Task HandleAsync(GenerateMetrics command)
+    {
+        var metrics = metricsService.GetAllForEnv(command.EnvId);
+        var tables = tableService.GetAll(command.EnvId);
+
+        foreach (var table in tables)
+        {
+            var columnMetrics = metrics.Where(x => x.ColumnId != Guid.Empty && x.TableId == table.Id).ToList();
+
+            var result = MetricsGenerator.For(columnMetrics, metric => new MetricsDetails
+            {
+                Id = Guid.NewGuid(),
+                Title = metric.Key,
+                Value = metric.Value,
+                Items = [],
+                EnvironmentId = table.EnvironmentId,
+                DatabaseId = table.DatabaseId,
+                TableId = table.Id,
+                ColumnId = Guid.Empty,
+                Type = metric.Key
+            });
+
+            foreach (var metric in result)
+            {
+                metricsService.Add(metric);
+            }
+        }
+
+
+        return Task.CompletedTask;
+    }
+}
+
+public static class MetricsGenerator
+{
+    public static List<MetricsDetails> For(List<MetricsDetails> columnMetrics, Func<KeyValuePair<string, int>, MetricsDetails> map)
+        => columnMetrics.GroupBy(x => x.Type)
+            .ToDictionary(x => x.Key, x => x.Sum(y => y.Value))
+            .Select(map).ToList();
 }

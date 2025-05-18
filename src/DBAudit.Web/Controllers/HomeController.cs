@@ -33,8 +33,9 @@ public class HomeController : Controller
         var environments = _environmentService.GetActive();
         if (environments.Count == 0) return View("AddEnv");
         var env = environments.First();
-        ViewBag.Count =    _metricsService.Count(nameof(IsTableWithoutPrimaryKeys), env.Id); 
-        ViewBag.Metrics =    _metricsService.Get(nameof(IsTableWithoutPrimaryKeys), env.Id); 
+        ViewBag.Count = _metricsService.Count(nameof(IsTableWithoutPrimaryKeys), env.Id);
+        ViewBag.Metrics = _metricsService.Get(nameof(IsTableWithoutPrimaryKeys), env.Id);
+        ViewBag.EnvironmentId = env.Id;
         return View(environments);
         //     ViewBag.EnvironmentId = env.Id;
         //     return _reportService.GetByEnvId(env.Id).Match(r => View("Report", r), () => View("Report", new ReportView()));

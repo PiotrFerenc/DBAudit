@@ -20,8 +20,9 @@ public interface IMetricsService
     List<MetricsDetails> Get(string type, Guid envId, Guid dbId);
     List<MetricsDetails> Get(string type, Guid envId, Guid dbId, Guid tableId);
     List<MetricsDetails> Get(string type, Guid envId, Guid dbId, Guid tableId, Guid columnId);
-
-
+    List<MetricsDetails> GetColumnsFromEnv(Guid envId);
+    List<string> GetGeneratedMetricTypes(Guid envId);
     Option<MetricsDetails> Get(Guid id);
     void Remove(params Guid[] id);
+    List<MetricsDetails> GetAllForEnv(Guid envId);
 }

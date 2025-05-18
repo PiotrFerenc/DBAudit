@@ -21,6 +21,12 @@
         </div>
     </div>
 </div>
+
+<form action="/home/AnalyzeDatabase" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="envId" value="@ViewBag.EnvironmentId"/>
+    <input type="submit" value="Refresh" class="btn btn-primary"/>
+</form>
 @ViewBag.Count
 
 @foreach (MetricsDetails item in ViewBag.Metrics)
