@@ -3,6 +3,7 @@ using DBAudit.Analyzer;
 using DBAudit.Infrastructure.Command;
 using DBAudit.Infrastructure.Contracts.Entities;
 using DBAudit.Infrastructure.Storage;
+using LanguageExt;
 using Microsoft.Data.SqlClient;
 
 namespace DBAudit.Application.Feature.Analyze;
@@ -70,7 +71,7 @@ public class AnalyzeColumnHandler : ICommandHandler<AnalyzeColumn>
 
 public record GenerateMetrics(Guid EnvId) : IRequest;
 
-public class GenerateMetricsHandler(IMetricsService metricsService, ITableService tableService) : ICommandHandler<GenerateMetrics>
+public class GenerateMetricsHandler(IMetricsService metricsService, ITableService tableService, IDatabaseService databaseService, IEnvironmentService environmentService) : ICommandHandler<GenerateMetrics>
 {
     public Task HandleAsync(GenerateMetrics command)
     {
@@ -99,8 +100,50 @@ public class GenerateMetricsHandler(IMetricsService metricsService, ITableServic
                 metricsService.Add(metric);
             }
         }
+        var databases = databaseService.GetAll(command.EnvId);
 
+        foreach (var database in databases)
+        {
+            var tableMetrics = metrics.Where(x => x.ColumnId == Guid.Empty && x.TableId != Guid.Empty && x.EnvironmentId == command.EnvId).ToList();
+            var result = MetricsGenerator.For(tableMetrics, metric => new MetricsDetails
+            {
+                Id = Guid.NewGuid(),
+                Title = metric.Key,
+                Value = metric.Value,
+                Items = [],
+                EnvironmentId = database.EnvironmentId,
+                DatabaseId = database.Id,
+                TableId = Guid.Empty,
+                ColumnId = Guid.Empty,
+                Type = metric.Key
+            });
+            foreach (var metric in result)
+            {
+                metricsService.Add(metric);
+            }
+        }
 
+        environmentService.GetById(command.EnvId).IfSome(e =>
+        {
+            var databaseMetrics  = metrics.Where(x => x.ColumnId == Guid.Empty && x.TableId == Guid.Empty && x.EnvironmentId == command.EnvId).ToList();
+            var result = MetricsGenerator.For(databaseMetrics, metric => new MetricsDetails
+            {
+                Id = Guid.NewGuid(),
+                Title = metric.Key,
+                Value = metric.Value,
+                Items = [],
+                EnvironmentId = e.Id,
+                DatabaseId = e.Id,
+                TableId = Guid.Empty,
+                ColumnId = Guid.Empty,
+                Type = metric.Key
+            });
+            foreach (var metric in result)
+            {
+                metricsService.Add(metric);
+            }
+        });
+        
         return Task.CompletedTask;
     }
 }
