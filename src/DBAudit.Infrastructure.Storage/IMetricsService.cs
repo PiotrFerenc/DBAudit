@@ -25,4 +25,5 @@ public interface IMetricsService
     Option<MetricsDetails> Get(Guid id);
     void Remove(params Guid[] id);
     List<MetricsDetails> GetAllForEnv(Guid envId);
+    List<MetricsDetails> GetTableMetrics(Guid tableId);
 }

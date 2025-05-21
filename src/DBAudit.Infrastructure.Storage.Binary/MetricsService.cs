@@ -50,4 +50,5 @@ public class MetricsService(IDbAuditStorage<MetricsDetails> storage) : IMetricsS
     public Option<MetricsDetails> Get(Guid id) => storage.Find(x => x.Id == id);
     public void Remove(params Guid[] id) => storage.RemoveByKey(x => id.Contains(x.Id));
     public List<MetricsDetails> GetAllForEnv(Guid envId) => storage.Where(x => x.EnvironmentId == envId);
+    public List<MetricsDetails> GetTableMetrics(Guid tableId) => storage.Where(x => x.TableId == tableId && x.ColumnId == Guid.Empty);
 }

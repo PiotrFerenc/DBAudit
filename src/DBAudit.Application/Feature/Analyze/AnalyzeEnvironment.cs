@@ -76,8 +76,8 @@ public class GenerateMetricsHandler(IMetricsService metricsService, ITableServic
     public Task HandleAsync(GenerateMetrics command)
     {
         var metrics = metricsService.GetAllForEnv(command.EnvId);
-        var tables = tableService.GetAll(command.EnvId);
-
+        var tables = tableService.GetAllByEnvId(command.EnvId);
+            // get ze srodowiska i wszystkie tabele w nim 
         foreach (var table in tables)
         {
             var columnMetrics = metrics.Where(x => x.ColumnId != Guid.Empty && x.TableId == table.Id).ToList();
@@ -100,6 +100,7 @@ public class GenerateMetricsHandler(IMetricsService metricsService, ITableServic
                 metricsService.Add(metric);
             }
         }
+        metrics = metricsService.GetAllForEnv(command.EnvId);
         var databases = databaseService.GetAll(command.EnvId);
 
         foreach (var database in databases)
@@ -125,6 +126,7 @@ public class GenerateMetricsHandler(IMetricsService metricsService, ITableServic
 
         environmentService.GetById(command.EnvId).IfSome(e =>
         {
+            metrics = metricsService.GetAllForEnv(command.EnvId);
             var databaseMetrics  = metrics.Where(x => x.ColumnId == Guid.Empty && x.TableId == Guid.Empty && x.EnvironmentId == command.EnvId).ToList();
             var result = MetricsGenerator.For(databaseMetrics, metric => new MetricsDetails
             {
@@ -133,7 +135,7 @@ public class GenerateMetricsHandler(IMetricsService metricsService, ITableServic
                 Value = metric.Value,
                 Items = [],
                 EnvironmentId = e.Id,
-                DatabaseId = e.Id,
+                DatabaseId = Guid.Empty,
                 TableId = Guid.Empty,
                 ColumnId = Guid.Empty,
                 Type = metric.Key

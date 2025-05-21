@@ -11,10 +11,10 @@ public class IsTableWithoutPrimaryKeysHandler(IQueryService queryService, IDatab
 {
     public async Task<Option<string>> HandleAsync(IsTableWithoutPrimaryKeys request)
     {
-        await databaseService.GetById(request.dbId).IfSomeAsync(db =>
+        await databaseService.GetById(request.dbId).IfSomeAsync(async db =>
         {
             var query = QueryConstants.TablesWithoutPk.Replace("@table", db.Name);
-            queryService.QuerySingleData(request.connection, query, reader => (reader.GetInt32(0)))
+          await  queryService.QuerySingleData(request.connection, query, reader => (reader.GetInt32(0)))
                 .IfSomeAsync(count => { metricsService.Add(count > 0 ? 1 : 0, nameof(IsTableWithoutPrimaryKeys), request.envId, request.dbId, request.tableId); });
         });
 
