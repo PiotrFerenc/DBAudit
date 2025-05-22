@@ -1,4 +1,5 @@
 using DBAudit.Infrastructure.Contracts.Entities;
+using DBAudit.Infrastructure.Storage.Metrics;
 using Microsoft.Extensions.DependencyInjection;
 using Environment = DBAudit.Infrastructure.Contracts.Entities.Environment;
 
@@ -20,6 +21,6 @@ public static class StorageExtensions
         services.AddTransient<ITableService, TableService>();
         services.AddTransient<IColumnService, ColumnService>();
         services.AddTransient<IReportService, ReportService>();
-        services.AddTransient<IMetricsService, MetricsService>();
+        services.AddTransient<IColumnMetricsService, MetricsService>();
     }
 }

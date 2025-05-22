@@ -1,11 +1,16 @@
 using DBAudit.Infrastructure.Contracts.Entities;
+using DBAudit.Infrastructure.Storage.Metrics;
 using LanguageExt;
 
 namespace DBAudit.Infrastructure.Storage.Binary;
 
-public class MetricsService(IDbAuditStorage<MetricsDetails> storage) : IMetricsService
+public class MetricsService(IDbAuditStorage<MetricsDetails> storage) : IColumnMetricsService
 {
     public void Add(MetricsDetails counter) => storage.SaveItem(counter);
+    public List<MetricsDetails> GetAllByTableId(Guid tableId)
+    {
+        throw new NotImplementedException();
+    }
 
     public void Add(int value, string type, Guid envId)
     {

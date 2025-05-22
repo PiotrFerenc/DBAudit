@@ -11,4 +11,8 @@ public class SqlLiteDbContext(DbContextOptions<SqlLiteDbContext> options) : DbCo
     public DbSet<Environment> Environments { get; set; }
     public DbSet<ReportView> Reports { get; set; }
     public DbSet<Table> Tables { get; set; }
+    public DbSet<MetricsDetails> ColumnMetrics { get; set; }
+    public DbSet<MetricsDetails> DatabaseMetrics { get; set; }
+    public DbSet<MetricsDetails> EnvironmentMetrics { get; set; }
+    public DbSet<MetricsDetails> TableMetrics { get; set; }
 }

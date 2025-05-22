@@ -1,9 +1,10 @@
 using DBAudit.Infrastructure.Contracts.Entities;
+using DBAudit.Infrastructure.Storage.Metrics;
 using LanguageExt;
 
 namespace DBAudit.Infrastructure.Storage.Binary;
 
-public class ReportService(IDbAuditStorage<ReportView> storage, IMetricsService counterService) : IReportService
+public class ReportService(IDbAuditStorage<ReportView> storage, IColumnMetricsService counterService) : IReportService
 {
     public List<ReportView> All(Guid dbId) => storage.Where(x => x.DatabaseId == dbId);
     public void Add(ReportView report) => storage.SaveItem(report);
@@ -11,7 +12,7 @@ public class ReportService(IDbAuditStorage<ReportView> storage, IMetricsService 
 
     public void Remove(Guid dbId) => storage.Find(x => x.DatabaseId == dbId).IfSome(r =>
     {
-        counterService.Remove(r.Counters.Select(c => c.Id).ToArray());
+        // counterService.Remove(r.Counters.Select(c => c.Id).ToArray());
         storage.RemoveByKey(v => v.DatabaseId == dbId);
     });
 
