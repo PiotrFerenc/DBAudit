@@ -22,7 +22,7 @@ public static class ChannelExtensions
             SingleWriter = true
         };
 
-        services.AddSingleton<Channel<EnvironmentMessage>>(_ => Channel.CreateUnbounded<EnvironmentMessage>(config));
+        services.AddSingleton<Channel<UpdateEnvironment>>(_ => Channel.CreateUnbounded<UpdateEnvironment>(config));
         
         services.AddSingleton<Channel<CounterMetricMessage>>(_ => Channel.CreateUnbounded<CounterMetricMessage>(config));
         

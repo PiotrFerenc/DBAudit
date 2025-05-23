@@ -15,7 +15,7 @@ public class EnvironmentService(IDbAuditStorage<Environment> storage, IEncryptio
         environment.ConnectionString = encryptionService.Encrypt(environment.ConnectionString);
         storage.SaveItem(environment);
 
-        queue.Enqueue(new EnvironmentMessage(environment.Id));
+        queue.Enqueue(new UpdateEnvironment(environment.Id));
     }
 
     public void Activate(Guid id) => storage.Update(e => e.IsActive = true, x => x.Id == id);

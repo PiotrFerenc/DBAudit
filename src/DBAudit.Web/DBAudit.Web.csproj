@@ -28,9 +28,9 @@
       <ProjectReference Include="..\DBAudit.Analyzer.Database\DBAudit.Analyzer.Database.csproj" />
       <ProjectReference Include="..\DBAudit.Analyzer.Table\DBAudit.Analyzer.Table.csproj" />
       <ProjectReference Include="..\DBAudit.Infrastructure.DatabaseProvider.SqlServer\DBAudit.Infrastructure.DatabaseProvider.SqlServer.csproj" />
+      <ProjectReference Include="..\DBAudit.Infrastructure.Storage.SqlLite\DBAudit.Infrastructure.Storage.SqlLite.csproj" />
       <ProjectReference Include="..\DBAudit.Infrastructure.Storage\DBAudit.Infrastructure.Storage.csproj" />
       <ProjectReference Include="..\DBAudit.Application\DBAudit.Application.csproj" />
-      <ProjectReference Include="..\DBAudit.Infrastructure.Storage.Binary\DBAudit.Infrastructure.Storage.Binary.csproj" />
     </ItemGroup>
 
     <ItemGroup>

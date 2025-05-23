@@ -20,7 +20,7 @@ public static class StorageExtensions
         services.AddTransient<IDatabaseService, DatabaseService>();
         services.AddTransient<ITableService, TableService>();
         services.AddTransient<IColumnService, ColumnService>();
-        services.AddTransient<IReportService, ReportService>();
+        //services.AddTransient<IReportService, ReportService>();
         services.AddTransient<IColumnMetricsService, MetricsService>();
     }
 }

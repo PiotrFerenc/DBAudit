@@ -10,7 +10,7 @@ public static class RegisterHelper
             .FromAssemblyOf<TMarker>()
             .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)))
             .AsImplementedInterfaces()
-            .WithTransientLifetime());
+            .WithScopedLifetime());
     }
 
     public static void RegisterCommandHandlers<TMarker>(this IServiceCollection services)
@@ -19,6 +19,6 @@ public static class RegisterHelper
             .FromAssemblyOf<TMarker>()
             .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)))
             .AsImplementedInterfaces()
-            .WithTransientLifetime());
+            .WithScopedLifetime());
     }
 }

@@ -12,6 +12,7 @@ public class SqlLiteEnvironmentService(SqlLiteDbContext dbContext, IEncryptionSe
 
     public void Add(Environment environment)
     {
+        environment.ConnectionString = encryptionService.Encrypt(environment.ConnectionString);
         dbContext.Environments.Add(environment);
         dbContext.SaveChanges();
     }

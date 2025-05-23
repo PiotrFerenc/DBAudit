@@ -26,11 +26,11 @@ public class SqlLiteTableService (SqlLiteDbContext dbContext): ITableService
         return dbContext.Tables.Where(x => x.EnvironmentId == envId).ToList();
     }
 
-    public Option<Table> Get(Guid messageDbId, Guid messageEnvId, string tableName)
+    public Option<Table> Get(Guid dbId, Guid envId, string tableName)
     {
         return dbContext.Tables.FirstOrDefault(x => 
-            x.DatabaseId == messageDbId && 
-            x.EnvironmentId == messageEnvId && 
+            x.DatabaseId == dbId && 
+            x.EnvironmentId == envId && 
             x.Name == tableName);
     }
 

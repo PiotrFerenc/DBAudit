@@ -4,7 +4,7 @@ using LanguageExt;
 
 namespace DBAudit.Infrastructure.Storage.Binary;
 
-public class ReportService(IDbAuditStorage<ReportView> storage, IColumnMetricsService counterService) : IReportService
+public class ReportService(IDbAuditStorage<ReportView> storage, IColumnMetricsService counterService) //: IReportService
 {
     public List<ReportView> All(Guid dbId) => storage.Where(x => x.DatabaseId == dbId);
     public void Add(ReportView report) => storage.SaveItem(report);

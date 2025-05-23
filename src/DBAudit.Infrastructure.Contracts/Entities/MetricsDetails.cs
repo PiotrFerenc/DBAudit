@@ -8,7 +8,6 @@ public class MetricsDetails
     [Key(0)] public Guid Id { get; set; }
     [Key(1)] public string Title { get; set; } = string.Empty;
     [Key(2)] public int Value { get; set; }
-    [Key(3)] public List<(string Name, string Link)> Items { get; set; } = [];
     [Key(4)] public Guid EnvironmentId { get; set; }
     [Key(5)] public Guid DatabaseId { get; set; }
     [Key(6)] public Guid TableId { get; set; }
@@ -30,7 +29,6 @@ public class MetricsDetails
         Id = Guid.NewGuid(),
         Title = title,
         Value = value,
-        Items = items,
         EnvironmentId = environmentId,
         DatabaseId = databaseId,
         TableId = tableId,

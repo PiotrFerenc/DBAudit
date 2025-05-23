@@ -33,7 +33,6 @@ public class MetricsService(IDbAuditStorage<MetricsDetails> storage) : IColumnMe
             Id = Guid.NewGuid(),
             Type = type,
             Value = value,
-            Items = [],
             EnvironmentId = envId,
             DatabaseId = dbId,
             TableId = tableId,

@@ -7,12 +7,12 @@ public class DatabaseMigration : Migration
 {
     public override void Up()
     {
-        Create.Table("Database")
+        Create.Table("Databases")
             .WithColumn("Id").AsGuid().PrimaryKey()
             .WithColumn("Name").AsString().NotNullable()
             .WithColumn("IsActive").AsBoolean().NotNullable()
-            .WithColumn("EnvironmentId").AsGuid().NotNullable()
-            .ForeignKey("FK_Database_Environment", "Environments", "Id");
+            .WithColumn("EnvironmentId").AsGuid().NotNullable();
+        // .ForeignKey("FK_Database_Environment", "Environments", "Id");
     }
 
     public override void Down()

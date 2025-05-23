@@ -16,16 +16,15 @@ public class HomeController : Controller
     private readonly IEnvironmentService _environmentService;
     private readonly IQueueProvider _queueProvider;
     private readonly IDatabaseService _databaseService;
-    private readonly IReportService _reportService;
+    //private readonly IReportService _reportService;
     private readonly IColumnMetricsService _metricsService;
 
-    public HomeController(ILogger<HomeController> logger, IEnvironmentService environmentService, IQueueProvider queueProvider, IDatabaseService databaseService, IReportService reportService, IColumnMetricsService metricsService)
+    public HomeController(ILogger<HomeController> logger, IEnvironmentService environmentService, IQueueProvider queueProvider, IDatabaseService databaseService,  IColumnMetricsService metricsService)
     {
         _logger = logger;
         _environmentService = environmentService;
         _queueProvider = queueProvider;
         _databaseService = databaseService;
-        _reportService = reportService;
         _metricsService = metricsService;
     }
 
@@ -45,7 +44,8 @@ public class HomeController : Controller
     [HttpGet("/database/{id:guid}")]
     public IActionResult DatabaseReport([FromRoute] Guid id)
     {
-        return _reportService.GetByDbId(id).Match(r => View("Report", r), () => View("Report", new ReportView()));
+        //return _reportService.GetByDbId(id).Match(r => View("Report", r), () => View("Report", new ReportView()));
+        return View();
     }
 
     [HttpPost]

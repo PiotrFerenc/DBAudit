@@ -5,15 +5,3 @@
     Layout = "_Layout";
 }
 @await Html.PartialAsync("Alert/Warning", (Model.Title, Model.Value.ToString()))
-
-<table class=" table table-bordered">
-    @foreach (var item in Model.Items)
-    {
-        <tr>
-            <td>
-                <a href="@item.Link"> @item.Name</a>
-            </td>
-        </tr>
-    }
-
-</table>

@@ -4,10 +4,11 @@ using DBAudit.Application.Extensions;
 using DBAudit.Infrastructure;
 using DBAudit.Infrastructure.Command;
 using DBAudit.Infrastructure.DatabaseProvider.SqlServer.Extensions;
+using DBAudit.Infrastructure.Extensions;
 using DBAudit.Infrastructure.Queue.Channels;
 using DBAudit.Infrastructure.Queue.Channels.Extensions;
 using DBAudit.Infrastructure.Queue.Channels.StructureProcessors;
-using DBAudit.Infrastructure.Storage.Binary;
+using DBAudit.Infrastructure.Storage.SqlLite.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,7 +19,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddSingleton<IEncryptionService>(new EncryptionService(key, iv));
 
-builder.Services.AddBinaryStorage();
+builder.Services.AddAddSqlLiteStorage(builder.Configuration);
 
 builder.Services.AddSqlServerProvider();
 
@@ -52,5 +53,5 @@ app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
+app.RunMigration();
 app.Run();
