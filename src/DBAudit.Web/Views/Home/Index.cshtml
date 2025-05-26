@@ -27,16 +27,6 @@
     <input type="hidden" name="envId" value="@ViewBag.EnvironmentId"/>
     <input type="submit" value="Refresh" class="btn btn-primary"/>
 </form>
-@ViewBag.Count
-<table class="table">
-@foreach (MetricsDetails item in ViewBag.Metrics)
-{
-    <tr>
-        <td>@item.Title</td>
-        <td>@item.Value</td>
-    </tr>
-}
-</table>
 <div class="container-fluid mt-4">
     <!-- Status Cards Row -->
     <div class="row g-4 mb-4">

@@ -5,13 +5,13 @@ namespace DBAudit.Infrastructure.Storage.SqlLite.Metrics;
 
 public class ColumnMetricsService(SqlLiteDbContext dbContext) : IColumnMetricsService
 {
-    public void Add(MetricsDetails counter)
+    public void Add(ColumnMetrics counter)
     {
         dbContext.ColumnMetrics.Add(counter);
         dbContext.SaveChanges();
     }
 
-    public List<MetricsDetails> GetAllByTableId(Guid tableId)
+    public List<ColumnMetrics> GetAllByTableId(Guid tableId)
     {
         return dbContext.ColumnMetrics.Where(x => x.TableId == tableId).ToList();
     }

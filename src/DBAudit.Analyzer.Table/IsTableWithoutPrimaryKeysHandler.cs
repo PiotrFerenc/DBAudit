@@ -8,7 +8,7 @@ using LanguageExt;
 
 namespace DBAudit.Analyzer.Table;
 
-public class IsTableWithoutPrimaryKeysHandler(IQueryService queryService, IDatabaseService databaseService, IColumnMetricsService metricsService) : IRequestHandler<IsTableWithoutPrimaryKeys, Option<string>>
+public class IsTableWithoutPrimaryKeysHandler(IQueryService queryService, IDatabaseService databaseService, ITableMetricsService tableMetricsService) : IRequestHandler<IsTableWithoutPrimaryKeys, Option<string>>
 {
     public async Task<Option<string>> HandleAsync(IsTableWithoutPrimaryKeys request)
     {
@@ -16,7 +16,7 @@ public class IsTableWithoutPrimaryKeysHandler(IQueryService queryService, IDatab
         {
             var query = QueryConstants.TablesWithoutPk.Replace("@table", db.Name);
             await queryService.QuerySingleData(request.connection, query, reader => (reader.GetInt32(0)))
-                .IfSomeAsync(count => { metricsService.Add(MetricsDetails.CreateTableMetrics(request.name, count > 0 ? 1 : 0, request.envId, request.dbId, request.tableId, nameof(IsTableWithoutPrimaryKeys))); });
+                .IfSomeAsync(count => { tableMetricsService.Add(TableMetrics.Create(request.name, count > 0 ? 1 : 0, request.envId, request.dbId, request.tableId, nameof(IsTableWithoutPrimaryKeys))); });
         });
 
         return Option<string>.None;
