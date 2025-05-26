@@ -59,7 +59,7 @@ public class UpdateStructureHandler(IDatabaseProvider databaseProvider, IDatabas
                         {
                             Id = Guid.NewGuid(),
                             Name = column.Name,
-                            IsActive = false,
+                            IsActive = true,
                             Type = column.Type,
                             TableId = dbTable.Id,
                             EnvironmentId = envId,

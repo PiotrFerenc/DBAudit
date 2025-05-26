@@ -14,7 +14,7 @@ public class SqlServerProvider(IQueryService queryService, IEnvironmentService e
         => await queryService.QueryData(connection, "SELECT table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE';", r => r.GetString(0));
 
     public async Task<IEnumerable<(string Type, string Name)>> GetColumns(string tableName, SqlConnection connection)
-        => await queryService.QueryData(connection, $@"SELECT COLUMN_NAME,    DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{tableName}'",
+        => await queryService.QueryData(connection, $@"SELECT  DATA_TYPE ,COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{tableName}'",
             reader => (reader.GetString(0), reader.GetString(1))
         );
 }
