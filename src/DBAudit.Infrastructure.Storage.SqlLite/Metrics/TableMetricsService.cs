@@ -27,4 +27,9 @@ public class TableMetricsService (SqlLiteDbContext dbContext): ITableMetricsServ
     {
         return dbContext.TableMetrics.Where(x => x.DatabaseId == databaseId).ToList();
     }
+
+    public List<TableMetrics> GetByTableId(Guid tableId)
+    {
+        return dbContext.TableMetrics.Where(x => x.TableId == tableId).ToList();
+    }
 }

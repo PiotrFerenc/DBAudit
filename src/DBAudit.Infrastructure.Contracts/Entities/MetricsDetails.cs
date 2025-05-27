@@ -4,7 +4,7 @@ public class ColumnMetrics
 {
      public Guid Id { get; set; }
      public string Title { get; set; } = string.Empty;
-     public int Value { get; set; }
+     public string Value { get; set; }
      public Guid EnvironmentId { get; set; }
      public Guid DatabaseId { get; set; }
      public Guid TableId { get; set; }
@@ -16,7 +16,7 @@ public class ColumnMetrics
 
 
      public static ColumnMetrics Create(string title,
-         int value,
+         string value,
          Guid environmentId,
          Guid databaseId,
          Guid tableId,
@@ -42,7 +42,7 @@ public class TableMetrics
 {
      public Guid Id { get; set; }
      public string Title { get; set; } = string.Empty;
-     public int Value { get; set; }
+     public string Value { get; set; }
      public Guid EnvironmentId { get; set; }
      public Guid DatabaseId { get; set; }
      public Guid TableId { get; set; }
@@ -51,7 +51,7 @@ public class TableMetrics
 
      public DateTime UpdatedAt { get; set; }
      public static TableMetrics Create(string title,
-         int value,
+         string value,
          Guid environmentId,
          Guid databaseId,
          Guid tableId,
@@ -75,7 +75,7 @@ public class DatabaseMetrics
 {
     public Guid Id { get; set; }
     public string Title { get; set; } = string.Empty;
-    public int Value { get; set; }
+    public string Value { get; set; }
     public Guid EnvironmentId { get; set; }
     public Guid DatabaseId { get; set; }
     public string Type { get; set; } = string.Empty;
@@ -83,7 +83,7 @@ public class DatabaseMetrics
     
     public DateTime UpdatedAt { get; set; }
     public static DatabaseMetrics Create(string title,
-        int value,
+        string value,
         Guid environmentId,
         Guid databaseId,
         string type)
@@ -105,14 +105,14 @@ public class EnvironmentMetrics
 {
      public Guid Id { get; set; }
      public string Title { get; set; } = string.Empty;
-     public int Value { get; set; }
+     public string Value { get; set; }
      public Guid EnvironmentId { get; set; }
      public string Type { get; set; } = string.Empty;
      public DateTime CreatedAt { get; set; }
      
      public DateTime UpdatedAt { get; set; }
      public static EnvironmentMetrics Create(string title,
-         int value,
+         string value,
          Guid environmentId,
          string type)
          => new ()

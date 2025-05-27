@@ -28,6 +28,11 @@ public class SqlLiteTableService (SqlLiteDbContext dbContext): ITableService
         return dbContext.Tables.Where(x => x.EnvironmentId == envId).ToList();
     }
 
+    public List<Table> GetAllByDbId(Guid dbId)
+    {
+        return dbContext.Tables.Where(x => x.DatabaseId == dbId).ToList();
+    }
+
     public Option<Table> Get(Guid dbId, Guid envId, string tableName)
     {
         return dbContext.Tables.FirstOrDefault(x => 
@@ -45,12 +50,15 @@ public class SqlLiteTableService (SqlLiteDbContext dbContext): ITableService
     {
         var results = await dbContext.TableMetrics
             .Where(x => x.EnvironmentId == envId && x.DatabaseId == tableId)
-            .GroupBy(x => new { x.Type, x.Title })
+            .GroupBy(x => new { x.Type, x.Value })
             .Select(g => new CountMetric
             {
                 Type = g.Key.Type,
-                Title = g.Key.Title,
-                Value = g.Sum(x => x.Value)
+                Title = g.First().Title,
+                Value = g.Count().ToString()
             }).ToListAsync();
+
 return results;
-    } }
+    }
+    
+}

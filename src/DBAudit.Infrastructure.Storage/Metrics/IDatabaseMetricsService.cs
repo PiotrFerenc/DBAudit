@@ -6,4 +6,5 @@ public interface IDatabaseMetricsService
 {
     void Add(DatabaseMetrics counter);
     List<DatabaseMetrics> GetAllByEnvId(Guid envId);
+    List<DatabaseMetrics> GetAllByDbId(Guid envId);
 }

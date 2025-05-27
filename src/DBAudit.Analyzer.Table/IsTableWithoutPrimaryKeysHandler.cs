@@ -16,7 +16,7 @@ public class IsTableWithoutPrimaryKeysHandler(IQueryService queryService, IDatab
         {
             var query = QueryConstants.TablesWithoutPk.Replace("@table", db.Name);
             await queryService.QuerySingleData(request.connection, query, reader => (reader.GetInt32(0)))
-                .IfSomeAsync(count => { tableMetricsService.Add(TableMetrics.Create(request.name, count > 0 ? 1 : 0, request.envId, request.dbId, request.tableId, nameof(IsTableWithoutPrimaryKeys))); });
+                .IfSomeAsync(count => { tableMetricsService.Add(TableMetrics.Create(request.name, count == 0 ? "✅" : "⚠️", request.envId, request.dbId, request.tableId, nameof(IsTableWithoutPrimaryKeys))); });
         });
 
         return Option<string>.None;

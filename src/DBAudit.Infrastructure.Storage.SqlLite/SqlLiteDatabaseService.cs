@@ -1,5 +1,6 @@
 using DBAudit.Infrastructure.Contracts.Entities;
 using LanguageExt;
+using Microsoft.EntityFrameworkCore;
 
 namespace DBAudit.Infrastructure.Storage.SqlLite;
 
@@ -50,4 +51,18 @@ public class SqlLiteDatabaseService(SqlLiteDbContext dbContext) : IDatabaseServi
 
     public Option<Database> GetByName(Guid envId, string databaseName) =>
         dbContext.Databases.FirstOrDefault(x => x.EnvironmentId == envId && x.Name == databaseName);
+    public async Task<List<CountMetric>> CountMetrics(Guid envId)
+    {
+        var results = await dbContext.DatabaseMetrics
+            .Where(x => x.EnvironmentId == envId )
+            .GroupBy(x => new { x.Type, x.Value })
+            .Select(g => new CountMetric
+            {
+                Type = g.Key.Type,
+                Title = g.First().Title,
+                Value = g.Count().ToString()
+            }).ToListAsync();
+        
+        return results;
+    }
 }

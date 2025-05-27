@@ -9,7 +9,7 @@ public class EnvironmentsMetricsMigration : Migration
         Create.Table("EnvironmentMetrics")
             .WithColumn("Id").AsGuid().PrimaryKey()
             .WithColumn("Title").AsString().NotNullable()
-            .WithColumn("Value").AsInt32().NotNullable()
+            .WithColumn("Value").AsString().NotNullable()
             .WithColumn("EnvironmentId").AsGuid().NotNullable()
             .WithColumn("Type").AsString().NotNullable()
             .WithColumn("CreatedAt").AsDateTime().NotNullable()

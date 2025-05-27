@@ -26,4 +26,9 @@ public class DatabaseMetricsService(SqlLiteDbContext dbContext) : IDatabaseMetri
     {
         return dbContext.DatabaseMetrics.Where(x => x.EnvironmentId == envId).ToList();
     }
+
+    public List<DatabaseMetrics> GetAllByDbId(Guid envId)
+    {
+        return dbContext.DatabaseMetrics.Where(x => x.DatabaseId == envId).ToList();
+    }
 }

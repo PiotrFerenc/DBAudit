@@ -7,7 +7,16 @@ public class EnvMetricsService(SqlLiteDbContext dbContext) : IEnvMetricsService
 {
     public void Add(EnvironmentMetrics counter)
     {
-        dbContext.EnvironmentMetrics.Add(counter);
+        var item = dbContext.EnvironmentMetrics.FirstOrDefault(x => x.Id == counter.Id);
+        if (item == null)
+        {
+            dbContext.EnvironmentMetrics.Add(counter);
+        }
+        else
+        {
+           item.Value  = counter.Value;
+           item.UpdatedAt  = DateTime.UtcNow;
+        }
         dbContext.SaveChanges();
     }
 

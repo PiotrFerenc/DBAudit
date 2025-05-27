@@ -1,0 +1,28 @@
+@using DBAudit.Infrastructure.Contracts.Entities
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+            @foreach (Table table in ViewBag.Tables)
+            {
+                <a class="nav-link e" aria-current="page" href="/table/@table.Id">@table.Name</a>
+            }
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-10">
+            <div class="card">
+                @await Html.PartialAsync("MetricsBreakdown/Info", ("Reliability",(List<(string Title, string Text, string Metrics)> )ViewBag.Metrics))
+            </div>
+        </div>
+    </div>
+</div>

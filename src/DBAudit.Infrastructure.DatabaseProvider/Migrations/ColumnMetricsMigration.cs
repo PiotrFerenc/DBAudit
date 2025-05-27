@@ -10,7 +10,7 @@ public class ColumnMetricsMigration : Migration
         Create.Table("ColumnMetrics")
             .WithColumn("Id").AsGuid().PrimaryKey()
             .WithColumn("Title").AsString().NotNullable()
-            .WithColumn("Value").AsInt32().NotNullable()
+            .WithColumn("Value").AsString().NotNullable()
             .WithColumn("EnvironmentId").AsGuid().NotNullable()
             .WithColumn("DatabaseId").AsGuid().NotNullable()
             .WithColumn("TableId").AsGuid().NotNullable()
