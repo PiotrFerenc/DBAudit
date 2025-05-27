@@ -1,7 +1,5 @@
-@model DBAudit.Infrastructure.Contracts.Entities.MetricsDetails
 
 @{
     ViewBag.Title = $"{Model.Title}- {Model.Value}";
     Layout = "_Layout";
 }
-@await Html.PartialAsync("Alert/Warning", (Model.Title, Model.Value.ToString()))

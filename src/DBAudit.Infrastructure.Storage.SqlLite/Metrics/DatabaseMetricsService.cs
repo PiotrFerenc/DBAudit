@@ -5,13 +5,23 @@ namespace DBAudit.Infrastructure.Storage.SqlLite.Metrics;
 
 public class DatabaseMetricsService(SqlLiteDbContext dbContext) : IDatabaseMetricsService
 {
-    public void Add(MetricsDetails counter)
+    public void Add(DatabaseMetrics counter)
     {
-        dbContext.DatabaseMetrics.Add(counter);
+        var item = dbContext.DatabaseMetrics.FirstOrDefault(e => e.DatabaseId == counter.DatabaseId && e.Type == counter.Type );
+        if (item == null)
+        {
+            dbContext.DatabaseMetrics.Add(counter);
+        }
+        else
+        {
+            item.Value = counter.Value;
+            dbContext.DatabaseMetrics.Update(item);
+        }
+        
         dbContext.SaveChanges();
     }
 
-    public List<MetricsDetails> GetAllByEnvId(Guid envId)
+    public List<DatabaseMetrics> GetAllByEnvId(Guid envId)
     {
         return dbContext.DatabaseMetrics.Where(x => x.EnvironmentId == envId).ToList();
     }

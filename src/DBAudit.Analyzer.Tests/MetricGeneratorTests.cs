@@ -14,7 +14,7 @@ public class MetricGeneratorTests
         const string type1 = "test_type";
         const string type2 = "some_type";
 
-        var columnMetrics = new List<MetricsDetails>()
+        var columnMetrics = new List<ColumnMetrics>()
         {
             new()
             {
@@ -51,31 +51,19 @@ public class MetricGeneratorTests
             }
         };
 
-        var result = MetricsGenerator.For(columnMetrics, metric => new MetricsDetails
-        {
-            Id = Guid.NewGuid(),
-            Title = metric.Key,
-            Value = metric.Value,
-            EnvironmentId = envId,
-            DatabaseId = dbId,
-            TableId = tableId,
-            ColumnId = Guid.Empty,
-            Type = metric.Key
-        });
-
+        var result = MetricsGenerator.For(columnMetrics, metric => TableMetrics.Create(metric.Key, metric.Value, envId, dbId, tableId, metric.Key));
+        
         Assert.Equal(2, result.Count);
         var first = result.First();
         var last = result.Last();
 
         Assert.Equal(type1, first.Type);
         Assert.Equal(2, first.Value);
-        Assert.Equal(Guid.Empty, first.ColumnId);
         Assert.Equal(dbId, first.DatabaseId);
         Assert.Equal(envId, first.EnvironmentId);
 
         Assert.Equal(type2, last.Type);
         Assert.Equal(1, last.Value);
-        Assert.Equal(Guid.Empty, last.ColumnId);
         Assert.Equal(dbId, last.DatabaseId);
         Assert.Equal(envId, last.EnvironmentId);
     }

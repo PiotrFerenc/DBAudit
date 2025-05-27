@@ -5,13 +5,13 @@ namespace DBAudit.Infrastructure.Storage.SqlLite.Metrics;
 
 public class EnvMetricsService(SqlLiteDbContext dbContext) : IEnvMetricsService
 {
-    public void Add(MetricsDetails counter)
+    public void Add(EnvironmentMetrics counter)
     {
         dbContext.EnvironmentMetrics.Add(counter);
         dbContext.SaveChanges();
     }
 
-    public List<MetricsDetails> GetAllByEnvId(Guid envId)
+    public List<EnvironmentMetrics> GetAllByEnvId(Guid envId)
     {
         return dbContext.EnvironmentMetrics.Where(x => x.EnvironmentId == envId).ToList();
     }

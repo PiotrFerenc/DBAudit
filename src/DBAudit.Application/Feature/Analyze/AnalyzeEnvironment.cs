@@ -72,10 +72,21 @@ public class AnalyzeColumnHandler : ICommandHandler<AnalyzeColumn>
 
 public record GenerateMetrics(Guid EnvId) : IRequest;
 
-public class GenerateMetricsHandler(IColumnMetricsService metricsService, ITableService tableService, IDatabaseService databaseService, IEnvironmentService environmentService) : ICommandHandler<GenerateMetrics>
+public class GenerateMetricsHandler(IColumnMetricsService metricsService, ITableService tableService, IDatabaseService databaseService, IEnvironmentService environmentService, IDatabaseMetricsService databaseMetricsService) : ICommandHandler<GenerateMetrics>
 {
-    public Task HandleAsync(GenerateMetrics command)
+    public async Task HandleAsync(GenerateMetrics command)
     {
+        var datebases = databaseService.GetAll(command.EnvId);
+        foreach (var database in datebases)
+        {
+            var tableMetrics =await tableService.CountMetrics(command.EnvId, database.Id);
+
+            foreach (var metric in tableMetrics)
+            {
+                databaseMetricsService.Add(DatabaseMetrics.Create(metric.Title,metric.Value, command.EnvId, database.Id ,metric.Type));
+            }
+        }
+            
         // var metrics = metricsService.GetAllForEnv(command.EnvId);
         // var tables = tableService.GetAllByEnvId(command.EnvId);
         //     // get ze srodowiska i wszystkie tabele w nim 
@@ -147,13 +158,18 @@ public class GenerateMetricsHandler(IColumnMetricsService metricsService, ITable
         //     }
         // });
         
-        return Task.CompletedTask;
     }
 }
 
 public static class MetricsGenerator
 {
-    public static List<MetricsDetails> For(List<MetricsDetails> columnMetrics, Func<KeyValuePair<string, int>, MetricsDetails> map)
+    
+    /*
+    SELECT Type, SUM(Value) as Value
+    FROM ColumnMetrics
+    GROUP BY Type
+    */
+    public static List<TableMetrics> For(List<ColumnMetrics> columnMetrics, Func<KeyValuePair<string, int>, TableMetrics> map)
         => columnMetrics.GroupBy(x => x.Type)
             .ToDictionary(x => x.Key, x => x.Sum(y => y.Value))
             .Select(map).ToList();

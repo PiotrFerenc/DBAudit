@@ -4,6 +4,6 @@ namespace DBAudit.Infrastructure.Storage.Metrics;
 
 public interface IEnvMetricsService
 {
-    void Add(MetricsDetails counter);
-    List<MetricsDetails> GetAllByEnvId(Guid envId);
+    void Add(EnvironmentMetrics counter);
+    List<EnvironmentMetrics> GetAllByEnvId(Guid envId);
 }
