@@ -15,6 +15,7 @@ public class DatabaseMetricsService(SqlLiteDbContext dbContext) : IDatabaseMetri
         else
         {
             item.Value = counter.Value;
+            item.UpdatedAt = counter.UpdatedAt;
             dbContext.DatabaseMetrics.Update(item);
         }
         

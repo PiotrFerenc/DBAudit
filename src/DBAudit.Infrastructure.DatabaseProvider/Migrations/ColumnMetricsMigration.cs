@@ -16,7 +16,8 @@ public class ColumnMetricsMigration : Migration
             .WithColumn("TableId").AsGuid().NotNullable()
             .WithColumn("ColumnId").AsGuid().NotNullable()
             .WithColumn("Type").AsString().NotNullable()
-            .WithColumn("CreatedAt").AsDateTime().NotNullable();
+            .WithColumn("CreatedAt").AsDateTime().NotNullable()
+            .WithColumn("UpdatedAt").AsDateTime().NotNullable();
     }
     
     public override void Down()

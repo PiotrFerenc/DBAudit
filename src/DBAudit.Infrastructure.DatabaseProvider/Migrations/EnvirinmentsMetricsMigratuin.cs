@@ -12,7 +12,8 @@ public class EnvironmentsMetricsMigration : Migration
             .WithColumn("Value").AsInt32().NotNullable()
             .WithColumn("EnvironmentId").AsGuid().NotNullable()
             .WithColumn("Type").AsString().NotNullable()
-            .WithColumn("CreatedAt").AsDateTime().NotNullable();
+            .WithColumn("CreatedAt").AsDateTime().NotNullable()
+            .WithColumn("UpdatedAt").AsDateTime().NotNullable();
     }
     
     public override void Down()

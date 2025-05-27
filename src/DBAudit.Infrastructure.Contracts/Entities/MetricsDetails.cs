@@ -11,6 +11,7 @@ public class ColumnMetrics
      public Guid ColumnId { get; set; }
      public string Type { get; set; } = string.Empty;
      public DateTime CreatedAt { get; set; }
+     public DateTime UpdatedAt { get; set; }
 
 
 
@@ -31,7 +32,8 @@ public class ColumnMetrics
          TableId = tableId,
          ColumnId = columnId,
          Type = type,
-         CreatedAt = DateTime.UtcNow
+         CreatedAt = DateTime.UtcNow,
+         UpdatedAt = DateTime.UtcNow,
      };
 
 }
@@ -47,6 +49,7 @@ public class TableMetrics
      public string Type { get; set; } = string.Empty;
      public DateTime CreatedAt { get; set; }
 
+     public DateTime UpdatedAt { get; set; }
      public static TableMetrics Create(string title,
          int value,
          Guid environmentId,
@@ -62,7 +65,8 @@ public class TableMetrics
              DatabaseId = databaseId,
              TableId = tableId,
              Type = type,
-             CreatedAt = DateTime.UtcNow
+             CreatedAt = DateTime.UtcNow,
+             UpdatedAt = DateTime.UtcNow,
          };
 }
 
@@ -77,6 +81,7 @@ public class DatabaseMetrics
     public string Type { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
     
+    public DateTime UpdatedAt { get; set; }
     public static DatabaseMetrics Create(string title,
         int value,
         Guid environmentId,
@@ -90,7 +95,8 @@ public class DatabaseMetrics
             EnvironmentId = environmentId,
             DatabaseId = databaseId,
             Type = type,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
         };
 }
 
@@ -104,6 +110,7 @@ public class EnvironmentMetrics
      public string Type { get; set; } = string.Empty;
      public DateTime CreatedAt { get; set; }
      
+     public DateTime UpdatedAt { get; set; }
      public static EnvironmentMetrics Create(string title,
          int value,
          Guid environmentId,
@@ -115,6 +122,7 @@ public class EnvironmentMetrics
              Value = value,
              EnvironmentId = environmentId,
              Type = type,
-             CreatedAt = DateTime.UtcNow
+             CreatedAt = DateTime.UtcNow,
+             UpdatedAt = DateTime.UtcNow,
          };
 }

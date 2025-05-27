@@ -15,7 +15,9 @@ public class TableMetricsMigration : Migration
             .WithColumn("DatabaseId").AsGuid().NotNullable()
             .WithColumn("TableId").AsGuid().NotNullable()
             .WithColumn("Type").AsString().NotNullable()
-            .WithColumn("CreatedAt").AsDateTime().NotNullable();
+            .WithColumn("CreatedAt").AsDateTime().NotNullable()
+            .WithColumn("UpdatedAt").AsDateTime().NotNullable();
+
     }
     
     public override void Down()

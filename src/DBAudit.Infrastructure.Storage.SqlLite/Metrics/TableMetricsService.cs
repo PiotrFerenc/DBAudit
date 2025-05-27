@@ -17,6 +17,7 @@ public class TableMetricsService (SqlLiteDbContext dbContext): ITableMetricsServ
         else
         {
             item.Value = counter.Value;
+            item.UpdatedAt = counter.UpdatedAt;
             dbContext.TableMetrics.Update(item);
         }
         dbContext.SaveChanges();
