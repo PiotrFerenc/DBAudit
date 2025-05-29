@@ -31,7 +31,7 @@ public class HomeController : Controller
         _columnService = columnService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         var environments = _environmentService.GetActive();
         if (environments.Count == 0) return View("AddEnv");
@@ -39,8 +39,8 @@ public class HomeController : Controller
         var databases = _databaseService.GetAll(env.Id);
         ViewBag.Databases = databases;
         ViewBag.EnvironmentId = env.Id;
-        var metrics= _metricsService.GetEnvMetrics(new EnvName(env.Name)).Select(x => (x.Title, x.Value.ToString(), "success") );
-        ViewBag.Metrics = metrics.ToList();
+        var metrics = await _metricsService.GetEnvMetrics(new EnvName(env.Name));
+        ViewBag.Metrics = metrics.Select(x => (x.Title, x.Value.ToString(), "success") ).ToList();
         
         return View(env);
     }
