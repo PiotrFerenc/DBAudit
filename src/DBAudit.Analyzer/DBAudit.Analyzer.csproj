@@ -15,6 +15,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DBAudit.Infrastructure.Command\DBAudit.Infrastructure.Command.csproj" />
+      <ProjectReference Include="..\DBAudit.Infrastructure.Contracts\DBAudit.Infrastructure.Contracts.csproj" />
     </ItemGroup>
 
 </Project>

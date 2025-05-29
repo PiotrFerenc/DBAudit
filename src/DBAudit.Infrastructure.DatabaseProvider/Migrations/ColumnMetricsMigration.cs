@@ -7,14 +7,11 @@ public class ColumnMetricsMigration : Migration
 {
     public override void Up()
     {
-        Create.Table("ColumnMetrics")
+        Create.Table("Metrics")
             .WithColumn("Id").AsGuid().PrimaryKey()
             .WithColumn("Title").AsString().NotNullable()
             .WithColumn("Value").AsString().NotNullable()
-            .WithColumn("EnvironmentId").AsGuid().NotNullable()
-            .WithColumn("DatabaseId").AsGuid().NotNullable()
-            .WithColumn("TableId").AsGuid().NotNullable()
-            .WithColumn("ColumnId").AsGuid().NotNullable()
+            .WithColumn("Key").AsString().NotNullable()
             .WithColumn("Type").AsString().NotNullable()
             .WithColumn("CreatedAt").AsDateTime().NotNullable()
             .WithColumn("UpdatedAt").AsDateTime().NotNullable();
@@ -22,6 +19,6 @@ public class ColumnMetricsMigration : Migration
     
     public override void Down()
     {
-        Delete.Table("ColumnMetrics");
+        Delete.Table("Metrics");
     }
 }

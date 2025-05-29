@@ -14,7 +14,7 @@ public class MetricGeneratorTests
         const string type1 = "test_type";
         const string type2 = "some_type";
 
-        var columnMetrics = new List<ColumnMetrics>()
+        var columnMetrics = new List<Metric>()
         {
             new()
             {

@@ -6,6 +6,8 @@ using DBAudit.Infrastructure.Storage;
 using DBAudit.Infrastructure.Storage.Metrics;
 using LanguageExt;
 using Microsoft.Data.SqlClient;
+using Environment = DBAudit.Infrastructure.Contracts.Entities.Environment;
+
 
 namespace DBAudit.Application.Feature.Analyze;
 
@@ -17,34 +19,35 @@ public class AnalyzeEnvironmentHandler(ICommandDispatcher dispatcher, IDatabaseS
     {
         await environmentService.GetConnectionString(command.EnvId).IfSomeAsync(async builder =>
         {
-            var databases = databaseService.GetAll(command.EnvId);
-            foreach (var database in databases)
+             await environmentService.GetById(command.EnvId).IfSomeAsync(async env =>
             {
-                builder.InitialCatalog = database.Name;
-                await dispatcher.Send(new AnalyzeDatabase(command.EnvId, database.Id, builder));
-            }
-
-            await dispatcher.Send(new GenerateMetrics(command.EnvId));
+                var databases = databaseService.GetAll(command.EnvId);
+                foreach (var database in databases)
+                {
+                    builder.InitialCatalog = database.Name;
+                    await dispatcher.Send(new AnalyzeDatabase(env, database, builder));
+                }
+            });
         });
     }
 }
 
-public record AnalyzeDatabase(Guid EnvId, Guid DbId, SqlConnectionStringBuilder ConnectionStringBuilder) : IRequest;
+public record AnalyzeDatabase(Environment env, Database database, SqlConnectionStringBuilder ConnectionStringBuilder) : IRequest;
 
 public class AnalyzeDatabaseHandler(ICommandDispatcher dispatcher, ITableService tableService) : ICommandHandler<AnalyzeDatabase>
 {
     public async Task HandleAsync(AnalyzeDatabase command)
     {
-        var tables = tableService.GetAll(command.DbId);
+        var tables = tableService.GetAll(command.database.Id);
         await using var connection = new SqlConnection(command.ConnectionStringBuilder.ToString());
 
-        foreach (var table in tables) await dispatcher.Send(new AnalyzeTable(command.EnvId, command.DbId, table.Id, connection));
+        foreach (var table in tables) await dispatcher.Send(new AnalyzeTable(command.env, command.database, table, connection));
 
         await connection.CloseAsync();
     }
 }
 
-public record AnalyzeTable(Guid EnvId, Guid DbId, Guid TableId, SqlConnection connection) : IRequest;
+public record AnalyzeTable(Environment Env, Database Database, Table Table, SqlConnection connection) : IRequest;
 
 public class AnalyzeTableHandler(ICommandDispatcher dispatcher, IColumnService columnService, ITableAnalyzerService databaseAnalyzerService) : ICommandHandler<AnalyzeTable>
 {
@@ -52,44 +55,20 @@ public class AnalyzeTableHandler(ICommandDispatcher dispatcher, IColumnService c
     {
         if (command.connection.State is not ConnectionState.Open) command.connection.Open();
 
-        var analyzers = databaseAnalyzerService.GetCheckAnalyzers(command.connection, TableId.Create(command.TableId), EnvId.Create(command.EnvId), DbId.Create(command.DbId));
+        var analyzers = databaseAnalyzerService.GetCheckAnalyzers(command.connection, command.Env, command.Database, command.Table);
         foreach (var analyzer in analyzers) await dispatcher.Send(analyzer).IfSomeAsync(Console.WriteLine);
 
-        var columns = columnService.GetByTableId(command.TableId);
-        foreach (var column in columns) await dispatcher.Send(new AnalyzeColumn(command.EnvId, command.DbId, command.TableId, column.Id, command.connection));
+        var columns = columnService.GetByTableId(command.Table.Id);
+        foreach (var column in columns) await dispatcher.Send(new AnalyzeColumn(command.Env, command.Database, command.Table, column, command.connection));
     }
 }
 
-public record AnalyzeColumn(Guid EnvId, Guid DbId, Guid TableId, Guid ColumnId, SqlConnection connection) : IRequest;
+public record AnalyzeColumn(Environment Env, Database Database, Table Table, Column Column, SqlConnection connection) : IRequest;
 
 public class AnalyzeColumnHandler : ICommandHandler<AnalyzeColumn>
 {
     public async Task HandleAsync(AnalyzeColumn command)
     {
         await Task.Delay(1);
-    }
-}
-
-public record GenerateMetrics(Guid EnvId) : IRequest;
-
-public class GenerateMetricsHandler(IColumnMetricsService metricsService, ITableService tableService, IDatabaseService databaseService, IEnvironmentService environmentService, IDatabaseMetricsService databaseMetricsService, IEnvMetricsService envMetricsService) : ICommandHandler<GenerateMetrics>
-{
-    public async Task HandleAsync(GenerateMetrics command)
-    {
-        var datebases = databaseService.GetAll(command.EnvId);
-        foreach (var database in datebases)
-        {
-            var tableMetrics =await tableService.CountMetrics(command.EnvId, database.Id);
-
-            foreach (var metric in tableMetrics)
-            {
-                databaseMetricsService.Add(DatabaseMetrics.Create(metric.Title,metric.Value, command.EnvId, database.Id ,metric.Type));
-            }
-        }
-        var databaseMetrics = await databaseService.CountMetrics(command.EnvId);
-        foreach (var metric in databaseMetrics)
-        {
-            envMetricsService.Add(EnvironmentMetrics.Create(metric.Title, metric.Value, command.EnvId, metric.Type));
-        } 
     }
 }

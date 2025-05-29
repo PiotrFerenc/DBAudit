@@ -46,19 +46,4 @@ public class SqlLiteTableService (SqlLiteDbContext dbContext): ITableService
         return dbContext.Tables.FirstOrDefault(x => x.Id == tableId);
     }
 
-    public async Task<List<CountMetric>> CountMetrics(Guid envId, Guid tableId)
-    {
-        var results = await dbContext.TableMetrics
-            .Where(x => x.EnvironmentId == envId && x.DatabaseId == tableId)
-            .GroupBy(x => new { x.Type, x.Value })
-            .Select(g => new CountMetric
-            {
-                Type = g.Key.Type,
-                Title = g.First().Title,
-                Value = g.Count().ToString()
-            }).ToListAsync();
-
-return results;
-    }
-    
 }

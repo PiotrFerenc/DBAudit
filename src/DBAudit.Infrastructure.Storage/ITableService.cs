@@ -12,8 +12,6 @@ public interface ITableService
     List<Table> GetAllByDbId(Guid envId);
     Option<Table> Get(Guid messageDbId, Guid messageEnvId, string tableName);
     Option<Table> GetById(Guid tableId);
-    Task<List<CountMetric>> CountMetrics(Guid envId, Guid databaseId);
-    
 }
 
 public class CountMetric

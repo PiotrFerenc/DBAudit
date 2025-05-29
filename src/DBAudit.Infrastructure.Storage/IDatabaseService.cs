@@ -14,5 +14,4 @@ public interface IDatabaseService
     bool Exist(Guid databaseId);
     bool Exist(Guid envId, string databaseName);
     Option<Database> GetByName(Guid envId, string databaseName);
-    Task<List<CountMetric>> CountMetrics(Guid envId);
 }

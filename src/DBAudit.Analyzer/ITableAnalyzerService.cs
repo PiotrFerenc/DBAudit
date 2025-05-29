@@ -1,8 +1,10 @@
+using DBAudit.Infrastructure.Contracts.Entities;
 using Microsoft.Data.SqlClient;
+using Environment = DBAudit.Infrastructure.Contracts.Entities.Environment;
 
 namespace DBAudit.Analyzer;
 
 public interface ITableAnalyzerService
 {
-    List<Is> GetCheckAnalyzers(SqlConnection connection, TableId tableId, EnvId envId, DbId dbId);
+    List<TableAnalyzer> GetCheckAnalyzers(SqlConnection connection, Environment env, Database database, Table table);
 }

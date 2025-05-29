@@ -1,128 +1,61 @@
 namespace DBAudit.Infrastructure.Contracts.Entities;
 
-public class ColumnMetrics
+public class Metric
 {
      public Guid Id { get; set; }
      public string Title { get; set; } = string.Empty;
-     public string Value { get; set; }
-     public Guid EnvironmentId { get; set; }
-     public Guid DatabaseId { get; set; }
-     public Guid TableId { get; set; }
-     public Guid ColumnId { get; set; }
+     public string Value { get; set; } = string.Empty;
+     public string Key { get; set; } = string.Empty;
      public string Type { get; set; } = string.Empty;
      public DateTime CreatedAt { get; set; }
      public DateTime UpdatedAt { get; set; }
 
-
-
-     public static ColumnMetrics Create(string title,
+     public static Metric Create(string title,
          string value,
-         Guid environmentId,
-         Guid databaseId,
-         Guid tableId,
-         Guid columnId,
-         string type
+         string type,
+         MetricKey key
      ) => new()
      {
          Id = Guid.NewGuid(),
          Title = title,
          Value = value,
-         EnvironmentId = environmentId,
-         DatabaseId = databaseId,
-         TableId = tableId,
-         ColumnId = columnId,
          Type = type,
          CreatedAt = DateTime.UtcNow,
          UpdatedAt = DateTime.UtcNow,
+         Key = key.Key,
      };
-
 }
 
-public class TableMetrics
+public record ColumnName(string Value)
 {
-     public Guid Id { get; set; }
-     public string Title { get; set; } = string.Empty;
-     public string Value { get; set; }
-     public Guid EnvironmentId { get; set; }
-     public Guid DatabaseId { get; set; }
-     public Guid TableId { get; set; }
-     public string Type { get; set; } = string.Empty;
-     public DateTime CreatedAt { get; set; }
+    public static ColumnName Empty() => new ColumnName(String.Empty);
+};
+public record TableName(string Value);
+public record DatabaseName(string Value);
+public record EnvName(string Value);
 
-     public DateTime UpdatedAt { get; set; }
-     public static TableMetrics Create(string title,
-         string value,
-         Guid environmentId,
-         Guid databaseId,
-         Guid tableId,
-         string type)
-         => new TableMetrics()
-         {
-             Id = Guid.NewGuid(),
-             Title = title,
-             Value = value,
-             EnvironmentId = environmentId,
-             DatabaseId = databaseId,
-             TableId = tableId,
-             Type = type,
-             CreatedAt = DateTime.UtcNow,
-             UpdatedAt = DateTime.UtcNow,
-         };
-}
-
-
-public class DatabaseMetrics
+public class MetricKey
 {
-    public Guid Id { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string Value { get; set; }
-    public Guid EnvironmentId { get; set; }
-    public Guid DatabaseId { get; set; }
-    public string Type { get; set; } = string.Empty;
-    public DateTime CreatedAt { get; set; }
-    
-    public DateTime UpdatedAt { get; set; }
-    public static DatabaseMetrics Create(string title,
-        string value,
-        Guid environmentId,
-        Guid databaseId,
-        string type)
-        => new ()
-        {
-            Id = Guid.NewGuid(),
-            Title = title,
-            Value = value,
-            EnvironmentId = environmentId,
-            DatabaseId = databaseId,
-            Type = type,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
-        };
-}
-
-
-public class EnvironmentMetrics
-{
-     public Guid Id { get; set; }
-     public string Title { get; set; } = string.Empty;
-     public string Value { get; set; }
-     public Guid EnvironmentId { get; set; }
-     public string Type { get; set; } = string.Empty;
-     public DateTime CreatedAt { get; set; }
-     
-     public DateTime UpdatedAt { get; set; }
-     public static EnvironmentMetrics Create(string title,
-         string value,
-         Guid environmentId,
-         string type)
-         => new ()
-         {
-             Id = Guid.NewGuid(),
-             Title = title,
-             Value = value,
-             EnvironmentId = environmentId,
-             Type = type,
-             CreatedAt = DateTime.UtcNow,
-             UpdatedAt = DateTime.UtcNow,
-         };
+    public string Key { get; private set; }
+    private readonly char _separator = ':';
+    public MetricKey(ColumnName columnName)
+    {
+        Key = columnName.Value; 
+    }
+    public MetricKey(  EnvName envName)
+    {
+        Key = $"{envName.Value}"; 
+    }
+    public MetricKey( DatabaseName databaseName, EnvName envName)
+    {
+        Key = $"{databaseName.Value}{_separator}{envName.Value}"; 
+    }
+    public MetricKey( TableName tableName, DatabaseName databaseName, EnvName envName)
+    {
+        Key = $"{tableName.Value}{_separator}{databaseName.Value}{_separator}{envName.Value}"; 
+    }
+    public MetricKey(ColumnName columnName, TableName tableName, DatabaseName databaseName, EnvName envName)
+    {
+        Key = $"{columnName.Value}{_separator}{tableName.Value}{_separator}{databaseName.Value}{_separator}{envName.Value}"; 
+    }
 }

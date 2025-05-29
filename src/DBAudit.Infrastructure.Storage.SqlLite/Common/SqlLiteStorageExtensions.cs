@@ -21,10 +21,7 @@ public static class SqlLiteStorageExtensions
         services.AddScoped<ITableService, SqlLiteTableService>();
         services.AddScoped<IColumnService, SqlLiteColumnService>();
 
-        services.AddTransient<IColumnMetricsService, ColumnMetricsService>();
-        services.AddTransient<ITableMetricsService, TableMetricsService>();
-        services.AddTransient<IDatabaseMetricsService, DatabaseMetricsService>();
-        services.AddTransient<IEnvMetricsService, EnvMetricsService>();
+        services.AddTransient<IMetricsService, ColumnMetricsService>();
         
             services
             .AddFluentMigratorCore()

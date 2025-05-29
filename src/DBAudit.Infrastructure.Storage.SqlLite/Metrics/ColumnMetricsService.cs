@@ -3,16 +3,20 @@ using DBAudit.Infrastructure.Storage.Metrics;
 
 namespace DBAudit.Infrastructure.Storage.SqlLite.Metrics;
 
-public class ColumnMetricsService(SqlLiteDbContext dbContext) : IColumnMetricsService
+public class ColumnMetricsService(SqlLiteDbContext dbContext) : IMetricsService
 {
-    public void Add(ColumnMetrics counter)
+    public void Add(Contracts.Entities.Metric counter)
     {
-        dbContext.ColumnMetrics.Add(counter);
+        dbContext.Metrics.Add(counter);
         dbContext.SaveChanges();
     }
 
-    public List<ColumnMetrics> GetAllByTableId(Guid tableId)
+    public List<Metric> Get(MetricKey key)
     {
-        return dbContext.ColumnMetrics.Where(x => x.TableId == tableId).ToList();
+        return dbContext.Metrics.Where(x => x.Key == key.Key).ToList();
     }
+
+    public List<Metric> GetEnvMetrics(EnvName envName) =>
+        dbContext.Metrics.Where(x => x.Key.EndsWith(envName.Value)).ToList();
+    
 }
