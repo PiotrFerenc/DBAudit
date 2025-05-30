@@ -10,6 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Scripts\AttachUser.sql = Scripts\AttachUser.sql
 		Scripts\CreateUser.sql = Scripts\CreateUser.sql
 		Scripts\Grant.sql = Scripts\Grant.sql
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBAudit.Infrastructure", "src/DBAudit.Infrastructure\DBAudit.Infrastructure.csproj", "{96BC6144-7F73-4E01-AB7A-70A1DDFBB28B}"

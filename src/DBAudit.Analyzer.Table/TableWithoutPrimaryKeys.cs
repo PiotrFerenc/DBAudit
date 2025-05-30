@@ -10,8 +10,7 @@ namespace DBAudit.Analyzer.Table;
 
 public class TableWithoutPrimaryKeys(SqlConnection connection, Environment env, Database database, Infrastructure.Contracts.Entities.Table table)
     : TableAnalyzer(connection, $"In the database '{database.Name}', the table '{table.Name}' does not have a primary key.",   env, database, table);
-    
-    
+
 public class TableWithoutPrimaryKeysHandler(IQueryService queryService, IMetricsService tableMetricsService) : IRequestHandler<TableWithoutPrimaryKeys, Option<string>>
 {
     public async Task<Option<string>> HandleAsync(TableWithoutPrimaryKeys request)
@@ -35,3 +34,4 @@ public class TableWithoutPrimaryKeysHandler(IQueryService queryService, IMetrics
                                                               AND i.is_primary_key = 1) and name = '{tableName}';
                                           """;
 }
+
