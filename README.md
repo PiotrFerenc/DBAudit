@@ -14,7 +14,7 @@ The tool helps developers, DBAs, and data architects identify potential issues i
 - [x] Detect tables without indexes
 - [x] List columns with nullable types without justification
 - [x] Flag tables with excessive column counts
-- [ ] Identify tables without foreign key relationships
+- [x] Identify tables without foreign key relationships
 - [ ] Report on use of `TEXT`/`BLOB` types without real need
 - [ ] Identify undocumented tables and columns
 
