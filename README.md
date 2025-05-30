@@ -10,8 +10,8 @@ The tool helps developers, DBAs, and data architects identify potential issues i
 ## 📌 TODO (Planned Features & Metrics)
 
 ### ✅ Structural Analysis
-- [ ] Detect tables without primary keys
-- [ ] Detect tables without indexes
+- [x] Detect tables without primary keys
+- [x] Detect tables without indexes
 - [ ] List columns with nullable types without justification
 - [ ] Flag tables with excessive column counts
 - [ ] Identify tables without foreign key relationships

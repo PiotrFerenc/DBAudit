@@ -5,164 +5,35 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-2">
-            <ul class="nav flex-column">
-                <li class="nav-item">
-            @foreach (Database db in ViewBag.Databases)
-            {
-                <a class="nav-link e" aria-current="page" href="/database/@db.Id">@db.Name</a>
-            }
-                </li>
-            </ul>
+        <div class="row">
+            <div class="col">
+                <form action="/home/AnalyzeDatabase" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="envId" value="@ViewBag.EnvironmentId"/>
+                    <input type="submit" value="Refresh" class="btn btn-primary"/>
+                </form>
+            </div> 
         </div>
-        <div class="col-md-10">
-            <div class="card">
-                
-                @await Html.PartialAsync("MetricsBreakdown/Info", ("Reliability",(List<(string Title, string Text, string Metrics)> )ViewBag.Metrics))
-
+            <div class="col-md-2">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        @foreach (Database db in ViewBag.Databases)
+                        {
+                            <a class="nav-link e" aria-current="page" href="/database/@db.Id">@db.Name</a>
+                        }
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-10">
+                @foreach (Metric metric in ViewBag.Metrics)
+                {
+                    <div class="card mb-1">
+                        <div class="card-body">
+                            @metric.Value @metric.Title
+                        </div>
+                    </div>
+                }
             </div>
         </div>
-    </div>
 </div>
 
-<form action="/home/AnalyzeDatabase" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="envId" value="@ViewBag.EnvironmentId"/>
-    <input type="submit" value="Refresh" class="btn btn-primary"/>
-</form>
-<div class="container-fluid mt-4">
-    <!-- Status Cards Row -->
-    <div class="row g-4 mb-4">
-
-    </div>
-
-    <!-- Quality Overview Table -->
-    <div class="card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">📊 Quality Overview</h5>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead>
-                    <tr>
-                        <th>Metric</th>
-                        <th>Status</th>
-                        <th>Threshold</th>
-                        <th>Value</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Coverage</td>
-                        <td><span class="badge bg-success">Passed</span></td>
-                        <td>80.0%</td>
-                        <td>84.2%</td>
-                    </tr>
-                    <tr>
-                        <td>Duplicate Lines</td>
-                        <td><span class="badge bg-success">Passed</span></td>
-                        <td>< 3%</td>
-                        <td>1.2%</td>
-                    </tr>
-                    <tr>
-                        <td>Code Smells</td>
-                        <td><span class="badge bg-warning text-dark">Warning</span></td>
-                        <td>< 10</td>
-                        <td>12</td>
-                    </tr>
-                    <tr>
-                        <td>Technical Debt</td>
-                        <td><span class="badge bg-success">Passed</span></td>
-                        <td>< 5d</td>
-                        <td>2d</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- Quality Gates -->
-    <div class="row g-4">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">🎯 Code Quality Gates</h5>
-                </div>
-                <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Unit Test Coverage > 80%
-                            <span class="badge bg-success rounded-pill">✅</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Integration Test Coverage > 70%
-                            <span class="badge bg-success rounded-pill">✅</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Code Smells < 10
-                            <span class="badge bg-warning text-dark rounded-pill">⚠️</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Critical Issues = 0
-                            <span class="badge bg-success rounded-pill">✅</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">🛠️ Database Structure Gates</h5>
-                </div>
-                <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Tables without Primary Keys = 0
-                            <span class="badge bg-success rounded-pill">✅</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Unused Indexes < 5
-                            <span class="badge bg-success rounded-pill">✅</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Tables without Documentation = 3
-                            <span class="badge bg-warning text-dark rounded-pill">⚠️</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Metrics Breakdown -->
-    <div class="row g-4 mt-4">
-
-
-        @await Html.PartialAsync("MetricsBreakdown/Success", ("Reliability", new Dictionary<string, (string Text, string Metrics)>
-        {
-            { "Bugs", ("0", "success") },
-            { "Reliability Rating", ("A", "success") },
-            { "Technical Debt Ratio", ("0.8%", "success") },
-        }))
-
-
-        @await Html.PartialAsync("MetricsBreakdown/Warning", ("Reliability", new Dictionary<string, (string Text, string Metrics)>
-        {
-            { "Bugs", ("0", "success") },
-            { "Reliability Rating", ("A", "success") },
-            { "Technical Debt Ratio", ("0.8%", "success") },
-        }))
-
-
-    </div>
-
-    <!-- Last Analysis -->
-    <div class="alert alert-info mt-4">
-        <strong>Last Analysis:</strong> 2024-03-20 14:30 UTC
-        <span class="badge bg-success ms-2">Passed ✅</span>
-    </div>
-</div>

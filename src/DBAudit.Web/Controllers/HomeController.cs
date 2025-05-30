@@ -40,7 +40,7 @@ public class HomeController : Controller
         ViewBag.Databases = databases;
         ViewBag.EnvironmentId = env.Id;
         var metrics = await _metricsService.GetEnvMetrics(new EnvName(env.Name));
-        ViewBag.Metrics = metrics.Select(x => (x.Title, x.Value.ToString(), "success") ).ToList();
+        ViewBag.Metrics = metrics;
         
         return View(env);
     }
@@ -87,7 +87,7 @@ public class HomeController : Controller
         }
         catch
         {
-            return View();
+            return RedirectToAction(nameof(Index));
         }
     }
 
@@ -106,7 +106,7 @@ public class HomeController : Controller
         }
         catch
         {
-            return View();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
