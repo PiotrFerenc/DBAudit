@@ -18,7 +18,7 @@ public class DetectTablesWithoutIndexesHandler(IQueryService queryService, IMetr
 {
     public async Task<Option<string>> HandleAsync(DetectTablesWithoutIndexes request)
     {
-        var query = QueryConstants.DetectTablesWithoutIndexes.Replace("@table", request.table.Name);
+        var query = GetQuery(request.table.Name);
         await queryService.QuerySingleData(request.connection, query, reader => (reader.GetInt32(0)))
             .IfSomeAsync(count =>
             {
@@ -28,4 +28,20 @@ public class DetectTablesWithoutIndexesHandler(IQueryService queryService, IMetr
 
         return Option<string>.None;
     }
+    
+    private static string GetQuery(string tableName)=>$"""
+        SELECT
+            count(1)
+        FROM
+            sys.tables t
+                JOIN sys.schemas s ON t.schema_id = s.schema_id
+        WHERE
+            NOT EXISTS (
+                SELECT 1
+                FROM sys.indexes i
+                WHERE i.object_id = t.object_id
+                  AND i.type > 0 
+            )
+        and t.name ='{tableName}`'
+        """;
 }
