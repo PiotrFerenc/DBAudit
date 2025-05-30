@@ -16,7 +16,7 @@ The tool helps developers, DBAs, and data architects identify potential issues i
 - [x] Flag tables with excessive column counts
 - [x] Identify tables without foreign key relationships
 - [x] Report on use of `TEXT`/`BLOB` types without real need
-- [ ] Identify undocumented tables and columns
+- [x] Identify undocumented tables and columns
 
 ### 🚀 Performance Metrics
 - [ ] Identify unused or duplicate indexes
