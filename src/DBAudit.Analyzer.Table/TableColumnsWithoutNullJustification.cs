@@ -5,7 +5,6 @@ using DBAudit.Infrastructure.Storage.Metrics;
 using LanguageExt;
 using Microsoft.Data.SqlClient;
 using Environment = DBAudit.Infrastructure.Contracts.Entities.Environment;
-using DBAudit.Infrastructure;
 namespace DBAudit.Analyzer.Table;
 
 public class TableColumnsWithoutNullJustification(SqlConnection connection, Environment env, Database database, Infrastructure.Contracts.Entities.Table table)

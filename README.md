@@ -12,8 +12,8 @@ The tool helps developers, DBAs, and data architects identify potential issues i
 ### ✅ Structural Analysis
 - [x] Detect tables without primary keys
 - [x] Detect tables without indexes
-- [ ] List columns with nullable types without justification
-- [ ] Flag tables with excessive column counts
+- [x] List columns with nullable types without justification
+- [x] Flag tables with excessive column counts
 - [ ] Identify tables without foreign key relationships
 - [ ] Report on use of `TEXT`/`BLOB` types without real need
 - [ ] Identify undocumented tables and columns
